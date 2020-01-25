@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Piaprobox</string>
+<!--    Greet string for i18n test-->
+    <string name="Greets">Welcome to Piaprobox!</string>
+
+<!--    Drawer Navigation Title-->
+    <string name="Drawer_Nav_Music_Text">Music</string>
+    <string name="Drawer_Nav_Illustrator_Text">Illustrator</string>
+    <string name="Drawer_Nav_Text_Text">Text</string>
+</resources>
