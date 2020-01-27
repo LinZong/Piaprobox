@@ -1,0 +1,244 @@
+{
+  "version": "0.0.1",
+  "RecommendTag": {
+    "RequestUrl": "https://piapro.jp/",
+    "RequestParameter": {},
+    "RequestCookie": {},
+    "Steps": [
+      {
+        "getElementsByClassSingle": {
+          "Name": "cv_link",
+          "Index": 0
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "span"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel",
+          "GenerateOutputRule": {
+            "URL": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href",
+                  "Terminate": true
+                }
+              }
+            ],
+            "Text": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {
+                  "Executable": true,
+                  "Terminate": true
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "RecommendList": {
+    "RequestUrl": "https://piapro.jp/",
+    "RequestParameter": {},
+    "RequestCookie": {},
+    "Steps": [
+      {
+        "getElementsByClassSingle": {
+          "Name": "snd_list",
+          "Index": 0
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "li"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel",
+          "GenerateOutputRule": {
+            "Thumb": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "thumb-card",
+                  "Index": 0
+                }
+              },
+              {
+                "getRecommendThumbImageSingle": {}
+              }
+            ],
+            "ItemName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "title",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "ArtistName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "username",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "UploadDate": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "post",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "UploadTime": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "time",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

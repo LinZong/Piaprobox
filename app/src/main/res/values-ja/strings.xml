@@ -5,4 +5,5 @@
     <string name="Drawer_Nav_Music_Text">オンガク</string>
     <string name="Drawer_Nav_Illustrator_Text">イラスト</string>
     <string name="Drawer_Nav_Text_Text">テキスト</string>
+    <string name="Drawer_Nav_Recommand">オススメ</string>
 </resources>

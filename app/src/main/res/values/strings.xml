@@ -7,4 +7,5 @@
     <string name="Drawer_Nav_Music_Text">Music</string>
     <string name="Drawer_Nav_Illustrator_Text">Illustrator</string>
     <string name="Drawer_Nav_Text_Text">Text</string>
+    <string name="Drawer_Nav_Recommand">Recommand</string>
 </resources>

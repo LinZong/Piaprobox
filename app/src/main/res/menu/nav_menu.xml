@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:icon="@drawable/nav_icon_music"
-          android:title="@string/Drawer_Nav_Music_Text"
-          android:id="@+id/Drawer_Nav_Music"/>
-    <item android:icon="@drawable/nav_icon_illustrator"
-          android:title="@string/Drawer_Nav_Illustrator_Text"
-          android:id="@+id/Drawer_Nav_Illustrator"/>
-    <item android:icon="@drawable/nav_icon_text"
-          android:title="@string/Drawer_Nav_Text_Text"
-          android:id="@+id/Drawer_Nav_Text"/>
 
+    <item android:icon="@drawable/ic_home_white_36dp"
+          android:title="@string/Drawer_Nav_Recommand"
+          android:id="@+id/Main_Drawer_Nav_Recommand"/>
+
+    <item android:icon="@drawable/nav_icon_music_big"
+          android:title="@string/Drawer_Nav_Music_Text"
+          android:id="@+id/Main_Drawer_Nav_Music"/>
+    <item android:icon="@drawable/nav_icon_illustrator_big"
+          android:title="@string/Drawer_Nav_Illustrator_Text"
+          android:id="@+id/Main_Drawer_Nav_Illustrator"/>
+    <item android:icon="@drawable/nav_icon_text_big"
+          android:title="@string/Drawer_Nav_Text_Text"
+          android:id="@+id/Main_Drawer_Nav_Text"/>
     <item android:id="@+id/Drawer_Nav_None"
           android:title=""
           android:visible="false"/>

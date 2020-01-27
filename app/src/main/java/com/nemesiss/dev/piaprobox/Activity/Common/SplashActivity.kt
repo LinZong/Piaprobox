@@ -9,8 +9,6 @@ import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
 import com.nemesiss.dev.piaprobox.Util.AnimatorListenerBuilder
 import com.nemesiss.dev.piaprobox.Util.AppUtil
-import dagger.android.AndroidInjection
-import dagger.android.DaggerActivity_MembersInjector
 import kotlinx.android.synthetic.main.activity_splash.*
 import javax.inject.Inject
 

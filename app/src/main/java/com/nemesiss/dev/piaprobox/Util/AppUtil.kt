@@ -1,8 +1,11 @@
 package com.nemesiss.dev.piaprobox.Util
 
 import android.app.Activity
+import android.content.res.AssetManager
 import android.os.Build
+import android.support.v4.content.ContextCompat
 import android.view.View
+import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 
 
 class AppUtil {
@@ -20,5 +23,11 @@ class AppUtil {
             }
         }
 
+
+        fun GetAppCachePath() : String {
+            return ContextCompat.getExternalCacheDirs(PiaproboxApplication.Self.applicationContext)[0].absolutePath
+        }
     }
 }
+
+fun AssetManager.AsPath(FileName : String) = "file:///android_asset/$FileName"

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ED0183</color>
+    <color name="colorPrimary">@color/PiaproColor</color>
     <color name="colorPrimaryDark">#cb0070</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">@color/DarkPiaproColor</color>
 
 <!--    App Theme relative  -->
     <color name="PiaproColor">#ED0183</color>
+    <color name="DarkPiaproColor">#D81B60</color>
+    <color name="LoadingIndicatorBackground">#F0F0F0</color>
 </resources>

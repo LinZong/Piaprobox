@@ -2,6 +2,7 @@
 <android.support.v4.widget.DrawerLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/Main_Drawer"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:fitsSystemWindows="true"
@@ -13,6 +14,7 @@
         <android.support.design.widget.AppBarLayout android:layout_width="match_parent"
                                                     android:layout_height="wrap_content">
             <android.support.v7.widget.Toolbar android:layout_width="match_parent"
+                                               android:id="@+id/Main_Toolbar"
                                                android:background="@color/PiaproColor"
                                                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                                                app:popupTheme="@style/Theme.AppCompat.Light"
@@ -22,20 +24,15 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <RelativeLayout android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_centerInParent="true"
-                      android:text="@string/Greets"
-                      android:textAllCaps="false"/>
-
-        </RelativeLayout>
+        <FrameLayout android:layout_width="match_parent"
+                     android:id="@+id/Main_Fragment_Container"
+                     android:layout_height="match_parent"/>
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
+            android:id="@+id/Main_Drawer_Navigation"
             app:menu="@menu/nav_menu"
+            app:headerLayout="@layout/nav_header"
             android:layout_gravity="start"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
