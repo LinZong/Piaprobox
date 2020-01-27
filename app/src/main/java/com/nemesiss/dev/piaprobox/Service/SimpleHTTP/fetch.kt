@@ -1,9 +1,12 @@
 package com.nemesiss.dev.piaprobox.Service.SimpleHTTP
 
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.OkHttpModules
+import dagger.Component
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import java.lang.Exception
 import javax.inject.Inject
 
 class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor: AsyncExecutor) {
@@ -20,13 +23,17 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor:
             .execute()
     }
 
-    fun goAsync(resolve: (Response) -> Unit) {
+    fun goAsync(resolve: (Response) -> Unit, unexpectedFail: (Exception) -> Unit) {
         CheckParameter()
         asyncExecutor.SendTask {
-            resolve(
-                httpClient.newCall(Request.Builder().url(URL).get().build())
-                    .execute()
-            )
+            try {
+                resolve(
+                    httpClient.newCall(Request.Builder().url(URL).get().build())
+                        .execute()
+                )
+            } catch (ex: Exception) {
+                unexpectedFail(ex)
+            }
         }
     }
 
@@ -35,4 +42,10 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor:
             throw IllegalArgumentException("URL Should not be empty!")
         }
     }
+}
+
+
+@Component(modules = [OkHttpModules::class])
+interface FetchFactory {
+    fun fetcher(): Fetch
 }

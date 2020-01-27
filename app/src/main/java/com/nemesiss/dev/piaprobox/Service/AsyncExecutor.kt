@@ -14,7 +14,6 @@ import javax.inject.Singleton
 
 
 
-@Singleton
 class AsyncExecutor {
 
     @Inject

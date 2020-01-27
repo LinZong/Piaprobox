@@ -8,4 +8,6 @@
     <color name="PiaproColor">#ED0183</color>
     <color name="DarkPiaproColor">#D81B60</color>
     <color name="LoadingIndicatorBackground">#F0F0F0</color>
+
+    <color name="MainFragmentItemSmallInfoIcon">#7e8e96</color>
 </resources>

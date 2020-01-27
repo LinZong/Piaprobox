@@ -1,16 +1,15 @@
 package com.nemesiss.dev.piaprobox.Service
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import com.alibaba.fastjson.JSONObject
 import com.nemesiss.dev.HTMLContentParser.ContentParserFactory
 import com.nemesiss.dev.HTMLContentParser.Steps.ContentParserImpl
 import com.nemesiss.dev.piaprobox.Model.HTMLParser.RuleVersion
 import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.Util.AsPath
-import java.io.*
-import java.util.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
 
 
 class HTMLParser(context: Context) {
@@ -26,7 +25,7 @@ class HTMLParser(context: Context) {
         }
     }
 
-    private var Rules : JSONObject
+    var Rules : JSONObject private set
 
     val version : RuleVersion
 

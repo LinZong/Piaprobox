@@ -6,4 +6,9 @@
     <string name="Drawer_Nav_Illustrator_Text">イラスト</string>
     <string name="Drawer_Nav_Text_Text">テキスト</string>
     <string name="Drawer_Nav_Recommand">オススメ</string>
+
+
+<!--    Error Tips-->
+
+    <string name="Error_Page_Load_Failed">ネットワーク接続が失敗しました。もう一度試します。</string>
 </resources>

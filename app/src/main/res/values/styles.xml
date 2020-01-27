@@ -22,4 +22,21 @@
         <item name="android:textSize">8pt</item>
     </style>
 
+    <style name="LargeTextView" parent="GenericTextView">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">9pt</item>
+        <item name="android:textColor">#2B2B2B</item>
+    </style>
+
+    <style name="SmallTextView" parent="GenericTextView">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">7pt</item>
+        <item name="android:textColor">#2B2B2B</item>
+    </style>
+
+    <style name="MainFragmentSmallInfoText" parent="SmallTextView">
+        <item name="android:textSize">5pt</item>
+        <item name="android:textColor">@color/MainFragmentItemSmallInfoIcon</item>
+    </style>
+
 </resources>
