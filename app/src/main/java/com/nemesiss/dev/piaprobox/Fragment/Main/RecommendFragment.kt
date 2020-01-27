@@ -24,8 +24,8 @@ class RecommendFragment : BaseMainFragment() {
 
     private lateinit var htmlParser: HTMLParser
 
-    private var recommendListAdapter : RecommendItemAdapter? = null
-    private var recommendItemLayoutManager : LinearLayoutManager? = null
+    private var recommendListAdapter: RecommendItemAdapter? = null
+    private var recommendItemLayoutManager: LinearLayoutManager? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.recommand_fragment, container, false)
@@ -59,41 +59,41 @@ class RecommendFragment : BaseMainFragment() {
                 SimpleResponseHandler(response, String::class)
                     .Handle({
                         ParseContent(it as String)
-                    }, { code,_ ->
+                    }, { code, _ ->
                         HideLoadingIndicator()
-                        LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))})
-            }, { HideLoadingIndicator() })
+                        LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
+                    })
+            }, { e ->
+                HideLoadingIndicator()
+                activity?.runOnUiThread { LoadFailedTips(-4,e.message ?: "") }
+            })
     }
 
-    private fun ParseContent(HTMLString : String) {
+    private fun ParseContent(HTMLString: String) {
 
         val root = Jsoup.parse(HTMLString)
         val rule = htmlParser.Rules.getJSONObject("RecommendList").getJSONArray("Steps")
         try {
             val ContentModels = (htmlParser.Parser.GoSteps(root, rule) as Array<*>).map { it as RecommendItemModel }
             activity?.runOnUiThread {
-                if(recommendItemLayoutManager == null) {
-                    recommendItemLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                    Recommend_Frag_RecyclerView.layoutManager = recommendItemLayoutManager
-                }
-                if(recommendListAdapter == null) {
+
+                recommendItemLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                Recommend_Frag_RecyclerView.layoutManager = recommendItemLayoutManager
+                if (recommendListAdapter == null) {
                     recommendListAdapter = RecommendItemAdapter(ContentModels, context!!)
                     Recommend_Frag_RecyclerView.adapter = recommendListAdapter
-                }
-                else {
+                } else {
+                    Recommend_Frag_RecyclerView.adapter = recommendListAdapter
                     recommendListAdapter?.items = ContentModels
                     recommendListAdapter?.notifyDataSetChanged()
                 }
             }
-        }
-        catch (e : InvalidStepExecutorException) {
-            LoadFailedTips(-1,"InvalidStepExecutorException: ${e.message}")
-        }
-        catch (e : ClassNotFoundException) {
-            LoadFailedTips(-2,"ClassNotFoundException: ${e.message}")
-        }
-        catch (e : Exception) {
-            LoadFailedTips(-3,"Exception: ${e.message}")
+        } catch (e: InvalidStepExecutorException) {
+            LoadFailedTips(-1, "InvalidStepExecutorException: ${e.message}")
+        } catch (e: ClassNotFoundException) {
+            LoadFailedTips(-2, "ClassNotFoundException: ${e.message}")
+        } catch (e: Exception) {
+            LoadFailedTips(-3, "Exception: ${e.message}")
         } finally {
             HideLoadingIndicator()
         }

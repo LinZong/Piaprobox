@@ -1,5 +1,6 @@
 package com.nemesiss.dev.piaprobox.Service.SimpleHTTP
 
+import android.os.Looper
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.OkHttpModules
 import dagger.Component
