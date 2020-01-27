@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
+                android:background="@drawable/loading_fullscreen_modal"
                 android:layout_height="match_parent">
-
     <RelativeLayout android:layout_width="100dp"
                     android:background="@drawable/loading_indicator_background"
                     android:layout_height="100dp"
