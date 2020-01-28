@@ -323,31 +323,27 @@
   "MusicPlayInfo": {
     "Steps": [
       {
-        "getElementsByClassSingle": {
-          "Name": "music-box",
-          "Index": 0
-        }
-      },
-      {
         "OutputSingle": {
           "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo",
           "GenerateOutputRule": {
             "URL": [
               {
-                "getElementByIdSingle": {
-                  "Name": "jp_audio_0"
-                }
-              },
-              {
-                "attrSingle": {
-                  "Name": "src"
+                "HTMLTextRegexMatchSingle": {
+                  "Regex": "(?<=mp3: ').*(?=')"
                 }
               }
             ],
             "Thumb": [
               {
-                "getElementByIdSingle": {
-                  "Name": "jacketCurrentImage"
+                "getElementsByClassSingle": {
+                  "Name": "music-box",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "music-card-hz",
+                  "Index": 0
                 }
               },
               {
