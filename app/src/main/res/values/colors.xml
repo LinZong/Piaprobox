@@ -10,4 +10,6 @@
     <color name="LoadingIndicatorBackground">#F0F0F0</color>
 
     <color name="MainFragmentItemSmallInfoIcon">#7e8e96</color>
+
+    <color name="TagSelectedBackground">#ff7cc0</color>
 </resources>

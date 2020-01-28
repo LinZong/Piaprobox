@@ -2,7 +2,9 @@ package com.nemesiss.dev.piaprobox.View.Common
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.widget.RelativeLayout
 import com.nemesiss.dev.piaprobox.R
 
@@ -31,5 +33,11 @@ class LoadingIndicatorView : RelativeLayout {
     private fun Init() {
         LayoutInflater.from(context)
             .inflate(R.layout.fullscreen_loading, this, true)
+    }
+
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+//        Log.d("LoadingIndicatorView","Touched!")
+        return true
     }
 }

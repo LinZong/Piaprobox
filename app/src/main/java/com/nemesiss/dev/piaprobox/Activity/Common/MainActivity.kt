@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
         when (item?.itemId) {
             R.id.Main_Toolbar_Reload -> {
                 CurrentShowMainFragment.Refresh()
