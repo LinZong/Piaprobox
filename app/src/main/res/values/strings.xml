@@ -13,4 +13,6 @@
 <!--    Error Tips-->
 
     <string name="Error_Page_Load_Failed">Cannot load page. Check network connection.</string>
+    <string name="MusicContentUrlEmpty">Cannot get current music info. Music content url is empty.</string>
+    <string name="LoadingTips">Loading...</string>
 </resources>

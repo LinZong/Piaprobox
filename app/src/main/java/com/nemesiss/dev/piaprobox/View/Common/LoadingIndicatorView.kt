@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.RelativeLayout
+import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.R
 
 class LoadingIndicatorView : RelativeLayout {
@@ -35,9 +36,7 @@ class LoadingIndicatorView : RelativeLayout {
             .inflate(R.layout.fullscreen_loading, this, true)
     }
 
-
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-//        Log.d("LoadingIndicatorView","Touched!")
         return true
     }
 }

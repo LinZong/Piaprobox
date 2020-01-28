@@ -1,5 +1,6 @@
 package com.nemesiss.dev.piaprobox.Fragment.Main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
+import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.RecommendItemAdapter
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
@@ -125,6 +127,16 @@ class RecommendFragment : BaseMainFragment() {
         }
     }
 
+
+    private fun OnRecommendItemSelected(index : Int) {
+        val item = recommendListData!!.get(index)
+        val URL = DefaultTagUrl + item.URL
+
+        val intent = Intent(context, MusicPlayerActivity::class.java)
+        intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, URL)
+        startActivity(intent)
+    }
+
     private fun ParseTagListContent(HTMLString: String) {
         val root = Jsoup.parse(HTMLString)
         val rule = htmlParser.Rules.getJSONObject("RecommendTag").getJSONArray("Steps")
@@ -159,11 +171,10 @@ class RecommendFragment : BaseMainFragment() {
         try {
             recommendListData = (htmlParser.Parser.GoSteps(root, rule) as Array<*>).map { it as RecommendItemModel }
             activity?.runOnUiThread {
-
                 recommendItemLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 Recommend_Frag_RecyclerView.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
-                    recommendListAdapter = RecommendItemAdapter(recommendListData!!, context!!)
+                    recommendListAdapter = RecommendItemAdapter(recommendListData!!, context!!, this::OnRecommendItemSelected)
                     Recommend_Frag_RecyclerView.adapter = recommendListAdapter
                 } else {
                     Recommend_Frag_RecyclerView.adapter = recommendListAdapter

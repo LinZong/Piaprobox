@@ -13,7 +13,10 @@ import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.Misc.StaticResourcesMap
 import com.nemesiss.dev.piaprobox.R
 
-class RecommendItemAdapter(var items : List<RecommendItemModel>, val context: Context) : RecyclerView.Adapter<RecommendItemAdapter.RecommendItemVH>() {
+class RecommendItemAdapter(var items : List<RecommendItemModel>,
+                           val context: Context,
+                           val itemSelected : (Int)->Unit
+) : RecyclerView.Adapter<RecommendItemAdapter.RecommendItemVH>() {
 
     class RecommendItemVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val Thumb : ImageView = itemView.findViewById(R.id.SingleWorkItemCard_WorkThumb)
@@ -32,9 +35,11 @@ class RecommendItemAdapter(var items : List<RecommendItemModel>, val context: Co
 
     override fun onBindViewHolder(vh: RecommendItemVH, index: Int) {
         val current = items[index]
+        vh.itemView.setOnClickListener { itemSelected(index) }
         vh.WorkName.text = current.ItemName
         vh.UploadUser.text = current.ArtistName
         vh.UploadTime.text = "${current.UploadDate} ${current.UploadTime}"
+
         if(current.Thumb.matches("^th-.*".toRegex())) {
             vh.Thumb.setImageResource(StaticResourcesMap.DefaultThumbMaps[current.Thumb] ?: R.drawable.thumb_empty)
         }

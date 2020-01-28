@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.View.Common.SingleTagView
 import kotlinx.android.synthetic.main.single_tag.view.*
 
 class TagItemAdapter(var items : List<RecommendTagModel>,val itemSelected : (Int)->Unit) : RecyclerView.Adapter<TagItemAdapter.TagItemVH>() {
@@ -26,6 +27,9 @@ class TagItemAdapter(var items : List<RecommendTagModel>,val itemSelected : (Int
 
     override fun onBindViewHolder(vh: TagItemVH, index: Int) {
         val root = vh.itemView
+        if(index == 0) {
+            (root as SingleTagView).SetSelected()
+        }
         val item = items[index]
         root.MainFragment_TagText.text = item.Text
         root.MainFragment_TagText.setOnClickListener {
