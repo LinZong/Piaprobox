@@ -27,6 +27,8 @@
         <activity android:name=".Activity.Common.MainActivity">
         </activity>
         <activity android:name=".Activity.Music.MusicPlayerActivity"/>
+        <activity android:name=".Activity.TestSkeletonActivity">
+        </activity>
     </application>
 
 </manifest>

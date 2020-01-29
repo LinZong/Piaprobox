@@ -13,4 +13,6 @@
     <string name="Error_Page_Load_Failed">ネットワーク接続が失敗しました。もう一度試します。</string>
     <string name="MusicContentUrlEmpty">Cannot get current music info. Music content url is empty.</string>
     <string name="LoadingTips">ロード中...</string>
+    <string name="RelatedMusicTips">関連作品</string>
+    <string name="NoLyricTips">歌詞なし</string>
 </resources>

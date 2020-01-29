@@ -1,10 +1,19 @@
 package com.nemesiss.dev.piaprobox.Activity.Music
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
+import android.widget.LinearLayout
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo
+import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
+import com.nemesiss.dev.piaprobox.Adapter.MusicPage.MusicLyricAdapter
+import com.nemesiss.dev.piaprobox.Adapter.MusicPage.RelatedMusicListAdapter
+import com.nemesiss.dev.piaprobox.Fragment.Main.RecommendFragment
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
@@ -16,6 +25,15 @@ class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     private lateinit var htmlParser: HTMLParser
 
+    private var relatedMusicListData : List<RelatedMusicInfo>? = null
+    private var relatedMusicListAdapter : RelatedMusicListAdapter? = null
+    private var relatedMusicListLayoutManager : LinearLayoutManager? = null
+
+
+    private var lyricListData : List<String>? = null
+    private var lyricListAdapter : MusicLyricAdapter? = null
+    private var lyricListLayoutManager : LinearLayoutManager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_player_layout)
@@ -25,13 +43,14 @@ class MusicPlayerActivity : PiaproboxBaseActivity() {
 
         htmlParser = HTMLParser(this)
         val MusicContentUrl = intent.getStringExtra(MUSIC_CONTENT_URL)
-        if(MusicContentUrl.isEmpty()) {
-            Toast.makeText(this, resources.getString(R.string.MusicContentUrlEmpty),Toast.LENGTH_SHORT).show()
-        }
-        LoadMusicInfo(MusicContentUrl)
+        LoadMusicContentInfo(MusicContentUrl)
     }
 
-    private fun LoadMusicInfo(Url : String) {
+    private fun LoadMusicContentInfo(Url : String) {
+        if(Url.isEmpty()) {
+            Toast.makeText(this, resources.getString(R.string.MusicContentUrlEmpty),Toast.LENGTH_SHORT).show()
+            return
+        }
         ShowLoadingIndicator(MusicPlayer_ContentContainer)
         DaggerFetchFactory.create()
             .fetcher()
@@ -53,7 +72,7 @@ class MusicPlayerActivity : PiaproboxBaseActivity() {
     }
 
     private fun LoadMusicPlayInfo(content : MusicContentInfo) {
-        val Url = "https://piapro.jp/html5_player_popup/?id=${content.ContentID}&cdate=${content.CreateDate}"
+        val Url = "https://piapro.jp/html5_player_popup/?id=${content.ContentID}&cdate=${content.CreateDate}&p=${content.Priority}"
         DaggerFetchFactory.create()
             .fetcher()
             .visit(Url)
@@ -75,12 +94,27 @@ class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     private fun ParseMusicContentInfo(HTMLString : String) {
         val root = Jsoup.parse(HTMLString)
-        val rule = htmlParser.Rules.getJSONObject("MusicContent")
-        val steps = rule.getJSONArray("Steps")
-        val contentInfo = htmlParser.Parser.GoSteps(root, steps) as MusicContentInfo
+        val parseMusicContentStep = htmlParser
+                                        .Rules
+                                        .getJSONObject("MusicContent")
+                                        .getJSONArray("Steps")
+        val contentInfo = htmlParser
+                            .Parser
+                            .GoSteps(root, parseMusicContentStep) as MusicContentInfo
+
+        val parseRelatedMusicInfoSteps = htmlParser
+                                            .Rules
+                                            .getJSONObject("RelatedMusic")
+                                            .getJSONArray("Steps")
+        val relatedMusics = (htmlParser
+                                .Parser
+                                .GoSteps(root, parseRelatedMusicInfoSteps) as Array<*>)
+                                .map { it as RelatedMusicInfo }
         runOnUiThread {
             MusicPlayer_Toolbar.title = contentInfo.Title
+            LoadRelatedMusicsToView(relatedMusics)
         }
+        ParseLyrics(contentInfo.Lyrics)
         LoadMusicPlayInfo(contentInfo)
     }
 
@@ -88,15 +122,56 @@ class MusicPlayerActivity : PiaproboxBaseActivity() {
         val root = Jsoup.parse(HTMLString)
         val steps = htmlParser.Rules.getJSONObject("MusicPlayInfo").getJSONArray("Steps")
         val playInfo = htmlParser.Parser.GoSteps(root,steps) as MusicPlayInfo
+        val finalThumbUrl : String = GetAlbumThumb(playInfo.Thumb)
         runOnUiThread {
-            MusicPlayer_ThumbUrl.text = playInfo.Thumb
-            MusicPlayer_MusicUrl.text = playInfo.URL
+            Log.d("LoadMusicInfo","${finalThumbUrl}  ${playInfo.URL}")
+            Glide.with(this)
+                .load(finalThumbUrl)
+                .priority(Priority.HIGH)
+                .into(MusicPlayer_ThumbBackground)
         }
+//        runOnUiThread {
+//            MusicPlayer_ThumbUrl.text = playInfo.Thumb
+//            MusicPlayer_MusicUrl.text = playInfo.URL
+//        }
         HideLoadingIndicator(MusicPlayer_ContentContainer)
     }
+
+    private fun ParseLyrics(LyricStr : String) {
+        if(LyricStr.isEmpty()) {
+
+        }
+    }
+
+    private fun LoadRelatedMusicsToView(data : List<RelatedMusicInfo>) {
+        relatedMusicListData = data
+        if(relatedMusicListAdapter == null) {
+            relatedMusicListAdapter = RelatedMusicListAdapter(relatedMusicListData!!)
+            MusicPlayer_RelatedMusic_RecyclerView.adapter = relatedMusicListAdapter
+        }
+        if(relatedMusicListLayoutManager == null) {
+            relatedMusicListLayoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL,false)
+            MusicPlayer_RelatedMusic_RecyclerView.layoutManager = relatedMusicListLayoutManager
+        }
+        else {
+            relatedMusicListAdapter?.items = relatedMusicListData!!
+            relatedMusicListAdapter?.notifyDataSetChanged()
+        }
+    }
+
+
 
     companion object {
         @JvmStatic
         val MUSIC_CONTENT_URL = "MUSIC_CONTENT_URL"
+
+        @JvmStatic
+        fun GetAlbumThumb(ValueFromParser : String) : String {
+            return if(ValueFromParser.contains("cdn")) {
+                "http://${ValueFromParser}"
+            } else {
+                RecommendFragment.DefaultTagUrl + ValueFromParser
+            }
+        }
     }
 }

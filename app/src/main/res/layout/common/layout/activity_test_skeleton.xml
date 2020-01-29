@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:Skeleton="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <io.rmiri.skeleton.SkeletonViewGroup
+            android:id="@+id/skeletonGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            Skeleton:SK_BackgroundViewsColor="#EEEEEE"
+            Skeleton:SK_animationAutoStart="true"
+            Skeleton:SK_animationDirection="LTR"
+            Skeleton:SK_animationDuration="1000"
+            Skeleton:SK_animationFinishType="alpha"
+            Skeleton:SK_animationNormalType="alpha"
+            Skeleton:SK_backgroundMainColor="@android:color/transparent"
+            Skeleton:SK_highLightColor="#DEDEDE">
+
+        <io.rmiri.skeleton.SkeletonView android:layout_width="wrap_content"
+                                        Skeleton:SK_cornerRadius="0dp"
+                                        Skeleton:SK_padding="0dp"
+                                        Skeleton:SK_shapeType="rect"
+                                        android:id="@+id/Test_SkeletionView"
+                                        android:layout_height="wrap_content">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      style="@style/GenericTextView"
+                      android:text="OKOKOKOKOK!"/>
+        </io.rmiri.skeleton.SkeletonView>
+
+    </io.rmiri.skeleton.SkeletonViewGroup>
+</LinearLayout>

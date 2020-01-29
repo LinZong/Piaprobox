@@ -12,4 +12,6 @@
     <color name="MainFragmentItemSmallInfoIcon">#7e8e96</color>
 
     <color name="TagSelectedBackground">#ff7cc0</color>
+    <color name="RelatedMusicListBackground">#D9234C5C</color>
+    <color name="RelatedMusicListItemBackground">#D9297B98</color>
 </resources>

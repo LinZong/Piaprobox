@@ -314,6 +314,52 @@
               {
                 "textSingle": {}
               }
+            ],
+            "CreateDetail": [
+              {
+                "getElementsByClassSingle":{
+                  "Name": "cd_dtl_data",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle":{
+                  "Name": "p",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle":{
+                  "Name": "p",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "Priority": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "music-play",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "data-priority"
+                }
+              }
+            ],
+            "Lyrics": [
+              {
+                "getElementByIdSingle": {
+                  "Name": "lyric-box-txt"
+                }
+              },
+              {
+                "textSingle": {}
+              }
             ]
           }
         }
@@ -341,15 +387,84 @@
                 }
               },
               {
-                "getElementsByClassSingle": {
-                  "Name": "music-card-hz",
+                "getElementByIdSingle": {
+                  "Name": "jacketCurrentImage",
                   "Index": 0
                 }
               },
               {
                 "getStyleAttributeBgImageSingle": {
-                  "UrlPrefix": "https://piapro.jp"
+                  "UrlPrefix": ""
                 }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "RelatedMusic": {
+    "Steps": [
+      {
+        "getElementByIdSingle": {
+          "Name": "recommendBox"
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "li"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo",
+          "GenerateOutputRule": {
+            "URL": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
+            "Thumb": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "getStyleAttributeBgImageSingle": {
+                  "UrlPrefix": ""
+                }
+              }
+            ],
+            "Title": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "rel-works-title",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "Artist": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "rel-works-author",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
               }
             ]
           }

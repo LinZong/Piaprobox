@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_height="match_parent"
               android:layout_width="match_parent"
 >
@@ -13,23 +13,170 @@
                                            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                                            app:popupTheme="@style/Theme.AppCompat.Light"
                                            app:title="@string/LoadingTips"
+                                           app:titleTextAppearance="@style/MusicPlayerToolbarTitle"
                                            android:layout_height="?attr/actionBarSize">
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
     <FrameLayout android:layout_width="match_parent"
                  android:id="@+id/MusicPlayer_ContentContainer"
                  android:layout_height="match_parent">
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:orientation="vertical">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      style="@style/GenericTextView"
-                      android:id="@+id/MusicPlayer_ThumbUrl"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      style="@style/GenericTextView"
-                      android:id="@+id/MusicPlayer_MusicUrl"/>
-        </LinearLayout>
+        <android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+                                                     android:layout_height="match_parent">
+            <FrameLayout android:layout_width="match_parent"
+                         android:layout_height="0dp"
+                         android:id="@+id/MusicPlayer_ThumbBackgroundContainer"
+                         app:layout_constraintStart_toStartOf="parent"
+                         app:layout_constraintEnd_toEndOf="parent"
+                         app:layout_constraintTop_toTopOf="parent"
+                         app:layout_constraintBottom_toTopOf="@+id/MusicPlayer_RelatedMusic_Container"
+            >
+                <ImageView android:layout_width="match_parent"
+                           android:id="@+id/MusicPlayer_ThumbBackground"
+                           android:scaleType="centerCrop"
+                           android:src="@drawable/player_bg_miku"
+                           android:layout_height="match_parent">
+                </ImageView>
+                <View android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@drawable/player_thumb_modal"/>
+            </FrameLayout>
+            <com.nemesiss.dev.piaprobox.View.Common.FixedRecyclerView android:layout_width="match_parent"
+                                                                      android:layout_height="0dp"
+                                                                      android:id="@+id/MusicPlayer_Lyric_RecyclerView"
+                                                                      android:layout_marginBottom="24dp"
+                                                                      app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                                                                      android:layout_marginTop="24dp"
+                                                                      app:layout_constraintTop_toTopOf="@+id/MusicPlayer_ThumbBackgroundContainer"
+                                                                      app:layout_constraintStart_toStartOf="parent"
+                                                                      app:layout_constraintEnd_toEndOf="parent"
+            />
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginBottom="16dp"
+                          android:orientation="vertical"
+                          app:layout_constraintBottom_toBottomOf="@+id/MusicPlayer_ThumbBackgroundContainer"
+                          app:layout_constraintStart_toStartOf="parent"
+                          app:layout_constraintEnd_toEndOf="parent" android:id="@+id/linearLayout2">
+
+                <android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+                                                             android:layout_marginBottom="18dp"
+                                                             android:layout_height="wrap_content">
+
+                    <ImageButton style="@style/MusicPlayerControlButton"
+                                 android:background="@android:color/transparent"
+                                 android:src="@drawable/ic_repeat_red_600_24dp" android:id="@+id/imageButton2"
+                                 app:layout_constraintStart_toStartOf="parent"
+                                 app:layout_constraintHorizontal_bias="0.5"
+                                 app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                                 android:layout_marginTop="8dp"
+                                 app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                                 app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <ImageButton style="@style/MusicPlayerControlButton"
+                                 android:background="@android:color/transparent"
+                                 android:src="@drawable/ic_skip_previous_red_600_24dp"
+                                 android:id="@+id/imageButton"
+                                 app:layout_constraintStart_toEndOf="@+id/imageButton2"
+                                 app:layout_constraintHorizontal_bias="0.5"
+                                 app:layout_constraintEnd_toStartOf="@+id/imageButton3"
+                                 android:layout_marginTop="8dp"
+                                 app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                                 app:layout_constraintBottom_toBottomOf="parent"/>
+                    <ImageButton style="@style/MusicPlayerControlButton"
+                                 android:background="@android:color/transparent"
+                                 android:src="@drawable/ic_play_arrow_red_600_24dp"
+                                 android:id="@+id/imageButton3"
+                                 app:layout_constraintStart_toEndOf="@+id/imageButton"
+                                 app:layout_constraintHorizontal_bias="0.5"
+                                 app:layout_constraintEnd_toStartOf="@+id/imageButton4"
+                                 android:layout_marginTop="8dp"
+                                 app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                                 app:layout_constraintBottom_toBottomOf="parent"/>
+                    <ImageButton style="@style/MusicPlayerControlButton"
+                                 android:background="@android:color/transparent"
+                                 android:src="@drawable/ic_skip_next_red_600_24dp"
+                                 android:id="@+id/imageButton4"
+                                 app:layout_constraintStart_toEndOf="@+id/imageButton3"
+                                 app:layout_constraintHorizontal_bias="0.5"
+                                 app:layout_constraintEnd_toStartOf="@+id/imageButton5"
+                                 android:layout_marginTop="8dp"
+                                 app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                                 app:layout_constraintBottom_toBottomOf="parent"/>
+                    <ImageButton style="@style/MusicPlayerControlButton"
+                                 android:background="@android:color/transparent"
+                                 android:src="@drawable/ic_more_vert_red_600_24dp"
+                                 android:id="@+id/imageButton5"
+                                 app:layout_constraintStart_toEndOf="@+id/imageButton4"
+                                 app:layout_constraintHorizontal_bias="0.5"
+                                 app:layout_constraintEnd_toEndOf="parent"
+                                 android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+                                 android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </android.support.constraint.ConstraintLayout>
+
+                <LinearLayout android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginStart="16dp"
+                              android:layout_marginEnd="16dp"
+                              android:layout_marginBottom="16dp"
+                              android:id="@+id/MusicPlayer_SeekbarContainer"
+                              android:orientation="vertical"
+                              android:layout_alignParentBottom="true">
+                    <SeekBar android:layout_width="match_parent"
+                             android:progress="0"
+                             android:secondaryProgress="0"
+                             android:paddingStart="0dp"
+                             android:paddingEnd="0dp"
+                             android:thumb="@drawable/musicplayer_seekbar_thumb"
+                             android:progressDrawable="@drawable/musicplayer_seekbar"
+                             android:layout_height="30dp"/>
+
+                    <RelativeLayout android:layout_width="match_parent"
+                                    android:layout_marginTop="4dp"
+                                    android:layout_height="wrap_content">
+
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  style="@style/SmallTextView"
+                                  android:textColor="@android:color/white"
+                                  android:text="@string/MusicPlayerTimePlaceholder"
+                                  android:layout_alignParentStart="true"
+                                  android:id="@+id/MusicPlayer_CurrentTime"/>
+
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  style="@style/SmallTextView"
+                                  android:textColor="@android:color/white"
+                                  android:text="@string/MusicPlayerTimePlaceholder"
+                                  android:layout_alignParentEnd="true"
+                                  android:id="@+id/MusicPlayer_TotalTime"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="128dp"
+                          android:background="@color/RelatedMusicListBackground"
+                          app:layout_constraintBottom_toBottomOf="parent"
+                          android:orientation="vertical"
+                          android:id="@+id/MusicPlayer_RelatedMusic_Container">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          style="@style/SmallTextView"
+                          android:layout_margin="8dp"
+                          android:textColor="@android:color/white"
+                          android:text="@string/RelatedMusicTips"
+                />
+
+                <com.nemesiss.dev.piaprobox.View.Common.FixedRecyclerView android:layout_width="match_parent"
+                                                                          android:layout_height="match_parent"
+                                                                          android:layout_marginStart="8dp"
+                                                                          android:layout_marginEnd="8dp"
+                                                                          android:background="@android:color/transparent"
+                                                                          android:id="@+id/MusicPlayer_RelatedMusic_RecyclerView"/>
+            </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
+
     </FrameLayout>
 
 </LinearLayout>

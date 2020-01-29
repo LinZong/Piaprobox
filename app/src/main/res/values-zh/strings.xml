@@ -12,4 +12,6 @@
     <string name="LoadingTips">加载中...</string>
     <string name="MusicContentUrlEmpty">无法加载当前音乐, 没有接受到音乐详情URL.</string>
 
+    <string name="RelatedMusicTips">相关作品</string>
+    <string name="NoLyricTips">暂无歌词</string>
 </resources>
