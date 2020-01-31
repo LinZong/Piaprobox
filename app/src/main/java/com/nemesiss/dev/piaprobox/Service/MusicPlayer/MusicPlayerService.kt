@@ -203,8 +203,7 @@ class MusicPlayerService : Service() {
 
     fun GracefullyShutdown() {
         SERVICE_AVAILABLE.onNext(false)
-        InnerPlayer!!.SafetyDestroy()
-        InnerPlayer = null
+        InnerPlayer!!.Stop()
         stopForeground(true)
         IS_FOREGROUND = false
         musicPlayerNotificationManager.ClearNotification()
@@ -214,6 +213,8 @@ class MusicPlayerService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("MusicPlayerService", "MusicPlayerService onDestroy")
+        InnerPlayer!!.SafetyDestroy()
+        InnerPlayer = null
         stopForeground(true)
         IS_FOREGROUND = false
         musicPlayerNotificationManager.ClearNotification()
