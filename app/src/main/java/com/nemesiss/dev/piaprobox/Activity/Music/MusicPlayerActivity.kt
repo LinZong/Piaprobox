@@ -19,6 +19,7 @@ import com.nemesiss.dev.piaprobox.Fragment.Main.RecommendFragment
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
+import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
 import kotlinx.android.synthetic.main.music_player_layout.*
@@ -28,18 +29,18 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     private lateinit var htmlParser: HTMLParser
 
-    protected var relatedMusicListData : List<RelatedMusicInfo>? = null
-    private var relatedMusicListAdapter : RelatedMusicListAdapter? = null
-    private var relatedMusicListLayoutManager : LinearLayoutManager? = null
+    protected var relatedMusicListData: List<RelatedMusicInfo>? = null
+    private var relatedMusicListAdapter: RelatedMusicListAdapter? = null
+    private var relatedMusicListLayoutManager: LinearLayoutManager? = null
 
 
-    protected var lyricListData : List<String>? = null
-    private var lyricListAdapter : MusicLyricAdapter? = null
-    private var lyricListLayoutManager : LinearLayoutManager? = null
+    protected var lyricListData: List<String>? = null
+    private var lyricListAdapter: MusicLyricAdapter? = null
+    private var lyricListLayoutManager: LinearLayoutManager? = null
 
-    protected var CurrentPlayMusicUrl : String = ""
+    protected var CurrentPlayMusicUrl: String = ""
 
-    protected var CurrentContentInfo : MusicContentInfo? = null
+    protected var CurrentContentInfo: MusicContentInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +55,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         htmlParser = HTMLParser(this)
 
         val status = intent.getSerializableExtra(PERSIST_STATUS_INTENT_KEY)
-        if(status != null) {
+        if (status != null) {
             val activityStatus = status as MusicPlayerActivityStatus
             relatedMusicListData = activityStatus.relatedMusicListData
             lyricListData = activityStatus.lyrics
@@ -63,17 +64,16 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             MusicPlayer_Toolbar.title = activityStatus.currentPlayMusicContentInfo.Title
             ActivateLyricRecyclerViewAdapter()
             ActivateRelatedMusicRecyclerViewAdapter()
-        }
-        else {
+        } else {
             val MusicContentUrl = intent.getStringExtra(MUSIC_CONTENT_URL) ?: ""
             LoadMusicContentInfo(MusicContentUrl)
         }
     }
 
 
-    private fun LoadMusicContentInfo(Url : String) {
-        if(Url.isEmpty()) {
-            Toast.makeText(this, resources.getString(R.string.MusicContentUrlEmpty),Toast.LENGTH_SHORT).show()
+    private fun LoadMusicContentInfo(Url: String) {
+        if (Url.isEmpty()) {
+            Toast.makeText(this, resources.getString(R.string.MusicContentUrlEmpty), Toast.LENGTH_SHORT).show()
             return
         }
         ShowLoadingIndicator(MusicPlayer_ContentContainer)
@@ -96,8 +96,9 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             })
     }
 
-    private fun LoadMusicPlayInfo(content : MusicContentInfo) {
-        val Url = "https://piapro.jp/html5_player_popup/?id=${content.ContentID}&cdate=${content.CreateDate}&p=${content.Priority}"
+    private fun LoadMusicPlayInfo(content: MusicContentInfo) {
+        val Url =
+            "https://piapro.jp/html5_player_popup/?id=${content.ContentID}&cdate=${content.CreateDate}&p=${content.Priority}"
         DaggerFetchFactory.create()
             .fetcher()
             .visit(Url)
@@ -117,26 +118,26 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             })
     }
 
-    private fun ParseMusicContentInfo(HTMLString : String) {
+    private fun ParseMusicContentInfo(HTMLString: String) {
         val root = Jsoup.parse(HTMLString)
         val parseMusicContentStep = htmlParser
-                                        .Rules
-                                        .getJSONObject("MusicContent")
-                                        .getJSONArray("Steps")
+            .Rules
+            .getJSONObject("MusicContent")
+            .getJSONArray("Steps")
         val contentInfo = htmlParser
-                            .Parser
-                            .GoSteps(root, parseMusicContentStep) as MusicContentInfo
+            .Parser
+            .GoSteps(root, parseMusicContentStep) as MusicContentInfo
 
         CurrentContentInfo = contentInfo
 
         val parseRelatedMusicInfoSteps = htmlParser
-                                            .Rules
-                                            .getJSONObject("RelatedMusic")
-                                            .getJSONArray("Steps")
+            .Rules
+            .getJSONObject("RelatedMusic")
+            .getJSONArray("Steps")
         val relatedMusics = (htmlParser
-                                .Parser
-                                .GoSteps(root, parseRelatedMusicInfoSteps) as Array<*>)
-                                .map { it as RelatedMusicInfo }
+            .Parser
+            .GoSteps(root, parseRelatedMusicInfoSteps) as Array<*>)
+            .map { it as RelatedMusicInfo }
         runOnUiThread {
             MusicPlayer_Toolbar.title = contentInfo.Title
             LoadRelatedMusicsToView(relatedMusics)
@@ -148,10 +149,10 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     private fun ParseMusicPlayInfo(HTMLString: String) {
         val root = Jsoup.parse(HTMLString)
         val steps = htmlParser.Rules.getJSONObject("MusicPlayInfo").getJSONArray("Steps")
-        val playInfo = htmlParser.Parser.GoSteps(root,steps) as MusicPlayInfo
-        val finalThumbUrl : String = GetAlbumThumb(playInfo.Thumb)
+        val playInfo = htmlParser.Parser.GoSteps(root, steps) as MusicPlayInfo
+        val finalThumbUrl: String = GetAlbumThumb(playInfo.Thumb)
         runOnUiThread {
-            Log.d("LoadMusicInfo","${finalThumbUrl}  ${playInfo.URL}")
+            Log.d("LoadMusicInfo", "${finalThumbUrl}  ${playInfo.URL}")
             Glide.with(this)
                 .load(finalThumbUrl)
                 .priority(Priority.HIGH)
@@ -165,8 +166,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         HideLoadingIndicator(MusicPlayer_ContentContainer)
     }
 
-    private fun ParseLyrics(LyricStr : String) {
-        if(LyricStr.isEmpty()) {
+    private fun ParseLyrics(LyricStr: String) {
+        if (LyricStr.isEmpty()) {
             lyricListData = MusicLyricAdapter.BuildNoLyricList()
         } else {
             lyricListData = LyricStr.split(" ")
@@ -175,11 +176,11 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     }
 
     private fun ActivateLyricRecyclerViewAdapter() {
-        if(lyricListAdapter == null) {
+        if (lyricListAdapter == null) {
             lyricListAdapter = MusicLyricAdapter(lyricListData!!)
             MusicPlayer_Lyric_RecyclerView.adapter = lyricListAdapter
         }
-        if(lyricListLayoutManager == null) {
+        if (lyricListLayoutManager == null) {
             lyricListLayoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
             MusicPlayer_Lyric_RecyclerView.layoutManager = lyricListLayoutManager
         } else {
@@ -188,34 +189,39 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         }
         MusicPlayer_Lyric_RecyclerView_Container.post {
             val LyricViewHeight = MusicPlayer_Lyric_RecyclerView_Container.height
-            MusicPlayer_Lyric_RecyclerView.setPadding(0, LyricViewHeight/2,0,LyricViewHeight/2)
+            MusicPlayer_Lyric_RecyclerView.setPadding(0, LyricViewHeight / 2, 0, LyricViewHeight / 2)
         }
     }
 
     private fun ActivateRelatedMusicRecyclerViewAdapter() {
-        if(relatedMusicListAdapter == null) {
-            relatedMusicListAdapter = RelatedMusicListAdapter(relatedMusicListData!!,this::RelatedItemSelected)
+        if (relatedMusicListAdapter == null) {
+            relatedMusicListAdapter = RelatedMusicListAdapter(relatedMusicListData!!, this::RelatedItemSelected)
             MusicPlayer_RelatedMusic_RecyclerView.adapter = relatedMusicListAdapter
         }
-        if(relatedMusicListLayoutManager == null) {
-            relatedMusicListLayoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL,false)
+        if (relatedMusicListLayoutManager == null) {
+            relatedMusicListLayoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
             MusicPlayer_RelatedMusic_RecyclerView.layoutManager = relatedMusicListLayoutManager
-        }
-        else {
+        } else {
             relatedMusicListAdapter?.items = relatedMusicListData!!
             relatedMusicListAdapter?.notifyDataSetChanged()
         }
         MusicPlayer_RelatedMusic_RecyclerView.scrollToPosition(0)
     }
 
-    private fun LoadRelatedMusicsToView(data : List<RelatedMusicInfo>) {
+    private fun LoadRelatedMusicsToView(data: List<RelatedMusicInfo>) {
         relatedMusicListData = data
         ActivateRelatedMusicRecyclerViewAdapter()
     }
 
-    private fun RelatedItemSelected(index : Int) {
+    private fun RelatedItemSelected(index: Int) {
         val item = relatedMusicListData!![index]
         LoadMusicContentInfo(item.URL)
+        if(CurrentPlayMusicUrl.isNotEmpty()) {
+            Log.d("MusicPlayerActivity", "命令停止")
+            var intent = Intent(this, MusicPlayerService::class.java)
+            intent.action = "STOP"
+            startService(intent)
+        }
     }
 
     companion object {
@@ -223,13 +229,14 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         val MUSIC_CONTENT_URL = "MUSIC_CONTENT_URL"
 
         @JvmStatic
-        fun GetAlbumThumb(ValueFromParser : String) : String {
-            return if(ValueFromParser.contains("cdn")) {
+        fun GetAlbumThumb(ValueFromParser: String): String {
+            return if (ValueFromParser.contains("cdn")) {
                 "http://${ValueFromParser}"
             } else {
                 RecommendFragment.DefaultTagUrl + ValueFromParser
             }
         }
+
         @JvmStatic
         val PERSIST_STATUS_INTENT_KEY = "ActivityLastStatus"
     }

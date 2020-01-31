@@ -182,7 +182,7 @@ class MusicPlayerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.d("MusicPlayerService", "即将onStartCommand, 对象HashCode: ${this.hashCode()}")
-        if (IS_BINDED) {
+        if (IS_BINDED && !SERVICE_AVAILABLE.value!!) {
             SERVICE_AVAILABLE.onNext(true)
         }
         when (intent?.action) {
@@ -195,6 +195,9 @@ class MusicPlayerService : Service() {
             }
             "PAUSE" -> {
                 ServiceController.Pause()
+            }
+            "STOP" -> {
+                ServiceController.Stop()
             }
         }
 

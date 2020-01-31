@@ -35,7 +35,6 @@ class MusicControlActivity : MusicPlayerActivity() {
         InitView()
         val status = intent.getSerializableExtra(PERSIST_STATUS_INTENT_KEY)
         StartService(NoNeedToStart = status != null)
-//        SubscribeServiceStatus()
         if (status != null) {
             FROM_NOTIFICATION_INTENT = true
             SHOULD_PAUSE_MUSIC = false
