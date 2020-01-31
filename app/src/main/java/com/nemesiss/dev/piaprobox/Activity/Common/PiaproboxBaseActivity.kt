@@ -1,5 +1,7 @@
 package com.nemesiss.dev.piaprobox.Activity.Common
 
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -9,6 +11,21 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.View.Common.LoadingIndicatorView
 
 open class PiaproboxBaseActivity : AppCompatActivity() {
+
+    companion object {
+        @JvmStatic
+        var activities = ArrayList<PiaproboxBaseActivity>(0)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activities.add(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activities.removeAt(activities.size-1)
+    }
 
     protected var loadingIndicatorView : LoadingIndicatorView? = null
 

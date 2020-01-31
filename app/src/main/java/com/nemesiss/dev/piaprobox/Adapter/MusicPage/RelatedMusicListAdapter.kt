@@ -13,7 +13,7 @@ import com.nemesiss.dev.piaprobox.R
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.single_related_music_item.view.*
 
-class RelatedMusicListAdapter(var items : List<RelatedMusicInfo>) : RecyclerView.Adapter<RelatedMusicListAdapter.RelatedMusicListViewHolder>() {
+class RelatedMusicListAdapter(var items : List<RelatedMusicInfo>, val itemSelected : (Int)->Unit) : RecyclerView.Adapter<RelatedMusicListAdapter.RelatedMusicListViewHolder>() {
 
     class RelatedMusicListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -35,6 +35,7 @@ class RelatedMusicListAdapter(var items : List<RelatedMusicInfo>) : RecyclerView
             .priority(Priority.HIGH)
             .bitmapTransform(RoundedCornersTransformation(PiaproboxApplication.Self.applicationContext,20,0, RoundedCornersTransformation.CornerType.ALL))
             .into(vh.itemView.MusicPlayer_RelatedMusic_Item_Thumb)
+        vh.itemView.setOnClickListener { itemSelected(index) }
         vh.itemView.MusicPlayer_RelatedMusic_Item_Title.text = item.Title
         vh.itemView.MusicPlayer_RelatedMusic_Item_Artist.text = item.Artist
 

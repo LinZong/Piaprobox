@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
+import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.RecommendItemAdapter
@@ -132,7 +133,7 @@ class RecommendFragment : BaseMainFragment() {
         val item = recommendListData!!.get(index)
         val URL = DefaultTagUrl + item.URL
 
-        val intent = Intent(context, MusicPlayerActivity::class.java)
+        val intent = Intent(context, MusicControlActivity::class.java)
         intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, URL)
         startActivity(intent)
     }

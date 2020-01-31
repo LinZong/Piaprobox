@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
             android:usesCleartextTraffic="true"
@@ -18,17 +19,25 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".Activity.Common.SplashActivity"
-                android:theme="@style/SplashScreenTheme">
+                  android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.Common.MainActivity">
+        <activity android:name=".Activity.Common.MainActivity"
+                  android:launchMode="singleTask"
+        >
         </activity>
-        <activity android:name=".Activity.Music.MusicPlayerActivity"/>
-        <activity android:name=".Activity.TestSkeletonActivity">
+        <activity android:name=".Activity.Music.MusicControlActivity"
+                  android:parentActivityName=".Activity.Common.MainActivity"
+                  android:launchMode="singleTask"
+        >
         </activity>
+        <activity android:name=".Activity.TestSkeletonActivity"
+        >
+        </activity>
+        <service android:name=".Service.MusicPlayer.MusicPlayerService"/>
     </application>
 
 </manifest>

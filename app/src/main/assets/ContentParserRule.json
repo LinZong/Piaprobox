@@ -360,6 +360,17 @@
               {
                 "textSingle": {}
               }
+            ],
+            "Artist": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "cd_user-name",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
             ]
           }
         }

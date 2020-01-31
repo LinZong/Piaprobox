@@ -12,7 +12,7 @@ import com.nemesiss.dev.piaprobox.Util.AppUtil
 import kotlinx.android.synthetic.main.activity_splash.*
 import javax.inject.Inject
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : PiaproboxBaseActivity() {
 
     @Inject
     lateinit var asyncExecutor: AsyncExecutor

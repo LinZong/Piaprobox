@@ -9,7 +9,7 @@ import com.nemesiss.dev.piaprobox.Fragment.Main.*
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : PiaproboxBaseActivity() {
 
     private val MainFragmentsCollection: HashMap<Int, BaseMainFragment> = HashMap()
 
