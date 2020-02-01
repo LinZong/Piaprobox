@@ -8,6 +8,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import android.widget.SeekBar
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
@@ -20,7 +21,18 @@ import kotlinx.android.synthetic.main.music_player_layout.*
 class MusicControlActivity : MusicPlayerActivity() {
 
     private var FROM_NOTIFICATION_INTENT = false
-    private var SHOULD_PAUSE_MUSIC = false
+    private var NEW_MUSIC_LOADED = false
+    private var IS_SEEKING = false
+    private var IS_ENABLE_LOOPING = false
+        set(value) {
+            PlayerServiceController?.Loop(value)
+            if (value) {
+                MusicPlayer_Control_Repeat.setImageResource(R.drawable.ic_repeat_one_red_600_24dp)
+            } else {
+                MusicPlayer_Control_Repeat.setImageResource(R.drawable.ic_repeat_red_600_24dp)
+            }
+            field = value
+        }
 
     private var PendingPrepareURL = ""
 
@@ -33,20 +45,66 @@ class MusicControlActivity : MusicPlayerActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         InitView()
+        InitSeekbarController()
         val status = intent.getSerializableExtra(PERSIST_STATUS_INTENT_KEY)
         StartService(NoNeedToStart = status != null)
         if (status != null) {
+            // 从通知栏消息过来.
             FROM_NOTIFICATION_INTENT = true
-            SHOULD_PAUSE_MUSIC = false
+            NEW_MUSIC_LOADED = false
             val activityStatus = status as MusicPlayerActivityStatus
-            CurrentMusicTotalDuration = activityStatus.currentPlayMusicDuration
+            RecoverActivityStatusFromPersistObject(activityStatus)
         } else {
             FROM_NOTIFICATION_INTENT = false
+            // 从点击RecommendItem过来
             val MusicContentUrl = intent.getStringExtra(MUSIC_CONTENT_URL) ?: ""
-            if (MusicContentUrl.isNotEmpty() && !FROM_NOTIFICATION_INTENT) {
-                SHOULD_PAUSE_MUSIC = true
+            if (LAST_MUSIC_PLAYER_ACTIVITY_STATUS != null) {
+                // 恢复
+                RecoverActivityStatusFromPersistObject(LAST_MUSIC_PLAYER_ACTIVITY_STATUS!!)
+            } else if (MusicContentUrl.isNotEmpty()) {
+                NEW_MUSIC_LOADED = true
             }
         }
+    }
+
+    private fun InitView() {
+        MusicPlayer_Control_Play.setOnClickListener {
+            if (MusicPlayerService.SERVICE_AVAILABLE.value == true) {
+                when (PlayerServiceController?.PlayerStatusValue()) {
+                    MusicStatus.PLAY -> {
+                        PlayerServiceController?.Pause()
+                    }
+                    MusicStatus.PAUSE -> {
+                        PlayerServiceController?.Play()
+                    }
+                    MusicStatus.STOP -> {
+                        PlayNewMusic()
+                    }
+                }
+            } else {
+                PendingPrepareURL = CurrentPlayMusicUrl
+                StartService()
+            }
+        }
+        MusicPlayer_Control_MoreInfo.setOnClickListener {
+
+        }
+
+        MusicPlayer_Control_Repeat.setOnClickListener {
+            IS_ENABLE_LOOPING = !IS_ENABLE_LOOPING
+        }
+    }
+
+
+    private fun RecoverActivityStatusFromPersistObject(activityStatus: MusicPlayerActivityStatus) {
+
+        Log.d("MusicControlActivity", "MusicControlActivity  开始恢复上一次的Activity状态")
+
+        IS_ENABLE_LOOPING = activityStatus.openSingleLooping
+        CurrentMusicTotalDuration = activityStatus.currentPlayMusicTotalDuration
+        MusicPlayer_Seekbar.progress = activityStatus.currentPlayMusicElapsedDuration
+        MusicPlayer_CurrentTime.text = Duration2Time(activityStatus.currentPlayMusicElapsedDuration)
+        MusicPlayer_Seekbar.secondaryProgress = activityStatus.currentBufferDuration
     }
 
     private val PlayerServiceConnection = object : ServiceConnection {
@@ -59,9 +117,9 @@ class MusicControlActivity : MusicPlayerActivity() {
         override fun onServiceConnected(componentName: ComponentName?, service: IBinder?) {
             PlayerService = (service as MusicPlayerService.MusicPlayerBinder).GetService()
             PlayerService?.NotifyServiceIsOK()
-            Log.d("MusicControlActivity", "音乐播放器服务成功启动  ${PlayerService?.hashCode()}")
+            Log.d("MusicControlActivity", "音乐播放器服务Bind完成  ${PlayerService?.hashCode()}")
             PlayerServiceController = PlayerService!!.ServiceController
-            if (SHOULD_PAUSE_MUSIC) {
+            if (PlayerServiceController?.PlayerStatus()?.value != MusicStatus.STOP && NEW_MUSIC_LOADED) {
                 PlayerServiceController?.Stop()
             }
             SubscribeMusicPlayerStatus()
@@ -89,15 +147,27 @@ class MusicControlActivity : MusicPlayerActivity() {
     private fun PersistMusicPlayerActivityStatus(playerStatus: MusicStatus) {
 
         if (relatedMusicListData != null && lyricListData != null && CurrentContentInfo != null) {
-            val StatusModel = MusicPlayerActivityStatus(
+            val ActivityStatusModel = MusicPlayerActivityStatus(
                 relatedMusicListData!!,
                 lyricListData!!,
                 CurrentPlayMusicUrl,
                 CurrentContentInfo!!,
-                CurrentMusicTotalDuration
+                CurrentMusicTotalDuration,
+                MusicPlayer_Seekbar.progress,
+                MusicPlayer_Seekbar.secondaryProgress,
+                IS_ENABLE_LOOPING
             )
-            PlayerService?.UpdateWakeupMusicPlayerActivityIntent(StatusModel, playerStatus)
+            PlayerService?.UpdateWakeupMusicPlayerActivityIntent(ActivityStatusModel, playerStatus)
+            LAST_MUSIC_PLAYER_ACTIVITY_STATUS = ActivityStatusModel
+            LAST_PLAYER_STATUS = playerStatus
         }
+    }
+
+
+    companion object {
+
+        @JvmStatic
+        private var LAST_PLAYER_STATUS: MusicStatus? = null
     }
 
 
@@ -110,8 +180,7 @@ class MusicControlActivity : MusicPlayerActivity() {
                         Log.d("MusicControlActivity", "音乐完成Prepare.")
                         CurrentMusicTotalDuration = PlayerService?.InnerPlayer?.GetDuration() ?: 0
                         MusicPlayer_TotalTime.text = Duration2Time(CurrentMusicTotalDuration)
-//                        PersistMusicPlayerActivityStatus(MusicStatus.STOP)
-                        if (PlayerServiceController?.PlayerStatus()?.value != MusicStatus.PLAY && SHOULD_PAUSE_MUSIC) {
+                        if (PlayerServiceController?.PlayerStatus()?.value == MusicStatus.STOP && NEW_MUSIC_LOADED) {
                             PlayerServiceController?.Play()
                         }
                     }
@@ -142,6 +211,15 @@ class MusicControlActivity : MusicPlayerActivity() {
 //                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
                         ResetTimeIndicator()
                     }
+                    MusicStatus.END -> {
+                        if(IS_ENABLE_LOOPING) {
+                            PlayerServiceController?.Play()
+                            PlayerServiceController?.Loop(true)
+                        }
+                        else {
+                            PlayerServiceController?.Stop()
+                        }
+                    }
 
                 }
             }
@@ -160,32 +238,6 @@ class MusicControlActivity : MusicPlayerActivity() {
         }
     }
 
-    private fun InitView() {
-        MusicPlayer_Control_Play.setOnClickListener {
-            if (MusicPlayerService.SERVICE_AVAILABLE.value == true) {
-                when (PlayerServiceController?.Status()) {
-                    MusicStatus.PLAY -> {
-                        PlayerServiceController?.Pause()
-                    }
-                    MusicStatus.PAUSE -> {
-                        PlayerServiceController?.Play()
-                    }
-                    MusicStatus.STOP -> {
-                        PlayNewMusic()
-                    }
-                }
-            } else {
-                PendingPrepareURL = CurrentPlayMusicUrl
-                StartService()
-            }
-        }
-        MusicPlayer_Control_MoreInfo.setOnClickListener {
-
-        }
-
-        MusicPlayer_Control_Repeat.setOnClickListener {
-        }
-    }
 
     private fun ResetTimeIndicator() {
         CurrentMusicTotalDuration = 0
@@ -222,12 +274,37 @@ class MusicControlActivity : MusicPlayerActivity() {
         super.onDestroy()
         Log.d("MusicControlActivity", "MusicControlActivity unbindService onDestroy")
 
-        if (PlayerServiceController?.PlayerStatus()?.value == MusicStatus.PLAY) {
+        if (PlayerServiceController?.PlayerStatusValue()!! != MusicStatus.STOP) {
             Log.d("MusicControlActivity", "应该保存当前Activity的状态信息.")
+            PersistMusicPlayerActivityStatus(PlayerServiceController?.PlayerStatusValue()!!)
         }
 
         unbindService(PlayerServiceConnection)
     }
+
+    private fun InitSeekbarController() {
+        MusicPlayer_Seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser && PlayerServiceController?.PlayerStatusValue() != MusicStatus.STOP) {
+                    MusicPlayer_CurrentTime.text =
+                        (Duration2Time(Progress2Duration(progress, CurrentMusicTotalDuration)))
+                }
+            }
+
+            override fun onStartTrackingTouch(seekbar: SeekBar?) {
+                IS_SEEKING = true
+                PlayerServiceController?.DisableElapsedTimeDispatcher()
+            }
+
+            override fun onStopTrackingTouch(seekbar: SeekBar?) {
+                IS_SEEKING = false
+                val finalProgress = seekbar!!.progress
+                PlayerServiceController?.SeekTo(finalProgress)
+                PlayerServiceController?.EnabletElapsedTimeDispatcher()
+            }
+        })
+    }
+
 
     // HELPER
 
@@ -240,5 +317,4 @@ class MusicControlActivity : MusicPlayerActivity() {
     private fun Progress2Duration(progress: Int, totalDuration: Int): Int {
         return (progress.toFloat() / 100 * totalDuration).toInt()
     }
-
 }

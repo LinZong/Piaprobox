@@ -6,5 +6,6 @@ public enum  MusicStatus implements Serializable
 {
     PLAY,
     PAUSE,
-    STOP
+    STOP,
+    END
 }

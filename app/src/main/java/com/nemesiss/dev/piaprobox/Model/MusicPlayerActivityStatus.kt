@@ -8,4 +8,8 @@ data class MusicPlayerActivityStatus(val relatedMusicListData : List<RelatedMusi
                                      val lyrics : List<String>,
                                      val currentPlayMusicURL : String,
                                      val currentPlayMusicContentInfo: MusicContentInfo,
-                                     val currentPlayMusicDuration : Int) : Serializable
+                                     val currentPlayMusicTotalDuration : Int,
+                                     val currentPlayMusicElapsedDuration : Int,
+                                     val currentBufferDuration : Int,
+                                     val openSingleLooping : Boolean
+) : Serializable

@@ -44,6 +44,8 @@ public class SimpleMusicPlayer
                 break;
             }
         }
+
+
         return true;
     }
 
@@ -75,6 +77,7 @@ public class SimpleMusicPlayer
         mContext = context;
         InnerMediaPlayer.setOnSeekCompleteListener(this::OnFinishSeek);
         InnerMediaPlayer.setOnPreparedListener(this::OnFinishPrepare);
+        InnerMediaPlayer.setOnCompletionListener(this::OnPlayReachEnd);
 
         MusicPlayStatus.subscribe((status) -> {
             if(status == MusicStatus.PAUSE && InnerMediaPlayer.isPlaying())
@@ -83,6 +86,10 @@ public class SimpleMusicPlayer
                 _Play();
             }
         });
+    }
+
+    private void OnPlayReachEnd(MediaPlayer mediaPlayer) {
+        MusicPlayStatus.onNext(MusicStatus.END);
     }
 
 
@@ -113,6 +120,7 @@ public class SimpleMusicPlayer
     {
         TimeElapsedHandler.sendMessage(GetTimeElapsedMessage());
     }
+    public void DisableDispatchElapsedTimeStamp() { TimeElapsedHandler.removeMessages(688);}
 
     private void OnFinishSeek(MediaPlayer mp)
     {

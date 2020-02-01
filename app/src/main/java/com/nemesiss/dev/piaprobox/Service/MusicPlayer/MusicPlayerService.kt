@@ -26,7 +26,7 @@ class MusicPlayerService : Service() {
 
     private lateinit var musicPlayerNotificationManager: MusicPlayerNotificationManager
     private var PlayingMusicContentInfo: MusicContentInfo? = null
-
+    private var WillPlayMusicURLFromActivity = ""
 
     override fun onCreate() {
         super.onCreate()
@@ -43,36 +43,13 @@ class MusicPlayerService : Service() {
         }
         private set
 
-    private fun UpdateNotification(playerStatus: MusicStatus) {
-        if (PlayingMusicContentInfo != null) {
-            if (!IS_FOREGROUND) {
-                ActAsForegroundService(
-                    musicPlayerNotificationManager.SendNotification(
-                        MusicNotificationModel(
-                            PlayingMusicContentInfo!!.Title
-                            , PlayingMusicContentInfo!!.Artist, playerStatus
-                        )
-                        , true
-                    )
-                )
-            } else {
-                musicPlayerNotificationManager.SendNotification(
-                    MusicNotificationModel(
-                        PlayingMusicContentInfo!!.Title
-                        , PlayingMusicContentInfo!!.Artist, playerStatus
-                    )
-                    , false
-                )
-            }
-        }
-    }
-
     val ServiceController = object :
         MusicPlayerServiceController {
         override fun PrepareAsync(URL: String, musicContent: MusicContentInfo) {
             PlayingMusicContentInfo = musicContent
+            WillPlayMusicURLFromActivity = "" // Clear pending prepare.
+            UpdateNotification(MusicStatus.STOP, musicContent)
             InnerPlayer!!.LoadMusic(URL)
-            UpdateNotification(MusicStatus.STOP)
         }
 
         override fun Loop(isLoop: Boolean) {
@@ -80,19 +57,22 @@ class MusicPlayerService : Service() {
         }
 
         override fun Play() {
-
             InnerPlayer!!.Play(false)
-            UpdateNotification(MusicStatus.PLAY)
+            UpdateNotification(MusicStatus.PLAY, PlayingMusicContentInfo!!)
         }
 
         override fun Pause() {
             InnerPlayer!!.Pause()
-            UpdateNotification(MusicStatus.PAUSE)
+            UpdateNotification(MusicStatus.PAUSE, PlayingMusicContentInfo!!)
         }
 
         override fun Stop() {
-            UpdateNotification(MusicStatus.STOP)
+            UpdateNotification(MusicStatus.STOP, PlayingMusicContentInfo!!)
             InnerPlayer!!.Stop()
+        }
+
+        override fun SeekTo(progress: Int) {
+            InnerPlayer!!.SeekTo(progress)
         }
 
         override fun SetElapsedTimeListener(listener: (Int) -> Unit) {
@@ -105,7 +85,7 @@ class MusicPlayerService : Service() {
             }
         }
 
-        override fun Status(): MusicStatus {
+        override fun PlayerStatusValue(): MusicStatus {
             return InnerPlayer!!.MusicPlayStatus.value!!
         }
 
@@ -125,6 +105,36 @@ class MusicPlayerService : Service() {
 
         override fun PlayerStatus(): BehaviorSubject<MusicStatus>? {
             return InnerPlayer!!.MusicPlayStatus
+        }
+
+        override fun DisableElapsedTimeDispatcher() {
+            InnerPlayer!!.DisableDispatchElapsedTimeStamp()
+        }
+
+        override fun EnabletElapsedTimeDispatcher() {
+            InnerPlayer!!.BeginDispatchElapsedTimeStamp()
+        }
+    }
+
+    private fun UpdateNotification(playerStatus: MusicStatus, playingMusicContentInfo: MusicContentInfo) {
+        if (!IS_FOREGROUND) {
+            ActAsForegroundService(
+                musicPlayerNotificationManager.SendNotification(
+                    MusicNotificationModel(
+                        playingMusicContentInfo.Title
+                        , playingMusicContentInfo.Artist, playerStatus
+                    )
+                    , true
+                )
+            )
+        } else {
+            musicPlayerNotificationManager.SendNotification(
+                MusicNotificationModel(
+                    playingMusicContentInfo.Title
+                    , playingMusicContentInfo.Artist, playerStatus
+                )
+                , false
+            )
         }
     }
 
@@ -191,6 +201,9 @@ class MusicPlayerService : Service() {
                 GracefullyShutdown()
             }
             "PLAY" -> {
+                if (WillPlayMusicURLFromActivity.isNotEmpty()) {
+                    ServiceController.PrepareAsync(WillPlayMusicURLFromActivity,PlayingMusicContentInfo!!)
+                }
                 ServiceController.Play()
             }
             "PAUSE" -> {
@@ -198,6 +211,14 @@ class MusicPlayerService : Service() {
             }
             "STOP" -> {
                 ServiceController.Stop()
+            }
+            "UPDATE_INFO" -> {
+                PlayingMusicContentInfo = intent.getSerializableExtra("UpdateMusicContentInfo") as MusicContentInfo?
+                if (PlayingMusicContentInfo != null) {
+                    ServiceController.Stop()
+//                    UpdateNotification(MusicStatus.STOP, PlayingMusicContentInfo!!)
+                    WillPlayMusicURLFromActivity = intent.getStringExtra("WillPlayMusicURL")
+                }
             }
         }
 
@@ -232,10 +253,13 @@ interface MusicPlayerServiceController {
     fun Play()
     fun Pause()
     fun Stop()
+    fun SeekTo(progress : Int)
     fun SetElapsedTimeListener(listener: (Int) -> Unit)
     fun SetBufferingListener(listener: (Int) -> Unit)
-    fun Status(): MusicStatus
+    fun PlayerStatusValue(): MusicStatus
     fun TestSendNotification(contentInfo: MusicContentInfo, currStatus: MusicStatus)
     fun PrepareStatus(): BehaviorSubject<SimpleMusicPlayer.PrepareStatus>?
     fun PlayerStatus(): BehaviorSubject<MusicStatus>?
+    fun DisableElapsedTimeDispatcher()
+    fun EnabletElapsedTimeDispatcher()
 }
