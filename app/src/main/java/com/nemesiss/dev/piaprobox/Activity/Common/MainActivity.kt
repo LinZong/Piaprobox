@@ -1,12 +1,17 @@
 package com.nemesiss.dev.piaprobox.Activity.Common
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
+import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Fragment.Main.*
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : PiaproboxBaseActivity() {
@@ -31,6 +36,27 @@ class MainActivity : PiaproboxBaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_toolbar_right_menu, menu)
+
+        return true
+    }
+
+    override fun onStart() {
+        super.onStart()
+        invalidateOptionsMenu()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        Log.d("MainActivity", "onPrepareOptionsMenu Enter")
+        if(MusicPlayerService.SERVICE_AVAILABLE.value == true && menu?.findItem(MUSIC_PLAYER_MENU_ID) == null) {
+            val playerMenu = menu?.add(Menu.NONE, MUSIC_PLAYER_MENU_ID, 2, "Music Player")
+            playerMenu?.setIcon(R.drawable.ic_play_circle_outline_white_24dp)
+            playerMenu?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            Log.d("MainActivity", "onPrepareOptionsMenu 创建播放按钮")
+        }
+        else if(MusicPlayerService.SERVICE_AVAILABLE.value != true && menu?.findItem(MUSIC_PLAYER_MENU_ID) != null) {
+            menu.removeItem(MUSIC_PLAYER_MENU_ID)
+            Log.d("MainActivity", "onPrepareOptionsMenu 取消播放按钮")
+        }
         return true
     }
 
@@ -38,6 +64,11 @@ class MainActivity : PiaproboxBaseActivity() {
         when (item?.itemId) {
             R.id.Main_Toolbar_Reload -> {
                 CurrentShowMainFragment.Refresh()
+            }
+            MUSIC_PLAYER_MENU_ID -> {
+                val intent = Intent(this, MusicControlActivity::class.java)
+                intent.putExtra(MusicPlayerActivity.CLICK_TOOLBAR_ICON,true)
+                startActivity(intent)
             }
         }
         return true
@@ -58,6 +89,9 @@ class MainActivity : PiaproboxBaseActivity() {
                 RecommendFragment::class.java
             )
         )
+
+        @JvmStatic
+        private val MUSIC_PLAYER_MENU_ID = Int.MAX_VALUE - 100
     }
 
     private fun OnNavigationItemSelected(item: MenuItem?): Boolean {

@@ -60,7 +60,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         } else {
             // 从RecommendItem点击过来
             val MusicContentUrl = intent.getStringExtra(MUSIC_CONTENT_URL) ?: ""
-            if(MusicContentUrl == LAST_LOAD_CONTENT_URL && LAST_MUSIC_BITMAP != null && LAST_MUSIC_PLAYER_ACTIVITY_STATUS != null) {
+            val ClickToolbarIcon = intent.getBooleanExtra(CLICK_TOOLBAR_ICON, false)
+            if((MusicContentUrl == LAST_LOAD_CONTENT_URL || ClickToolbarIcon) && LAST_MUSIC_BITMAP != null && LAST_MUSIC_PLAYER_ACTIVITY_STATUS != null) {
                 // 点击的和上次是一样的，恢复.
                 RecoverActivityStatusFromPersistObject(LAST_MUSIC_PLAYER_ACTIVITY_STATUS!!)
             }
@@ -260,6 +261,9 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     companion object {
         @JvmStatic
         val MUSIC_CONTENT_URL = "MUSIC_CONTENT_URL"
+
+        @JvmStatic
+        val CLICK_TOOLBAR_ICON = "CLICK_TOOLBAR_ICON"
 
         @JvmStatic
         fun GetAlbumThumb(ValueFromParser: String): String {

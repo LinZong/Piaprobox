@@ -4,5 +4,6 @@
           android:id="@+id/Main_Toolbar_Reload"
           android:icon="@drawable/ic_refresh_white_24dp"
           app:showAsAction="always"
+          android:orderInCategory="100"
     />
 </menu>
