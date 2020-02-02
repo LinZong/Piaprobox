@@ -4,14 +4,18 @@
     <color name="colorPrimaryDark">#cb0070</color>
     <color name="colorAccent">@color/DarkPiaproColor</color>
 
-<!--    App Theme relative  -->
+    <!--    App Theme relative  -->
     <color name="PiaproColor">#ED0183</color>
     <color name="DarkPiaproColor">#D81B60</color>
     <color name="LoadingIndicatorBackground">#F0F0F0</color>
 
     <color name="MainFragmentItemSmallInfoIcon">#7e8e96</color>
+    <color name="DividerColor">#d6d6d6</color>
 
     <color name="TagSelectedBackground">#ff7cc0</color>
     <color name="RelatedMusicListBackground">#D9234C5C</color>
     <color name="RelatedMusicListItemBackground">#D9297B98</color>
+
+
+    <color name="WorkDetailText">#606060</color>
 </resources>

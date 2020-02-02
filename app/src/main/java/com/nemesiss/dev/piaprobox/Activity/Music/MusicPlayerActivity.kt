@@ -44,8 +44,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_player_layout)
 
-        setSupportActionBar(MusicPlayer_Toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        ShowToolbarBackIcon(MusicPlayer_Toolbar)
 
         ViewCompat.setNestedScrollingEnabled(MusicPlayer_Lyric_RecyclerView, false)
         MusicPlayer_Lyric_RecyclerView.isNestedScrollingEnabled = false

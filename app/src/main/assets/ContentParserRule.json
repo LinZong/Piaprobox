@@ -338,6 +338,17 @@
                 "textSingle": {}
               }
             ],
+            "CreateDescription": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "cd_dtl_cap",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
             "Priority": [
               {
                 "getElementsByClassSingle": {
@@ -370,6 +381,19 @@
               },
               {
                 "textSingle": {}
+              }
+            ],
+            "ArtistAvatar": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "cd_user-icon",
+                  "Index": 0
+                }
+              },
+              {
+                "getStyleAttributeBgImageSingle": {
+                  "UrlPrefix": ""
+                }
               }
             ]
           }

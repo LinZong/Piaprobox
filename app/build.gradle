@@ -91,8 +91,8 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.1.71.android'
     implementation 'com.squareup.okhttp3:okhttp:4.3.1'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
-//    implementation 'com.github.rasoulmiri:skeleton:v1.1.6'
     implementation 'jp.wasabeef:glide-transformations:2.0.0'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
     implementation project(':library')
 
 

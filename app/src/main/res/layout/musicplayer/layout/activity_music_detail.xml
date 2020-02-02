@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <android.support.design.widget.AppBarLayout android:layout_width="match_parent"
+                                                android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar android:layout_width="match_parent"
+                                           android:id="@+id/MusicDetail_Toolbar"
+                                           android:background="@color/PiaproColor"
+                                           android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                                           app:popupTheme="@style/Theme.AppCompat.Light"
+                                           app:titleTextAppearance="@style/MusicPlayerToolbarTitle"
+                                           android:layout_height="?attr/actionBarSize">
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
+
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:layout_margin="8dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView android:layout_width="84dp"
+                                                              android:layout_height="84dp"
+                                                              android:id="@+id/MusicDetail_ArtistAvatar"/>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          style="@style/GenericTextView"
+                          android:textSize="9pt"
+                          android:layout_centerVertical="true"
+                          android:layout_toEndOf="@id/MusicDetail_ArtistAvatar"
+                          android:layout_marginStart="16dp"
+                          android:maxLines="3"
+                          android:ellipsize="end"
+                          android:id="@+id/MusicDetail_Artist"/>
+
+            </RelativeLayout>
+
+            <com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout android:layout_width="match_parent"
+                                                                   android:layout_margin="8dp"
+                                                                   android:id="@+id/MusicDetail_AutoWrap_Tag_Container"
+                                                                   android:layout_height="wrap_content"/>
+
+
+
+            <!--    Divider-->
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="1dp"
+                  android:layout_margin="8dp"
+                  android:background="@color/DividerColor"/>
+
+            <!--    Divider-->
+
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_marginTop="8dp"
+                          android:layout_marginBottom="8dp"
+                          android:layout_marginStart="12dp"
+                          android:layout_marginEnd="12dp"
+                          android:id="@+id/MusicDetail_DetailText_Container"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

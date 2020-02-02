@@ -2,6 +2,7 @@ package com.nemesiss.dev.piaprobox.Util
 
 import android.app.Activity
 import android.content.res.AssetManager
+import android.content.res.Resources
 import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.view.View
@@ -11,6 +12,7 @@ import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 class AppUtil {
     companion object {
 
+        @JvmStatic
         fun HideNavigationBar(activity: Activity) {
             if (Build.VERSION.SDK_INT < 19) {
                 val v = activity.window.decorView
@@ -23,11 +25,25 @@ class AppUtil {
             }
         }
 
-
-        fun GetAppCachePath() : String {
+        @JvmStatic
+        fun GetAppCachePath(): String {
             return ContextCompat.getExternalCacheDirs(PiaproboxApplication.Self.applicationContext)[0].absolutePath
         }
+
+        @JvmStatic
+        fun Dp2Px(resources: Resources, dp: Int): Int {
+            val scale = resources.displayMetrics.density
+            return (dp * scale + 0.5).toInt()
+        }
+
+        @JvmStatic
+        fun Px2Dp(resources: Resources, px: Int): Int {
+            val scale = resources.displayMetrics.density
+            return (px / scale + 0.5).toInt()
+        }
     }
+
+
 }
 
-fun AssetManager.AsPath(FileName : String) = "file:///android_asset/$FileName"
+fun AssetManager.AsPath(FileName: String) = "file:///android_asset/$FileName"

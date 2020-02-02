@@ -1,13 +1,11 @@
 package com.nemesiss.dev.piaprobox.Activity.Common
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.Toast
-import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
-import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.View.Common.LoadingIndicatorView
 
 open class PiaproboxBaseActivity : AppCompatActivity() {
@@ -63,5 +61,10 @@ open class PiaproboxBaseActivity : AppCompatActivity() {
         }
 
         return true
+    }
+
+    fun ShowToolbarBackIcon(toolbar : Toolbar) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 }

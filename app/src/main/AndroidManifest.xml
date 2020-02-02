@@ -20,10 +20,6 @@
             android:theme="@style/AppTheme">
         <activity android:name=".Activity.Common.SplashActivity"
                   android:theme="@style/SplashScreenTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".Activity.Common.MainActivity"
                   android:launchMode="singleTask"
@@ -38,6 +34,12 @@
         >
         </activity>
         <service android:name=".Service.MusicPlayer.MusicPlayerService"/>
+        <activity android:name=".Activity.Music.MusicDetailActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
