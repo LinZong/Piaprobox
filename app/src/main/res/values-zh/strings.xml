@@ -14,4 +14,7 @@
 
     <string name="RelatedMusicTips">相关作品</string>
     <string name="NoLyricTips">暂无歌词</string>
+
+    <string name="MusicDetailActivityTitle">作品詳情</string>
+    <string name="MusicDetailActivityParamWrong">作品详情信息不正确</string>
 </resources>

@@ -20,4 +20,7 @@
     <string name="RelatedMusicTips">Related Works</string>
 
     <string name="NoLyricTips">No Lyric</string>
+
+    <string name="MusicDetailActivityTitle">Item detail</string>
+    <string name="MusicDetailActivityParamWrong">Item content description parameter is incorrect.</string>
 </resources>

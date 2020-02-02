@@ -87,7 +87,9 @@ class MusicControlActivity : MusicPlayerActivity() {
             }
         }
         MusicPlayer_Control_MoreInfo.setOnClickListener {
-
+            val intent = Intent(this, MusicDetailActivity::class.java)
+            intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, CurrentContentInfo)
+            startActivity(intent)
         }
 
         MusicPlayer_Control_Repeat.setOnClickListener {

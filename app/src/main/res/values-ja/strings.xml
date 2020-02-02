@@ -15,4 +15,7 @@
     <string name="LoadingTips">ロード中...</string>
     <string name="RelatedMusicTips">関連作品</string>
     <string name="NoLyricTips">歌詞なし</string>
+
+    <string name="MusicDetailActivityTitle">作品詳細情報</string>
+    <string name="MusicDetailActivityParamWrong">作品詳細情報パラメータエラー</string>
 </resources>
