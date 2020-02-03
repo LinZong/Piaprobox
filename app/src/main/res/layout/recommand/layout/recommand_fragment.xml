@@ -6,18 +6,43 @@
                   android:layout_height="match_parent"
                   android:orientation="vertical">
         <include layout="@layout/fragment_header"/>
-        <com.nemesiss.dev.piaprobox.View.Common.FixedRecyclerView android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:layout_margin="4dp"
-                                                android:nestedScrollingEnabled="false"
-                                                android:id="@+id/Recommend_Frag_Tag_RecyclerView"/>
-        <RelativeLayout android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:id="@+id/Recommend_Frag_RecyclerView"/>
-        </RelativeLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/Recommend_Category_Tag_Container"
+                      android:orientation="horizontal">
+            <TextView android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      style="@style/RecommendCategoryTagView"
+                      android:id="@+id/Recommend_Category_Tag_Music"
+                      android:text="@string/Drawer_Nav_Music_Text"
+                      android:background="@drawable/single_tag_background"
+                      android:layout_margin="6dp"
+            />
+            <TextView android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      style="@style/RecommendCategoryTagView"
+                      android:layout_margin="6dp"
+                      android:id="@+id/Recommend_Category_Tag_Image"
+                      android:background="@drawable/single_tag_background"
+                      android:layout_weight="1"
+                      android:text="@string/Drawer_Nav_Illustrator_Text"/>
+            <TextView android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      style="@style/RecommendCategoryTagView"
+                      android:id="@+id/Recommend_Category_Tag_Text"
+                      android:layout_margin="6dp"
+                      android:background="@drawable/single_tag_background"
+                      android:layout_weight="1"
+                      android:text="@string/Drawer_Nav_Text_Text"/>
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+                android:layout_width="match_parent"
+                android:id="@+id/Recommend_Category_Frag_Pager"
+                android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
     </LinearLayout>
 </FrameLayout>

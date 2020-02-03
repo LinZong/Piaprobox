@@ -53,7 +53,7 @@
       }
     ]
   },
-  "RecommendList": {
+  "RecommendList-MUSIC": {
     "RequestUrl": "https://piapro.jp/",
     "RequestParameter": {},
     "RequestCookie": {},
@@ -277,6 +277,94 @@
               },
               {
                 "textSingle": {}
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "RecommendList-IMAGE": {
+    "Steps": [
+      {
+        "getElementByIdSingle": {
+          "Name": "itemcont"
+        }
+      },
+      {
+        "getElementsByClass": {
+          "Name": "item"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage",
+          "GenerateOutputRule": {
+            "Thumb": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "getStyleAttributeBgImageSingle": {
+                  "UrlPrefix": ""
+                }
+              }
+            ],
+            "ArtistAvatar": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "i_icon",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "img",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "src"
+                }
+              }
+            ],
+            "ArtistName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "i_title",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "UploadDate": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "post",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "URL": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "i_image",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
               }
             ]
           }
