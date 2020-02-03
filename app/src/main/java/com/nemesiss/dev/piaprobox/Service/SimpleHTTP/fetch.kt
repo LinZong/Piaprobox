@@ -1,13 +1,11 @@
 package com.nemesiss.dev.piaprobox.Service.SimpleHTTP
 
-import android.os.Looper
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.OkHttpModules
 import dagger.Component
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import java.lang.Exception
 import javax.inject.Inject
 
 class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor: AsyncExecutor) {

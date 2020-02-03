@@ -18,4 +18,10 @@
 
     <string name="MusicDetailActivityTitle">作品詳細情報</string>
     <string name="MusicDetailActivityParamWrong">作品詳細情報パラメータエラー</string>
+    <string name="MusicPlayInfoIsntPrepared">再生準備中です、今まだダウンロードが出来ません</string>
+
+
+    <string name="DownloadMusicRequestDialogTitle">音楽ダウンロード</string>
+    <string name="DownloadMusicRequestDialogMessgae">音楽ダウンロードが行きます、作品配布時を付ける権利許可は必ず守り下さい。ダウンロードファイルは権利許可範囲内使用のみ。</string>
+
 </resources>

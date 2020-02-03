@@ -12,14 +12,15 @@ import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.BaseNotificationManager
 
-class MusicPlayerNotificationManager(val context: Context, var activityIntent: Intent) {
-
-
-    private var notificationManager: NotificationManager =
-        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+class MusicPlayerNotificationManager(context: Context, var activityIntent: Intent) : BaseNotificationManager(context) {
 
     companion object {
+
+        @JvmStatic
+        val DownloadNotificationID = 393940
+
         @JvmStatic
         val NotificationID = 393939
 
@@ -31,19 +32,12 @@ class MusicPlayerNotificationManager(val context: Context, var activityIntent: I
         val ChannelID = "piaprobox-noti-1"
     }
 
-    private fun GetDefualtNotificationBuilder(): NotificationCompat.Builder {
-        return NotificationCompat.Builder(context, ChannelID)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setDefaults(Notification.DEFAULT_LIGHTS.or(Notification.DEFAULT_SOUND))
-            .setPriority(Notification.PRIORITY_MAX)
-            .setVibrate(null)
-    }
 
     fun ClearNotification() {
         notificationManager.cancel(NotificationID)
     }
 
-    fun SendNotification(model: MusicNotificationModel, butDontSend : Boolean = true): Notification {
+    fun SendNotification(model: MusicNotificationModel, butDontSend: Boolean = true): Notification {
 
         val NormalNotiView = RemoteViews(context.packageName, R.layout.player_noti_normal)
         val BigNotiView = RemoteViews(context.packageName, R.layout.player_noti_big)
@@ -70,18 +64,18 @@ class MusicPlayerNotificationManager(val context: Context, var activityIntent: I
 
         val PlayPendingIntent = PendingIntent.getService(context, 55, PlayIntent, 0)
 
-        when(model.CurrStatus) {
-            MusicStatus.PLAY ->  {
+        when (model.CurrStatus) {
+            MusicStatus.PLAY -> {
                 BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_pause_red_600_24dp)
-                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play,PausePendingIntent)
+                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, PausePendingIntent)
             }
             MusicStatus.PAUSE -> {
                 BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_play_arrow_red_600_24dp)
-                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play,PlayPendingIntent)
+                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, PlayPendingIntent)
             }
             MusicStatus.STOP -> {
                 BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_play_arrow_red_600_24dp)
-                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play,PlayPendingIntent)
+                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, PlayPendingIntent)
             }
         }
         BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop, CloseServicePendingIntent)
@@ -100,7 +94,8 @@ class MusicPlayerNotificationManager(val context: Context, var activityIntent: I
 
         val intents = arrayOf(Intent(context, MainActivity::class.java), activityIntent)
 
-        val OpenMusicPlayerActivityIntent = PendingIntent.getActivities(context, 0, intents, PendingIntent.FLAG_UPDATE_CURRENT)
+        val OpenMusicPlayerActivityIntent =
+            PendingIntent.getActivities(context, 0, intents, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification = GetDefualtNotificationBuilder()
             .setContentIntent(OpenMusicPlayerActivityIntent)
             .build()
@@ -109,19 +104,10 @@ class MusicPlayerNotificationManager(val context: Context, var activityIntent: I
         notification.bigContentView = BigNotiView
         notification.flags = (notification.flags).or(Notification.FLAG_ONGOING_EVENT)
         notification.`when` = System.currentTimeMillis()
-        if(!butDontSend)
+        if (!butDontSend)
             notificationManager.notify(NotificationID, notification)
         return notification
     }
 
-    fun CheckAndBuildChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (notificationManager.getNotificationChannel(ChannelID) == null) {
-                val mChannel = NotificationChannel(
-                    ChannelID, ChannelName, NotificationManager.IMPORTANCE_MIN
-                )
-                notificationManager.createNotificationChannel(mChannel)
-            }
-        }
-    }
+
 }

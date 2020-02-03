@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
+import com.nemesiss.dev.piaprobox.BuildConfig
 import com.nemesiss.dev.piaprobox.Fragment.Main.*
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService

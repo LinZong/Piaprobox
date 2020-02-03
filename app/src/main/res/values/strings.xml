@@ -23,4 +23,13 @@
 
     <string name="MusicDetailActivityTitle">Item detail</string>
     <string name="MusicDetailActivityParamWrong">Item content description parameter is incorrect.</string>
+    <string name="MusicPlayInfoIsntPrepared">Info for playing this music is still preparing, cannot begin download music.</string>
+
+    <string name="NeedStroageAccessPermission">Need Access Storage Permission</string>
+
+    <string name="WhyNeedStroageAccessPermission">To start a download, we need a permission to write file to your storage at the path you specified.</string>
+
+    <string name="DownloadMusicRequestDialogTitle">Download Music</string>
+    <string name="DownloadMusicRequestDialogMessgae">It seems that you are trying to download this music file. Remember that you MUST follow the licenses claimed by the author.</string>
+
 </resources>

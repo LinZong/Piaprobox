@@ -1,10 +1,13 @@
 package com.nemesiss.dev.piaprobox.Activity.Music
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -19,16 +22,24 @@ import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Adapter.MusicPage.MusicLyricAdapter
 import com.nemesiss.dev.piaprobox.Adapter.MusicPage.RelatedMusicListAdapter
 import com.nemesiss.dev.piaprobox.Fragment.Main.RecommendFragment
+import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
+import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
 import kotlinx.android.synthetic.main.music_player_layout.*
 import org.jsoup.Jsoup
+import javax.inject.Inject
 
 open class MusicPlayerActivity : PiaproboxBaseActivity() {
+
+    @Inject
+    lateinit var downloadService : DownloadService
 
     private lateinit var htmlParser: HTMLParser
     protected var relatedMusicListData: List<RelatedMusicInfo>? = null
@@ -44,8 +55,13 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_player_layout)
 
-        ShowToolbarBackIcon(MusicPlayer_Toolbar)
+        DaggerDownloadServiceFactory
+            .builder()
+            .downloadServiceModules(DownloadServiceModules(this))
+            .build()
+            .inject(this)
 
+        ShowToolbarBackIcon(MusicPlayer_Toolbar)
         ViewCompat.setNestedScrollingEnabled(MusicPlayer_Lyric_RecyclerView, false)
         MusicPlayer_Lyric_RecyclerView.isNestedScrollingEnabled = false
 
@@ -90,6 +106,9 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             Toast.makeText(this, resources.getString(R.string.MusicContentUrlEmpty), Toast.LENGTH_SHORT).show()
             return
         }
+        // 重置播放变量:
+        CurrentPlayMusicUrl = ""
+
         LAST_LOAD_CONTENT_URL = Url
         ShowLoadingIndicator(MusicPlayer_ContentContainer)
         DaggerFetchFactory.create()
@@ -167,7 +186,6 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
                 }
             })
     }
-
 
 
     private fun ParseMusicPlayInfo(HTMLString: String) {
@@ -257,6 +275,35 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.player_toolbar_menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        super.onOptionsItemSelected(item)
+        when(item?.itemId) {
+            R.id.MusicPlayer_Toolbar_Download -> {
+                if(CurrentPlayMusicUrl.isEmpty() || CurrentContentInfo == null || CurrentContentInfo!!.Title.isEmpty()) {
+                    Toast.makeText(this,R.string.MusicPlayInfoIsntPrepared,Toast.LENGTH_SHORT).show()
+                }
+                else  {
+                    ConfirmDownloadRequest()
+                }
+            }
+        }
+
+        return true
+    }
+
+    private fun ConfirmDownloadRequest() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.DownloadMusicRequestDialogTitle)
+            .setMessage(R.string.DownloadMusicRequestDialogMessgae)
+            .setPositiveButton("OK") {_,_ -> downloadService.DownloadMusic("${CurrentContentInfo?.Title ?: System.currentTimeMillis()}.mp3", CurrentPlayMusicUrl, CheckPermissionModel(this)) }
+            .setNegativeButton("Cancel") {_,_ -> }
+            .show()
+    }
 
     companion object {
         @JvmStatic

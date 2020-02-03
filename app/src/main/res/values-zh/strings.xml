@@ -17,4 +17,9 @@
 
     <string name="MusicDetailActivityTitle">作品詳情</string>
     <string name="MusicDetailActivityParamWrong">作品详情信息不正确</string>
+    <string name="MusicPlayInfoIsntPrepared">播放信息仍在准备中，此时无法开始下载</string>
+
+
+    <string name="DownloadMusicRequestDialogTitle">下载音乐</string>
+    <string name="DownloadMusicRequestDialogMessgae">看上去您准备下载这首音乐，您必须遵守作者发布此作品时声明的权利许可，您只能在权利许可允许的范围内使用下载的文件。对于任何侵权行为，本软件及作者不负任何责任。</string>
 </resources>
