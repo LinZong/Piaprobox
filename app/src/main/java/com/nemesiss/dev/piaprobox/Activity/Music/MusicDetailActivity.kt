@@ -73,7 +73,7 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
 
     private fun ShowWorkItemDetail(OriginalWorkItemDetailText: String) {
 
-        OriginalWorkItemDetailText.split(" ").forEach {
+        OriginalWorkItemDetailText.split("<br>").forEach {
 
             val tv = TextView(this)
             val lp = LinearLayout.LayoutParams(
