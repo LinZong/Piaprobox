@@ -21,7 +21,7 @@ import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Adapter.MusicPage.MusicLyricAdapter
 import com.nemesiss.dev.piaprobox.Adapter.MusicPage.RelatedMusicListAdapter
-import com.nemesiss.dev.piaprobox.Fragment.Main.RecommendFragment
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.R
@@ -317,7 +317,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             return if (ValueFromParser.contains("cdn")) {
                 "http://${ValueFromParser}"
             } else {
-                RecommendFragment.DefaultTagUrl + ValueFromParser
+                MainRecommendFragment.DefaultTagUrl + ValueFromParser
             }
         }
 

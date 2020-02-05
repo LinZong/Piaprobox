@@ -3,14 +3,13 @@ package com.nemesiss.dev.piaprobox.Activity.Common
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
-import com.nemesiss.dev.piaprobox.BuildConfig
 import com.nemesiss.dev.piaprobox.Fragment.Main.*
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import kotlinx.android.synthetic.main.activity_main.*
@@ -87,7 +86,7 @@ class MainActivity : PiaproboxBaseActivity() {
                 MusicFragment::class.java,
                 IllustratorFragment::class.java,
                 TextWorkFragment::class.java,
-                RecommendFragment::class.java
+                MainRecommendFragment::class.java
             )
         )
 

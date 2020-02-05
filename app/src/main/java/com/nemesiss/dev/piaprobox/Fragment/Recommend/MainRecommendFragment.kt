@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Fragment.Main
+package com.nemesiss.dev.piaprobox.Fragment.Recommend
 
 import RecommendMusicCategoryFragment
 import android.animation.Animator
@@ -14,7 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.RecommendCategoryFragmentPageAdapter
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.BaseRecommendFragment
+import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.recommand_fragment.*
@@ -25,9 +25,10 @@ enum class RecommendListType(var Name: String, var Index: Int) {
     TEXT("TEXT", 2);
 }
 
-class RecommendFragment : BaseMainFragment() {
+class MainRecommendFragment : BaseMainFragment() {
 
-    private var CurrentContentType = RecommendListType.MUSIC
+    private var CurrentContentType =
+        RecommendListType.MUSIC
     private lateinit var fragments : List<BaseRecommendFragment>
 
     private var CurrentDisplayFragmentIndex = 0;
@@ -74,7 +75,11 @@ class RecommendFragment : BaseMainFragment() {
 
     private fun BindCategoryClickHandler() {
         arrayOf(Recommend_Category_Tag_Music, Recommend_Category_Tag_Image, Recommend_Category_Tag_Text)
-            .zip(arrayOf(RecommendListType.MUSIC, RecommendListType.IMAGE, RecommendListType.TEXT))
+            .zip(arrayOf(
+                RecommendListType.MUSIC,
+                RecommendListType.IMAGE,
+                RecommendListType.TEXT
+            ))
             .forEachIndexed { index, pair ->
                 pair.first.setOnClickListener {
                     if (pair.second != CurrentContentType) {
@@ -114,10 +119,10 @@ class RecommendFragment : BaseMainFragment() {
             }
         })
         DimBrightSet.duration = 300
-        val textColorDimBrightAnim = ValueAnimator.ofInt(0, 255)
+        val textColorDimBrightAnim = ValueAnimator.ofInt(128, 255)
         textColorDimBrightAnim.addUpdateListener {
             val value = it.animatedValue as Int
-            val dimColor = Color.rgb(255 - value, 255 - value, 255 - value)
+            val dimColor = Color.rgb(128+255-value,128+255-value,128+255-value)
             val brightColor = Color.rgb(value, value, value)
             dimView.setTextColor(dimColor)
             brightView.setTextColor(brightColor)

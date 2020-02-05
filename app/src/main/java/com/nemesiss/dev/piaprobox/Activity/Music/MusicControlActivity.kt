@@ -15,6 +15,7 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerServiceController
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.SimpleMusicPlayer
+import com.nemesiss.dev.piaprobox.Service.Persistence
 import kotlinx.android.synthetic.main.music_player_layout.*
 
 
@@ -26,6 +27,7 @@ class MusicControlActivity : MusicPlayerActivity() {
     private var IS_ENABLE_LOOPING = false
         set(value) {
             PlayerServiceController?.Loop(value)
+            Persistence.SetMusicPlayerLoopStatus(value)
             if (value) {
                 MusicPlayer_Control_Repeat.setImageResource(R.drawable.ic_repeat_one_red_600_24dp)
             } else {
@@ -46,6 +48,15 @@ class MusicControlActivity : MusicPlayerActivity() {
         super.onCreate(savedInstanceState)
         InitView()
         InitSeekbarController()
+        LoadUserPreferenceSetup()
+        PrepareActivityStatus()
+    }
+
+    private fun LoadUserPreferenceSetup() {
+        IS_ENABLE_LOOPING =  Persistence.GetMusicPlayerLoopStatus()
+    }
+
+    private fun PrepareActivityStatus() {
         val status = intent.getSerializableExtra(PERSIST_STATUS_INTENT_KEY)
         StartService(NoNeedToStart = status != null)
         if (status != null) {
@@ -185,6 +196,9 @@ class MusicControlActivity : MusicPlayerActivity() {
                         if (PlayerServiceController?.PlayerStatus()?.value == MusicStatus.STOP && NEW_MUSIC_LOADED) {
                             PlayerServiceController?.Play()
                         }
+                        if(IS_ENABLE_LOOPING) {
+                            PlayerServiceController?.Loop(true)
+                        }
                     }
                     SimpleMusicPlayer.PrepareStatus.Failed -> {
                         ResetTimeIndicator()
@@ -210,7 +224,6 @@ class MusicControlActivity : MusicPlayerActivity() {
                         MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
                     }
                     MusicStatus.STOP -> {
-//                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
                         ResetTimeIndicator()
                     }
                     MusicStatus.END -> {

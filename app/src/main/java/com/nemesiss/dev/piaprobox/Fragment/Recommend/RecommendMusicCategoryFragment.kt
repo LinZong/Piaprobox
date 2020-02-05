@@ -12,9 +12,8 @@ import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.RecommendItemAdapter
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
-import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
-import com.nemesiss.dev.piaprobox.Fragment.Main.RecommendFragment.Companion.DefaultTagUrl
-import com.nemesiss.dev.piaprobox.Fragment.Main.RecommendListType
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment.Companion.DefaultTagUrl
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.BaseRecommendFragment
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
