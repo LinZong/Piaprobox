@@ -1,11 +1,13 @@
 package com.nemesiss.dev.piaprobox.Activity.Common
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.Toast
+import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.View.Common.LoadingIndicatorView
 
 open class PiaproboxBaseActivity : AppCompatActivity() {
@@ -23,6 +25,9 @@ open class PiaproboxBaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         activities.removeAt(activities.size-1)
+        if(activities.isEmpty() && !MusicPlayerService.IS_FOREGROUND) {
+            stopService(Intent(this, MusicPlayerService::class.java))
+        }
     }
 
     protected var loadingIndicatorView : LoadingIndicatorView? = null

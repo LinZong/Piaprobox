@@ -19,10 +19,17 @@ class MusicPlayerService : Service() {
     companion object {
         @JvmStatic
         var SERVICE_AVAILABLE = BehaviorSubject.createDefault(false)
+
+        @JvmStatic
+        var IS_BINDED = false
+            private set
+
+        @JvmStatic
+        var IS_FOREGROUND = false
+            private set
     }
 
-    private var IS_BINDED = false
-    private var IS_FOREGROUND = false
+
 
     private lateinit var musicPlayerNotificationManager: MusicPlayerNotificationManager
     private var PlayingMusicContentInfo: MusicContentInfo? = null
@@ -239,6 +246,7 @@ class MusicPlayerService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("MusicPlayerService", "MusicPlayerService onDestroy")
+        SERVICE_AVAILABLE.onNext(false)
         InnerPlayer!!.SafetyDestroy()
         InnerPlayer = null
         stopForeground(true)
