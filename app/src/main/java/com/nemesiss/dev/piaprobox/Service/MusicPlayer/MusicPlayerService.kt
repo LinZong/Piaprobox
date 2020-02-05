@@ -48,7 +48,7 @@ class MusicPlayerService : Service() {
         override fun PrepareAsync(URL: String, musicContent: MusicContentInfo) {
             PlayingMusicContentInfo = musicContent
             WillPlayMusicURLFromActivity = "" // Clear pending prepare.
-            UpdateNotification(MusicStatus.STOP, musicContent)
+//            UpdateNotification(MusicStatus.STOP, musicContent)
             InnerPlayer!!.LoadMusic(URL)
         }
 
@@ -116,6 +116,7 @@ class MusicPlayerService : Service() {
         }
     }
 
+    // Service内部使用
     private fun UpdateNotification(playerStatus: MusicStatus, playingMusicContentInfo: MusicContentInfo) {
         if (!IS_FOREGROUND) {
             ActAsForegroundService(
@@ -138,6 +139,7 @@ class MusicPlayerService : Service() {
         }
     }
 
+    // Activity 主动调用的.
     fun UpdateWakeupMusicPlayerActivityIntent(
         musicPlayerActivityStatus: MusicPlayerActivityStatus, playerStatus: MusicStatus
     ) {

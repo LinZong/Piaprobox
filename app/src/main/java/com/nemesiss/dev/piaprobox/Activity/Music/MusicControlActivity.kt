@@ -16,6 +16,7 @@ import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerServiceControll
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.SimpleMusicPlayer
 import com.nemesiss.dev.piaprobox.Service.Persistence
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.music_player_layout.*
 
 
@@ -40,8 +41,9 @@ class MusicControlActivity : MusicPlayerActivity() {
 
     private var PlayerService: MusicPlayerService? = null
     private var PlayerServiceController: MusicPlayerServiceController? = null
-
     private var CurrentMusicTotalDuration = 0
+
+    private var SubscribedRelations = ArrayList<Disposable?>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,9 +134,9 @@ class MusicControlActivity : MusicPlayerActivity() {
             PlayerService?.NotifyServiceIsOK()
             Log.d("MusicControlActivity", "音乐播放器服务Bind完成  ${PlayerService?.hashCode()}")
             PlayerServiceController = PlayerService!!.ServiceController
-            if (PlayerServiceController?.PlayerStatus()?.value != MusicStatus.STOP && NEW_MUSIC_LOADED) {
-                PlayerServiceController?.Stop()
-            }
+//            if (PlayerServiceController?.PlayerStatus()?.value != MusicStatus.STOP && NEW_MUSIC_LOADED) {
+//                PlayerServiceController?.Stop()
+//            }
             SubscribeMusicPlayerStatus()
         }
     }
@@ -150,14 +152,14 @@ class MusicControlActivity : MusicPlayerActivity() {
 
     @SuppressLint("CheckResult")
     private fun SubscribeServiceStatus() {
-        MusicPlayerService.SERVICE_AVAILABLE.subscribe {
+        SubscribedRelations.add(MusicPlayerService.SERVICE_AVAILABLE.subscribe {
             if (it) {
                 HandlePendingPrepareURL()
             }
-        }
+        })
     }
 
-    private fun PersistMusicPlayerActivityStatus(playerStatus: MusicStatus) {
+    fun PersistMusicPlayerActivityStatus(playerStatus: MusicStatus, AlsoUpdateActivityIntent : Boolean = true) {
 
         if (relatedMusicListData != null && lyricListData != null && CurrentContentInfo != null) {
             val ActivityStatusModel = MusicPlayerActivityStatus(
@@ -170,7 +172,8 @@ class MusicControlActivity : MusicPlayerActivity() {
                 MusicPlayer_Seekbar.secondaryProgress,
                 IS_ENABLE_LOOPING
             )
-            PlayerService?.UpdateWakeupMusicPlayerActivityIntent(ActivityStatusModel, playerStatus)
+            if(AlsoUpdateActivityIntent)
+                PlayerService?.UpdateWakeupMusicPlayerActivityIntent(ActivityStatusModel, playerStatus)
             LAST_MUSIC_PLAYER_ACTIVITY_STATUS = ActivityStatusModel
             LAST_PLAYER_STATUS = playerStatus
         }
@@ -186,58 +189,61 @@ class MusicControlActivity : MusicPlayerActivity() {
 
     @SuppressLint("CheckResult")
     private fun SubscribeMusicPlayerStatus() {
-        PlayerServiceController?.PrepareStatus()
-            ?.subscribe { status ->
-                when (status) {
-                    SimpleMusicPlayer.PrepareStatus.Prepared -> {
-                        Log.d("MusicControlActivity", "音乐完成Prepare.")
-                        CurrentMusicTotalDuration = PlayerService?.InnerPlayer?.GetDuration() ?: 0
-                        MusicPlayer_TotalTime.text = Duration2Time(CurrentMusicTotalDuration)
-                        if (PlayerServiceController?.PlayerStatus()?.value == MusicStatus.STOP && NEW_MUSIC_LOADED) {
-                            PlayerServiceController?.Play()
+        SubscribedRelations.add(
+            PlayerServiceController?.PrepareStatus()
+                ?.subscribe { status ->
+                    when (status) {
+                        SimpleMusicPlayer.PrepareStatus.Prepared -> {
+                            Log.d("MusicControlActivity", "音乐完成Prepare.")
+                            CurrentMusicTotalDuration = PlayerService?.InnerPlayer?.GetDuration() ?: 0
+                            MusicPlayer_TotalTime.text = Duration2Time(CurrentMusicTotalDuration)
+                            if (PlayerServiceController?.PlayerStatus()?.value == MusicStatus.STOP && NEW_MUSIC_LOADED) {
+                                PlayerServiceController?.Play()
+                            }
+                            if(IS_ENABLE_LOOPING) {
+                                PlayerServiceController?.Loop(true)
+                            }
                         }
-                        if(IS_ENABLE_LOOPING) {
-                            PlayerServiceController?.Loop(true)
+                        SimpleMusicPlayer.PrepareStatus.Failed -> {
+                            ResetTimeIndicator()
                         }
-                    }
-                    SimpleMusicPlayer.PrepareStatus.Failed -> {
-                        ResetTimeIndicator()
-                    }
-                    SimpleMusicPlayer.PrepareStatus.Destroyed -> {
-                        ResetTimeIndicator()
-                    }
-                    SimpleMusicPlayer.PrepareStatus.Default -> {
-                        ResetTimeIndicator()
+                        SimpleMusicPlayer.PrepareStatus.Destroyed -> {
+                            ResetTimeIndicator()
+                        }
+                        SimpleMusicPlayer.PrepareStatus.Default -> {
+                            ResetTimeIndicator()
+                        }
                     }
                 }
-            }
-
-        PlayerServiceController?.PlayerStatus()
-            ?.subscribe { status ->
-                when (status) {
-                    MusicStatus.PLAY -> {
-                        PersistMusicPlayerActivityStatus(MusicStatus.PLAY)
-                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_pause_red_600_24dp)
-                    }
-                    MusicStatus.PAUSE -> {
-                        PersistMusicPlayerActivityStatus(MusicStatus.PAUSE)
-                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
-                    }
-                    MusicStatus.STOP -> {
-                        ResetTimeIndicator()
-                    }
-                    MusicStatus.END -> {
-                        if(IS_ENABLE_LOOPING) {
-                            PlayerServiceController?.Play()
-                            PlayerServiceController?.Loop(true)
+        )
+        SubscribedRelations.add(
+            PlayerServiceController?.PlayerStatus()
+                ?.subscribe { status ->
+                    when (status) {
+                        MusicStatus.PLAY -> {
+                            PersistMusicPlayerActivityStatus(MusicStatus.PLAY)
+                            MusicPlayer_Control_Play.setImageResource(R.drawable.ic_pause_red_600_24dp)
                         }
-                        else {
-                            PlayerServiceController?.Stop()
+                        MusicStatus.PAUSE -> {
+                            PersistMusicPlayerActivityStatus(MusicStatus.PAUSE)
+                            MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
                         }
-                    }
+                        MusicStatus.STOP -> {
+                            ResetTimeIndicator()
+                        }
+                        MusicStatus.END -> {
+                            if(IS_ENABLE_LOOPING) {
+                                PlayerServiceController?.Play()
+                                PlayerServiceController?.Loop(true)
+                            }
+                            else {
+                                PlayerServiceController?.Stop()
+                            }
+                        }
 
+                    }
                 }
-            }
+        )
 
         PlayerServiceController?.SetElapsedTimeListener { CurrentTimeStamp ->
             MusicPlayer_CurrentTime.text = Duration2Time(CurrentTimeStamp)
@@ -295,6 +301,10 @@ class MusicControlActivity : MusicPlayerActivity() {
         }
 
         unbindService(PlayerServiceConnection)
+        SubscribedRelations.forEach {
+            if(it?.isDisposed != false)
+                it?.dispose()
+        }
     }
 
     private fun InitSeekbarController() {

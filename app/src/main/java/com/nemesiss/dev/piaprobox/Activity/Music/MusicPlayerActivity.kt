@@ -24,6 +24,7 @@ import com.nemesiss.dev.piaprobox.Adapter.MusicPage.RelatedMusicListAdapter
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
+import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
@@ -213,12 +214,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         intent.action = "UPDATE_INFO"
         intent.putExtra("UpdateMusicContentInfo",CurrentContentInfo)
         intent.putExtra("WillPlayMusicURL",playInfo.URL)
+        (this as? MusicControlActivity)?.PersistMusicPlayerActivityStatus(MusicStatus.STOP,false)
         startService(intent)
-
-//        runOnUiThread {
-//            MusicPlayer_ThumbUrl.text = playInfo.Thumb
-//            MusicPlayer_MusicUrl.text = playInfo.URL
-//        }
         HideLoadingIndicator(MusicPlayer_ContentContainer)
     }
 
@@ -292,7 +289,6 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
                 }
             }
         }
-
         return true
     }
 
