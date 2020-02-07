@@ -1,6 +1,7 @@
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,7 @@ class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d("MainRecommendFragment","创建View  RecommendMusicCategoryFragment")
         return inflater.inflate(R.layout.recommend_category_layout, container, false)
     }
 

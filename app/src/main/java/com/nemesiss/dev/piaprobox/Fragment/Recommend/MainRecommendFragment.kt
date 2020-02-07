@@ -42,12 +42,14 @@ class MainRecommendFragment : BaseMainFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d("MainRecommendFragment","创建View")
         return inflater.inflate(R.layout.recommand_fragment, container, false)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("MainRecommendFragment","View 被创建")
         BindCategoryClickHandler()
         Recommend_Category_Tag_Music.isSelected = true
         Recommend_Category_Tag_Music.setTextColor(Color.WHITE)
@@ -56,7 +58,7 @@ class MainRecommendFragment : BaseMainFragment() {
             RecommendImageCategoryFragment()
         )
         Recommend_Category_Frag_Pager.adapter =
-            RecommendCategoryFragmentPageAdapter(fragmentManager ?: activity!!.supportFragmentManager, fragments)
+            RecommendCategoryFragmentPageAdapter(childFragmentManager, fragments) // 嵌套在Fragment里面的子Fragment需要使用childFragmentManager.
         Recommend_Category_Frag_Pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {
             }
