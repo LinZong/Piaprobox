@@ -13,6 +13,7 @@ import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.BaseNotificationManager
+import com.nemesiss.dev.piaprobox.Util.AppUtil
 
 class MusicPlayerNotificationManager(context: Context, var activityIntent: Intent) : BaseNotificationManager(context) {
 
@@ -92,10 +93,12 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
 //            PendingIntent.FLAG_UPDATE_CURRENT
 //        )
 
-        val intents = arrayOf(Intent(context, MainActivity::class.java), activityIntent)
+        // 判断如果此时App退出了，才重启MainActivity.
+
+        val intents = arrayListOf(activityIntent)
 
         val OpenMusicPlayerActivityIntent =
-            PendingIntent.getActivities(context, 0, intents, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivities(context, 0, intents.toTypedArray(), PendingIntent.FLAG_UPDATE_CURRENT)
         val notification = GetDefualtNotificationBuilder()
             .setContentIntent(OpenMusicPlayerActivityIntent)
             .build()
@@ -108,6 +111,4 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
             notificationManager.notify(NotificationID, notification)
         return notification
     }
-
-
 }

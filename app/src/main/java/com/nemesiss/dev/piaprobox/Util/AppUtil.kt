@@ -2,31 +2,23 @@ package com.nemesiss.dev.piaprobox.Util
 
 import android.Manifest
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.res.AssetManager
 import android.content.res.Resources
 import android.os.Build
-import android.os.Message
 import android.support.v4.content.ContextCompat
 import android.view.View
 import com.karumi.dexter.Dexter
-import com.karumi.dexter.DexterBuilder
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.BaseMultiplePermissionsListener
-import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.karumi.dexter.listener.single.PermissionListener
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 
 
 class AppUtil {
     companion object {
-
         @JvmStatic
         fun HideNavigationBar(activity: Activity) {
             if (Build.VERSION.SDK_INT < 19) {
@@ -55,6 +47,39 @@ class AppUtil {
         fun Px2Dp(resources: Resources, px: Int): Int {
             val scale = resources.displayMetrics.density
             return (px / scale + 0.5).toInt()
+        }
+
+        @JvmStatic
+        fun IsAppRunning(context: Context, packageName: String): Boolean {
+            val activityManager =
+                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val procInfos = activityManager.runningAppProcesses
+            if (procInfos != null) {
+                for (processInfo in procInfos) {
+                    if (processInfo.processName == packageName) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        @JvmStatic
+        fun IsActivityAlivInTaskStack(context: Context, clazz: Class<*>) : Boolean {
+            val intent = Intent(context, clazz)
+            val componentName = intent.resolveActivity(context.packageManager)
+            var flag = false
+            if(componentName != null) {
+                val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                val taskLists = activityManager.getRunningTasks(20)
+                for(task in taskLists) {
+                    if(task.baseActivity == componentName) {
+                        flag = true
+                        break
+                    }
+                }
+            }
+            return flag
         }
     }
 }

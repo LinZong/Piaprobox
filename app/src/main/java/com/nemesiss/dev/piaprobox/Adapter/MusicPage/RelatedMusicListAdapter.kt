@@ -10,6 +10,7 @@ import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.single_related_music_item.view.*
 
@@ -31,7 +32,7 @@ class RelatedMusicListAdapter(var items : List<RelatedMusicInfo>, val itemSelect
         val item = items[index]
         Glide
             .with(PiaproboxApplication.Self.applicationContext)
-            .load(MusicPlayerActivity.GetAlbumThumb(item.Thumb))
+            .load(GetAlbumThumb(item.Thumb))
             .priority(Priority.HIGH)
             .bitmapTransform(RoundedCornersTransformation(PiaproboxApplication.Self.applicationContext,20,0, RoundedCornersTransformation.CornerType.ALL))
             .into(vh.itemView.MusicPlayer_RelatedMusic_Item_Thumb)

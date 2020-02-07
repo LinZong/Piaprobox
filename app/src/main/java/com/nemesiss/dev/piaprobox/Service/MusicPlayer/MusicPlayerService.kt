@@ -9,6 +9,7 @@ import android.util.Log
 import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
+import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
@@ -29,8 +30,6 @@ class MusicPlayerService : Service() {
             private set
     }
 
-
-
     private lateinit var musicPlayerNotificationManager: MusicPlayerNotificationManager
     private var PlayingMusicContentInfo: MusicContentInfo? = null
     private var WillPlayMusicURLFromActivity = ""
@@ -38,7 +37,7 @@ class MusicPlayerService : Service() {
     override fun onCreate() {
         super.onCreate()
         musicPlayerNotificationManager =
-            MusicPlayerNotificationManager(this, Intent(this, MusicControlActivity::class.java))
+            MusicPlayerNotificationManager(PiaproboxApplication.Self.applicationContext, Intent(this, MusicControlActivity::class.java))
     }
 
     var InnerPlayer: SimpleMusicPlayer? = null
@@ -150,8 +149,7 @@ class MusicPlayerService : Service() {
     fun UpdateWakeupMusicPlayerActivityIntent(
         musicPlayerActivityStatus: MusicPlayerActivityStatus, playerStatus: MusicStatus
     ) {
-        val intent: Intent
-        intent = Intent(this, MusicControlActivity::class.java)
+        val intent = Intent(PiaproboxApplication.Self.applicationContext, MusicControlActivity::class.java)
         intent.putExtra(MusicPlayerActivity.PERSIST_STATUS_INTENT_KEY, musicPlayerActivityStatus)
         musicPlayerNotificationManager.activityIntent = intent
         musicPlayerNotificationManager.SendNotification(

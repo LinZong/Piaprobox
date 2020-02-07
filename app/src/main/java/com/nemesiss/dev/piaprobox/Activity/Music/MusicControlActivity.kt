@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.widget.SeekBar
+import com.nemesiss.dev.piaprobox.Activity.Common.MainActivity
+import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
@@ -16,6 +18,7 @@ import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerServiceControll
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.SimpleMusicPlayer
 import com.nemesiss.dev.piaprobox.Service.Persistence
+import com.nemesiss.dev.piaprobox.Util.AppUtil
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.music_player_layout.*
 
@@ -55,7 +58,7 @@ class MusicControlActivity : MusicPlayerActivity() {
     }
 
     private fun LoadUserPreferenceSetup() {
-        IS_ENABLE_LOOPING =  Persistence.GetMusicPlayerLoopStatus()
+        IS_ENABLE_LOOPING = Persistence.GetMusicPlayerLoopStatus()
     }
 
     private fun PrepareActivityStatus() {
@@ -95,13 +98,13 @@ class MusicControlActivity : MusicPlayerActivity() {
                     }
                 }
             } else {
-                PendingPrepareURL = CurrentPlayMusicUrl
+                PendingPrepareURL = CurrentMusicPlayInfo?.URL ?: ""
                 StartService()
             }
         }
         MusicPlayer_Control_MoreInfo.setOnClickListener {
             val intent = Intent(this, MusicDetailActivity::class.java)
-            intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, CurrentContentInfo)
+            intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, CurrentMusicContentInfo)
             startActivity(intent)
         }
 
@@ -144,7 +147,7 @@ class MusicControlActivity : MusicPlayerActivity() {
     @Synchronized
     private fun HandlePendingPrepareURL() {
         if (PendingPrepareURL.isNotEmpty()) {
-            PlayerServiceController?.PrepareAsync(PendingPrepareURL, CurrentContentInfo!!)
+            PlayerServiceController?.PrepareAsync(PendingPrepareURL, CurrentMusicContentInfo!!)
             PlayerServiceController?.Play()
             PendingPrepareURL = ""
         }
@@ -159,20 +162,20 @@ class MusicControlActivity : MusicPlayerActivity() {
         })
     }
 
-    fun PersistMusicPlayerActivityStatus(playerStatus: MusicStatus, AlsoUpdateActivityIntent : Boolean = true) {
+    fun PersistMusicPlayerActivityStatus(playerStatus: MusicStatus, AlsoUpdateActivityIntent: Boolean = true) {
 
-        if (relatedMusicListData != null && lyricListData != null && CurrentContentInfo != null) {
+        if (relatedMusicListData != null && lyricListData != null && CurrentMusicContentInfo != null) {
             val ActivityStatusModel = MusicPlayerActivityStatus(
                 relatedMusicListData!!,
                 lyricListData!!,
-                CurrentPlayMusicUrl,
-                CurrentContentInfo!!,
+                CurrentMusicPlayInfo!!,
+                CurrentMusicContentInfo!!,
                 CurrentMusicTotalDuration,
                 MusicPlayer_Seekbar.progress,
                 MusicPlayer_Seekbar.secondaryProgress,
                 IS_ENABLE_LOOPING
             )
-            if(AlsoUpdateActivityIntent)
+            if (AlsoUpdateActivityIntent)
                 PlayerService?.UpdateWakeupMusicPlayerActivityIntent(ActivityStatusModel, playerStatus)
             LAST_MUSIC_PLAYER_ACTIVITY_STATUS = ActivityStatusModel
             LAST_PLAYER_STATUS = playerStatus
@@ -200,7 +203,7 @@ class MusicControlActivity : MusicPlayerActivity() {
                             if (PlayerServiceController?.PlayerStatus()?.value == MusicStatus.STOP && NEW_MUSIC_LOADED) {
                                 PlayerServiceController?.Play()
                             }
-                            if(IS_ENABLE_LOOPING) {
+                            if (IS_ENABLE_LOOPING) {
                                 PlayerServiceController?.Loop(true)
                             }
                         }
@@ -232,11 +235,10 @@ class MusicControlActivity : MusicPlayerActivity() {
                             ResetTimeIndicator()
                         }
                         MusicStatus.END -> {
-                            if(IS_ENABLE_LOOPING) {
+                            if (IS_ENABLE_LOOPING) {
                                 PlayerServiceController?.Play()
                                 PlayerServiceController?.Loop(true)
-                            }
-                            else {
+                            } else {
                                 PlayerServiceController?.Stop()
                             }
                         }
@@ -272,8 +274,8 @@ class MusicControlActivity : MusicPlayerActivity() {
 
     private fun PlayNewMusic() {
         ResetTimeIndicator()
-        if (CurrentPlayMusicUrl.isNotEmpty()) {
-            PlayerServiceController?.PrepareAsync(CurrentPlayMusicUrl, CurrentContentInfo!!)
+        if (CurrentMusicPlayInfo != null) {
+            PlayerServiceController?.PrepareAsync(CurrentMusicPlayInfo!!.URL, CurrentMusicContentInfo!!)
             PersistMusicPlayerActivityStatus(MusicStatus.STOP)
             MusicPlayer_Control_Play.setImageResource(R.drawable.ic_more_horiz_red_600_24dp)
             return
@@ -302,8 +304,13 @@ class MusicControlActivity : MusicPlayerActivity() {
 
         unbindService(PlayerServiceConnection)
         SubscribedRelations.forEach {
-            if(it?.isDisposed != false)
+            if (it?.isDisposed != false)
                 it?.dispose()
+        }
+        if(FROM_NOTIFICATION_INTENT && !AppUtil.IsActivityAlivInTaskStack(this, MainActivity::class.java)) {
+            val intent = Intent(PiaproboxApplication.Self.applicationContext,MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
         }
     }
 

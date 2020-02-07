@@ -5,6 +5,7 @@ import android.util.Log
 import com.alibaba.fastjson.JSONObject
 import com.nemesiss.dev.HTMLContentParser.ContentParserFactory
 import com.nemesiss.dev.HTMLContentParser.Steps.ContentParserImpl
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.HTMLParser.RuleVersion
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import java.io.BufferedReader
@@ -22,6 +23,15 @@ class HTMLParser(context: Context) {
         fun ProvideRuleJsonFileHandle() : File {
             val cachePath = AppUtil.GetAppCachePath()
             return File(cachePath).resolve("ContentParserRule.json")
+        }
+
+        @JvmStatic
+        fun GetAlbumThumb(ValueFromParser: String): String {
+            return if (ValueFromParser.contains("cdn")) {
+                "http://${ValueFromParser}"
+            } else {
+                MainRecommendFragment.DefaultTagUrl + ValueFromParser
+            }
         }
     }
 
@@ -46,5 +56,7 @@ class HTMLParser(context: Context) {
         Log.d(LOGTAG, "HTML Parser Loaded! Description here: ↓")
         Parser.Description()
     }
+
+
 
 }

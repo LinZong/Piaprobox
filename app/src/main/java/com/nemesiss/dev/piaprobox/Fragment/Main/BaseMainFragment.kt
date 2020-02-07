@@ -21,11 +21,13 @@ abstract class BaseMainFragment : Fragment() {
 
 
     fun LoadFailedTips(code: Int, message: String) {
-        Toast.makeText(
-            context ?: PiaproboxApplication.Self.applicationContext,
-            "$message ($code)",
-            Toast.LENGTH_SHORT
-        ).show()
+        activity?.runOnUiThread {
+            Toast.makeText(
+                context ?: PiaproboxApplication.Self.applicationContext,
+                "$message ($code)",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
 

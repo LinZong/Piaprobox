@@ -14,6 +14,7 @@ import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import kotlinx.android.synthetic.main.activity_music_detail.*
 
@@ -35,7 +36,7 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
             Toast.makeText(this, resources.getString(R.string.MusicDetailActivityParamWrong), Toast.LENGTH_SHORT).show()
             return
         }
-        val AvatarURL = MusicPlayerActivity.GetAlbumThumb(contentInfo.ArtistAvatar)
+        val AvatarURL = GetAlbumThumb(contentInfo.ArtistAvatar)
         ShowArtistInfo(AvatarURL, contentInfo.Artist)
         ShowWorkItemInfo(contentInfo.CreateDetail)
         ShowWorkItemDetail(contentInfo.CreateDescription)

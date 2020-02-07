@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
+import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Fragment.Main.*
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.R
@@ -66,7 +67,7 @@ class MainActivity : PiaproboxBaseActivity() {
                 CurrentShowMainFragment.Refresh()
             }
             MUSIC_PLAYER_MENU_ID -> {
-                val intent = Intent(this, MusicControlActivity::class.java)
+                val intent = Intent(PiaproboxApplication.Self.applicationContext, MusicControlActivity::class.java)
                 intent.putExtra(MusicPlayerActivity.CLICK_TOOLBAR_ICON,true)
                 startActivity(intent)
             }

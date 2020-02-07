@@ -15,27 +15,30 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.RecommendCategoryFragmentPageAdapter
 import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.BaseRecommendCategoryFragment
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.recommand_fragment.*
 
-enum class RecommendListType(var Name: String, var Index: Int) {
-    MUSIC("MUSIC", 0),
-    IMAGE("IMAGE", 1),
-    TEXT("TEXT", 2);
+enum class RecommendListType(var Name: String, var Index: Int, var CookieName: String) {
+    MUSIC("MUSIC", 0, "music"),
+    IMAGE("IMAGE", 1, "image"),
+    TEXT("TEXT", 2, "text");
 }
 
 class MainRecommendFragment : BaseMainFragment() {
 
     private var CurrentContentType =
         RecommendListType.MUSIC
-    private lateinit var fragments : List<BaseRecommendFragment>
 
-    private var CurrentDisplayFragmentIndex = 0;
+    private lateinit var fragments: List<BaseRecommendCategoryFragment>
+
+    private var CurrentDisplayFragmentIndex = 0
 
     companion object {
         @JvmStatic
-        val DefaultTagUrl = "http://piapro.jp"
+        val DefaultTagUrl = "https://piapro.jp"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,9 +51,13 @@ class MainRecommendFragment : BaseMainFragment() {
         BindCategoryClickHandler()
         Recommend_Category_Tag_Music.isSelected = true
         Recommend_Category_Tag_Music.setTextColor(Color.WHITE)
-        fragments = arrayListOf(RecommendMusicCategoryFragment())
-        Recommend_Category_Frag_Pager.adapter = RecommendCategoryFragmentPageAdapter(fragmentManager ?: activity!!.supportFragmentManager, fragments)
-        Recommend_Category_Frag_Pager.addOnPageChangeListener(object  : ViewPager.OnPageChangeListener {
+        fragments = arrayListOf(
+            RecommendMusicCategoryFragment(),
+            RecommendImageCategoryFragment()
+        )
+        Recommend_Category_Frag_Pager.adapter =
+            RecommendCategoryFragmentPageAdapter(fragmentManager ?: activity!!.supportFragmentManager, fragments)
+        Recommend_Category_Frag_Pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {
             }
 
@@ -64,22 +71,20 @@ class MainRecommendFragment : BaseMainFragment() {
         })
     }
 
-
     override fun Refresh() {
         // 暂时不联网测试
-
         fragments[CurrentDisplayFragmentIndex].Refresh()
-//        ShowLoadingIndicator()
-//        LoadContent()
     }
 
     private fun BindCategoryClickHandler() {
         arrayOf(Recommend_Category_Tag_Music, Recommend_Category_Tag_Image, Recommend_Category_Tag_Text)
-            .zip(arrayOf(
-                RecommendListType.MUSIC,
-                RecommendListType.IMAGE,
-                RecommendListType.TEXT
-            ))
+            .zip(
+                arrayOf(
+                    RecommendListType.MUSIC,
+                    RecommendListType.IMAGE,
+                    RecommendListType.TEXT
+                )
+            )
             .forEachIndexed { index, pair ->
                 pair.first.setOnClickListener {
                     if (pair.second != CurrentContentType) {
@@ -105,14 +110,11 @@ class MainRecommendFragment : BaseMainFragment() {
         DimBrightSet.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(p0: Animator?) {
             }
-
             override fun onAnimationEnd(p0: Animator?) {
                 dimView.isSelected = false
             }
-
             override fun onAnimationCancel(p0: Animator?) {
             }
-
             override fun onAnimationStart(p0: Animator?) {
                 brightView.isSelected = true
                 brightBg.alpha = 0
@@ -122,7 +124,7 @@ class MainRecommendFragment : BaseMainFragment() {
         val textColorDimBrightAnim = ValueAnimator.ofInt(128, 255)
         textColorDimBrightAnim.addUpdateListener {
             val value = it.animatedValue as Int
-            val dimColor = Color.rgb(128+255-value,128+255-value,128+255-value)
+            val dimColor = Color.rgb(128 + 255 - value, 128 + 255 - value, 128 + 255 - value)
             val brightColor = Color.rgb(value, value, value)
             dimView.setTextColor(dimColor)
             brightView.setTextColor(brightColor)
@@ -133,20 +135,12 @@ class MainRecommendFragment : BaseMainFragment() {
     }
 
     private fun OnCategoryTagSelected(contentType: RecommendListType) {
+        Recommend_Category_Frag_Pager.currentItem = contentType.Index
+        CurrentContentType = contentType
 
     }
 
     override fun LoadBannerImage() {
-        Log.d("RecommendFragment", BaseMainFragment_Banner_ImageView.toString())
         BaseMainFragment_Banner_ImageView.setImageResource(R.drawable.recommand_banner)
     }
-
-
-    private fun LoadContent() {
-
-    }
-
-
-    // Load data to RecyclerView
-
 }

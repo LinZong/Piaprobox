@@ -5,9 +5,14 @@ import android.content.Intent
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.Persistence
+import java.net.HttpURLConnection
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.HttpsURLConnection
+import javax.net.ssl.SSLContext
+import javax.net.ssl.X509TrustManager
 
 class PiaproboxApplication : Application() {
-    val delayTaskExecutor = AsyncExecutor()
     override fun onCreate() {
         super.onCreate()
         Self = this
@@ -15,9 +20,5 @@ class PiaproboxApplication : Application() {
     }
     companion object {
         lateinit var Self : PiaproboxApplication
-    }
-
-    override fun onTerminate() {
-        super.onTerminate()
     }
 }
