@@ -65,6 +65,21 @@ class AppUtil {
         }
 
         @JvmStatic
+        fun IsServiceRunning(context: Context, serviceClazz : Class<*>): Boolean {
+            val activityManager =
+                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val serviceInfos = activityManager.getRunningServices(20)
+            if (serviceInfos != null) {
+                for(serv in serviceInfos) {
+                    if(serv.service.className == serviceClazz.name) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        @JvmStatic
         fun IsActivityAlivInTaskStack(context: Context, clazz: Class<*>) : Boolean {
             val intent = Intent(context, clazz)
             val componentName = intent.resolveActivity(context.packageManager)

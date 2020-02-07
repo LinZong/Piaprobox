@@ -13,6 +13,7 @@ import com.nemesiss.dev.piaprobox.Fragment.Main.*
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
+import com.nemesiss.dev.piaprobox.Util.AppUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : PiaproboxBaseActivity() {
@@ -46,15 +47,21 @@ class MainActivity : PiaproboxBaseActivity() {
         invalidateOptionsMenu()
     }
 
+    override fun onResume() {
+        super.onResume()
+        invalidateOptionsMenu()
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        Log.d("MainActivity", "onPrepareOptionsMenu Enter")
-        if(MusicPlayerService.SERVICE_AVAILABLE.value == true && menu?.findItem(MUSIC_PLAYER_MENU_ID) == null) {
+        if ((MusicPlayerService.SERVICE_AVAILABLE.value == true ||
+             AppUtil.IsServiceRunning(this, MusicPlayerService::class.java))
+            && menu?.findItem(MUSIC_PLAYER_MENU_ID) == null
+        ) {
             val playerMenu = menu?.add(Menu.NONE, MUSIC_PLAYER_MENU_ID, 2, "Music Player")
             playerMenu?.setIcon(R.drawable.ic_play_circle_outline_white_24dp)
             playerMenu?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             Log.d("MainActivity", "onPrepareOptionsMenu 创建播放按钮")
-        }
-        else if(MusicPlayerService.SERVICE_AVAILABLE.value != true && menu?.findItem(MUSIC_PLAYER_MENU_ID) != null) {
+        } else if (menu?.findItem(MUSIC_PLAYER_MENU_ID) != null) {
             menu.removeItem(MUSIC_PLAYER_MENU_ID)
             Log.d("MainActivity", "onPrepareOptionsMenu 取消播放按钮")
         }
@@ -68,7 +75,7 @@ class MainActivity : PiaproboxBaseActivity() {
             }
             MUSIC_PLAYER_MENU_ID -> {
                 val intent = Intent(PiaproboxApplication.Self.applicationContext, MusicControlActivity::class.java)
-                intent.putExtra(MusicPlayerActivity.CLICK_TOOLBAR_ICON,true)
+                intent.putExtra(MusicPlayerActivity.CLICK_TOOLBAR_ICON, true)
                 startActivity(intent)
             }
         }

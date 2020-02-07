@@ -24,6 +24,7 @@
 
         </activity>
         <activity android:name=".Activity.Common.MainActivity"
+                  android:launchMode="singleTop"
         >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -32,7 +33,7 @@
         </activity>
         <activity android:name=".Activity.Music.MusicControlActivity"
                   android:parentActivityName=".Activity.Common.MainActivity"
-                  android:launchMode="singleTask"
+                  android:launchMode="singleTop"
         >
         </activity>
         <activity android:name=".Activity.TestSkeletonActivity"

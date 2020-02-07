@@ -307,11 +307,11 @@ class MusicControlActivity : MusicPlayerActivity() {
             if (it?.isDisposed != false)
                 it?.dispose()
         }
-        if(FROM_NOTIFICATION_INTENT && !AppUtil.IsActivityAlivInTaskStack(this, MainActivity::class.java)) {
-            val intent = Intent(PiaproboxApplication.Self.applicationContext,MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-        }
+//        if(FROM_NOTIFICATION_INTENT && !AppUtil.IsActivityAlivInTaskStack(this, MainActivity::class.java)) {
+//            val intent = Intent(PiaproboxApplication.Self.applicationContext,MainActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//            startActivity(intent)
+//        }
     }
 
     private fun InitSeekbarController() {

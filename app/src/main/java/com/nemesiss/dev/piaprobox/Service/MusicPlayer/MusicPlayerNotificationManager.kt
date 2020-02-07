@@ -95,7 +95,11 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
 
         // 判断如果此时App退出了，才重启MainActivity.
 
-        val intents = arrayListOf(activityIntent)
+        val beginMaiNActivityIntent = Intent(context,MainActivity::class.java)
+        beginMaiNActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        val intents = arrayListOf(beginMaiNActivityIntent,activityIntent)
+        activityIntent.action = Intent.ACTION_MAIN
+        activityIntent.addCategory(Intent.CATEGORY_LAUNCHER)
 
         val OpenMusicPlayerActivityIntent =
             PendingIntent.getActivities(context, 0, intents.toTypedArray(), PendingIntent.FLAG_UPDATE_CURRENT)
