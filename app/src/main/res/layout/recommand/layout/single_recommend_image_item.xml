@@ -10,6 +10,7 @@
 
         <ImageView android:layout_width="match_parent"
                    android:layout_height="0dp"
+                   android:transitionName="@string/ImageViewTransitionName"
                    app:layout_constraintDimensionRatio="H,1:1"
                    android:scaleType="fitCenter"
                    android:src="@drawable/thumb_miku" android:layout_marginTop="4dp"

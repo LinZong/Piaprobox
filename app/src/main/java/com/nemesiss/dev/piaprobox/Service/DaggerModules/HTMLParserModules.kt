@@ -1,16 +1,16 @@
 package com.nemesiss.dev.piaprobox.Service.DaggerModules
 
+import android.content.Context
 import dagger.Module
+import dagger.Provides
 import javax.inject.Qualifier
 
 
 @Module
-abstract class HTMLParserModules {
+class HTMLParserModules(val context : Context) {
 
-
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class HTMLParserConfig
+    @Provides
+    fun getCtx() = context
 }
 
 

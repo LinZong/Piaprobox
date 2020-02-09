@@ -17,6 +17,13 @@
         <item name="android:navigationBarColor">@color/PiaproColor</item>
     </style>
 
+
+    <style name="ShareImageViewContentStyle" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
     <style name="GenericTextView">
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">8pt</item>
@@ -41,6 +48,10 @@
         <item name="android:textColor">#2B2B2B</item>
     </style>
 
+    <style name="SmallSmallTextView" parent="SmallTextView">
+        <item name="android:textSize">6.4pt</item>
+    </style>
+
     <style name="MainFragmentSmallInfoText" parent="SmallTextView">
         <item name="android:textSize">5pt</item>
         <item name="android:textColor">@color/MainFragmentItemSmallInfoIcon</item>
@@ -60,6 +71,10 @@
     <style name="MusicPlayerToolbarTitle">
         <item name="android:textSize">8pt</item>
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ImageButtonWithRipple">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
 
 </resources>

@@ -11,6 +11,8 @@ import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
@@ -18,9 +20,11 @@ import com.nemesiss.dev.piaprobox.View.Common.SingleTagView
 import kotlinx.android.synthetic.main.recommend_category_layout.*
 import okhttp3.Response
 import org.jsoup.Jsoup
+import javax.inject.Inject
 
 abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
 
+    @Inject
     protected lateinit var htmlParser: HTMLParser
     protected open var tagListAdapter: TagItemAdapter? = null
     protected open var tagListLayoutManager: LinearLayoutManager? = null
@@ -34,7 +38,11 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        htmlParser = HTMLParser(context ?: PiaproboxApplication.Self.applicationContext)
+        DaggerHTMParserFactory
+            .builder()
+            .hTMLParserModules(HTMLParserModules(context ?: PiaproboxApplication.Self.applicationContext))
+            .build()
+            .inject(this)
     }
 
     override fun LoadBannerImage() {

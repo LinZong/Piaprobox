@@ -1,12 +1,15 @@
 package com.nemesiss.dev.piaprobox.Activity.Common
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.Toast
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.View.Common.LoadingIndicatorView
 
@@ -50,11 +53,14 @@ open class PiaproboxBaseActivity : AppCompatActivity() {
         }
     }
     fun LoadFailedTips(code: Int, message: String) {
-        Toast.makeText(
-            this,
-            "$message ($code)",
-            Toast.LENGTH_SHORT
-        ).show()
+        runOnUiThread {
+            Toast.makeText(
+                this,
+                "$message ($code)",
+                Toast.LENGTH_SHORT
+            ).show()
+
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

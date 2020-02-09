@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
 class ImageRecommendItemAdapter(
     var items: List<RecommendItemModelImage>,
     val context: Context,
-    val OnItemSelected: (Int) -> Unit
+    val OnItemSelected: (Int, ImageView) -> Unit
 ) : RecyclerView.Adapter<ImageRecommendItemAdapter.ImageRecommendItemViewHolder>() {
 
     class ImageRecommendItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -36,7 +37,7 @@ class ImageRecommendItemAdapter(
         val item = items[index]
 
         Log.d("ImageAdapter","Load :${item.Thumb}  ${item.ArtistAvatar}")
-
+        vh.itemView.setOnClickListener { OnItemSelected(index, vh.itemView.SingleImageWorkItemCard_WorkThumb) }
         Glide.with(context)
             .load(HTMLParser.GetAlbumThumb(item.Thumb))
             .priority(Priority.HIGH)

@@ -44,6 +44,7 @@
         <activity android:name=".Activity.Music.MusicDetailActivity">
 
         </activity>
+        <activity android:name=".Activity.Image.IllustratorViewActivity"/>
     </application>
 
 </manifest>

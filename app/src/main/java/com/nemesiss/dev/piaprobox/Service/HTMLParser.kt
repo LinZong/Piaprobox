@@ -11,9 +11,10 @@ import com.nemesiss.dev.piaprobox.Util.AppUtil
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
+import javax.inject.Inject
 
 
-class HTMLParser(context: Context) {
+class HTMLParser @Inject constructor(val context: Context) {
     companion object {
 
         @JvmStatic
@@ -59,7 +60,4 @@ class HTMLParser(context: Context) {
         Log.d(LOGTAG, "HTML Parser Loaded! Description here: ↓")
         Parser.Description()
     }
-
-
-
 }

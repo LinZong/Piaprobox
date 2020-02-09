@@ -2,6 +2,7 @@ package com.nemesiss.dev.piaprobox.Service.MusicPlayer;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
