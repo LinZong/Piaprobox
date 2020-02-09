@@ -27,7 +27,10 @@ class HTMLParser(context: Context) {
 
         @JvmStatic
         fun GetAlbumThumb(ValueFromParser: String): String {
-            return if (ValueFromParser.contains("cdn")) {
+            return if(ValueFromParser.startsWith("http") || ValueFromParser.startsWith("https")) {
+                ValueFromParser
+            }
+            else if (ValueFromParser.contains("cdn")) {
                 "http://${ValueFromParser}"
             } else {
                 MainRecommendFragment.DefaultTagUrl + ValueFromParser

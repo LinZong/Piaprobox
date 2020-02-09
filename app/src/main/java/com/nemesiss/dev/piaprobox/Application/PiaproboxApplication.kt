@@ -1,12 +1,9 @@
 package com.nemesiss.dev.piaprobox.Application
 
 import android.app.Application
-import android.content.Intent
-import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
-import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.Persistence
-import java.net.HttpURLConnection
 import java.security.SecureRandom
+import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
@@ -17,8 +14,41 @@ class PiaproboxApplication : Application() {
         super.onCreate()
         Self = this
         Persistence.Init(applicationContext)
+        TrustAllCetificates()
     }
+
     companion object {
-        lateinit var Self : PiaproboxApplication
+        lateinit var Self: PiaproboxApplication
+    }
+
+
+    private fun TrustAllCetificates() {
+        val sslContext = SSLContext.getInstance("TLS")
+        val trustManager: X509TrustManager = object : X509TrustManager {
+            @Throws(CertificateException::class)
+            override fun checkClientTrusted(
+                x509Certificates: Array<X509Certificate>,
+                s: String
+            ) {
+            }
+
+            @Throws(CertificateException::class)
+            override fun checkServerTrusted(
+                x509Certificates: Array<X509Certificate>,
+                s: String
+            ) {
+            }
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                return emptyArray()
+            }
+        }
+        sslContext.init(
+            null, arrayOf(
+                trustManager
+            ), SecureRandom()
+        )
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.socketFactory)
+        HttpsURLConnection.setDefaultHostnameVerifier { _, _ -> true }
     }
 }

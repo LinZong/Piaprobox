@@ -17,6 +17,7 @@ import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.RecommendCategoryFragmen
 import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.RecommendImageCategoryFragment
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.RecommendTextCategoryFragment
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.recommand_fragment.*
@@ -42,20 +43,20 @@ class MainRecommendFragment : BaseMainFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("MainRecommendFragment","创建View")
+//        Log.d("MainRecommendFragment","创建View")
         return inflater.inflate(R.layout.recommand_fragment, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("MainRecommendFragment","View 被创建")
+//        Log.d("MainRecommendFragment","View 被创建")
         BindCategoryClickHandler()
         Recommend_Category_Tag_Music.isSelected = true
         Recommend_Category_Tag_Music.setTextColor(Color.WHITE)
         fragments = arrayListOf(
             RecommendMusicCategoryFragment(),
-            RecommendImageCategoryFragment()
+            RecommendImageCategoryFragment(),
+            RecommendTextCategoryFragment()
         )
         Recommend_Category_Frag_Pager.adapter =
             RecommendCategoryFragmentPageAdapter(childFragmentManager, fragments) // 嵌套在Fragment里面的子Fragment需要使用childFragmentManager.
@@ -67,10 +68,13 @@ class MainRecommendFragment : BaseMainFragment() {
             }
 
             override fun onPageSelected(index: Int) {
+                // 左右滑动和上面的点击区域联动
+                FadeInAndOutCategoryTagBackground(CurrentDisplayFragmentIndex, index)
                 CurrentDisplayFragmentIndex = index
             }
 
         })
+        Recommend_Category_Frag_Pager.offscreenPageLimit = fragments.size
     }
 
     override fun Refresh() {
@@ -137,9 +141,7 @@ class MainRecommendFragment : BaseMainFragment() {
     }
 
     private fun OnCategoryTagSelected(contentType: RecommendListType) {
-        Recommend_Category_Frag_Pager.currentItem = contentType.Index
-        CurrentContentType = contentType
-
+        Recommend_Category_Frag_Pager.setCurrentItem(contentType.Index, true)
     }
 
     override fun LoadBannerImage() {

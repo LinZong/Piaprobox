@@ -30,129 +30,28 @@ import org.jsoup.Jsoup
 
 class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
 {
-
-    private lateinit var htmlParser: HTMLParser
-
     private var recommendListAdapter: ImageRecommendItemAdapter? = null
     private var recommendItemLayoutManager: GridLayoutManager? = null
     private var recommendListData: List<RecommendItemModelImage>? = null
 
-    private var tagListAdapter: TagItemAdapter? = null
-    private var tagListLayoutManager: LinearLayoutManager? = null
-    private var tagListData: List<RecommendTagModel>? = null
-
-    private var CurrentLoadTagPageURL = MainRecommendFragment.DefaultTagUrl
+    override var CurrentCategoryFragmentType: RecommendListType = RecommendListType.IMAGE
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("MainRecommendFragment","创建View  RecommendImageCategoryFragment")
         return inflater.inflate(R.layout.recommend_category_layout, container, false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        htmlParser = HTMLParser(context ?: PiaproboxApplication.Self.applicationContext)
-        LoadDefaultPage(RecommendListType.IMAGE,true)
+        LoadDefaultPage(CurrentCategoryFragmentType,true)
     }
 
     override fun Refresh() {
-        LoadRecommendList(CurrentLoadTagPageURL, RecommendListType.IMAGE)
+        LoadRecommendList(CurrentLoadTagPageURL, CurrentCategoryFragmentType)
     }
 
-    override fun LoadDefaultPage(contentType: RecommendListType, ShouldUpdateTagList : Boolean) {
-        ShowLoadingIndicator()
-        DaggerFetchFactory.create()
-            .fetcher()
-            .visit(CurrentLoadTagPageURL)
-            .cookie("top_view",contentType.CookieName)
-            .goAsync({ response ->
-                SimpleResponseHandler(response, String::class)
-                    .Handle({
-                        if(ShouldUpdateTagList)
-                            ParseTagListContent(it as String) // Load tags.
-                        ParseRecommendListContent(it as String, contentType) // Load all recommend item.
-                    }, { code, _ ->
-                        HideLoadingIndicator()
-                        LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
-                    })
-            }, { e ->
-                HideLoadingIndicator()
-                activity?.runOnUiThread { LoadFailedTips(-4, e.message ?: "") }
-            })
-    }
-
-    override fun LoadRecommendList(tagUrl: String, contentType: RecommendListType) {
-        ShowLoadingIndicator()
-        DaggerFetchFactory.create()
-            .fetcher()
-            .visit(tagUrl)
-            .cookie("top_view",contentType.CookieName)
-            .goAsync({ response ->
-                SimpleResponseHandler(response, String::class)
-                    .Handle({
-                        ParseRecommendListContent(it as String, contentType)
-                    }, { code, _ ->
-                        HideLoadingIndicator()
-                        LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
-                    })
-            }, { e ->
-                HideLoadingIndicator()
-                activity?.runOnUiThread { LoadFailedTips(-4, e.message ?: "") }
-            })
-    }
-
-    override fun OnTagItemSelected(index: Int) {
-        val childCount = tagListAdapter!!.itemCount
-        for (i in 0 until childCount) {
-            val vh = Recommend_Frag_Common_Tag_RecyclerView.findViewHolderForAdapterPosition(i)
-            if (vh != null) {
-                val tagVH = vh as TagItemAdapter.TagItemVH
-                val view = tagVH.itemView as SingleTagView
-                if (i == index) {
-                    view.SetSelected()
-                    ShowLoadingIndicator()
-                    CurrentLoadTagPageURL = MainRecommendFragment.DefaultTagUrl + tagListData!![i].URL
-                    LoadRecommendList(CurrentLoadTagPageURL, RecommendListType.IMAGE)
-                } else {
-                    view.SetDeSelected()
-                }
-            }
-        }
-    }
 
     override fun OnRecommendItemSelected(index: Int) {
-//        val item = recommendListData!!.get(index)
-//        val URL = MainRecommendFragment.DefaultTagUrl + item.URL
-//        val intent = Intent(context, MusicControlActivity::class.java)
-//        intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, URL)
-//        startActivity(intent)
     }
 
-    override fun ParseTagListContent(HTMLString: String) {
-        val root = Jsoup.parse(HTMLString)
-        val rule = htmlParser.Rules.getJSONObject("RecommendTag").getJSONArray("Steps")
-        try {
-            tagListData = (htmlParser.Parser.GoSteps(root, rule) as Array<*>).map { it as RecommendTagModel }
-            activity?.runOnUiThread {
-                tagListLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                Recommend_Frag_Common_Tag_RecyclerView.layoutManager = tagListLayoutManager
-                if (tagListAdapter == null) {
-                    tagListAdapter = TagItemAdapter(tagListData!!, this::OnTagItemSelected)
-                    Recommend_Frag_Common_Tag_RecyclerView.adapter = tagListAdapter
-                } else {
-                    Recommend_Frag_Common_Tag_RecyclerView.adapter = tagListAdapter
-                    tagListAdapter?.items = tagListData!!
-                    tagListAdapter?.notifyDataSetChanged()
-                }
-            }
-        } catch (e: InvalidStepExecutorException) {
-            LoadFailedTips(-1, "InvalidStepExecutorException: ${e.message}")
-        } catch (e: ClassNotFoundException) {
-            LoadFailedTips(-2, "ClassNotFoundException: ${e.message}")
-        } catch (e: Exception) {
-            LoadFailedTips(-3, "Exception: ${e.message}")
-        } finally {
-
-        }
-    }
 
     override fun ParseRecommendListContent(HTMLString: String, contentType: RecommendListType) {
         val root = Jsoup.parse(HTMLString)

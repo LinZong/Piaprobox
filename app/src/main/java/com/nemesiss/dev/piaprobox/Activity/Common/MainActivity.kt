@@ -60,10 +60,10 @@ class MainActivity : PiaproboxBaseActivity() {
             val playerMenu = menu?.add(Menu.NONE, MUSIC_PLAYER_MENU_ID, 2, "Music Player")
             playerMenu?.setIcon(R.drawable.ic_play_circle_outline_white_24dp)
             playerMenu?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-            Log.d("MainActivity", "onPrepareOptionsMenu 创建播放按钮")
+//            Log.d("MainActivity", "onPrepareOptionsMenu 创建播放按钮")
         } else if (MusicPlayerService.SERVICE_AVAILABLE.value != true && menu?.findItem(MUSIC_PLAYER_MENU_ID) != null) {
             menu.removeItem(MUSIC_PLAYER_MENU_ID)
-            Log.d("MainActivity", "onPrepareOptionsMenu 取消播放按钮")
+//            Log.d("MainActivity", "onPrepareOptionsMenu 取消播放按钮")
         }
         return true
     }
@@ -116,7 +116,6 @@ class MainActivity : PiaproboxBaseActivity() {
                 if (fragment == null) {
 //                    // 保证单例
                     fragment = this.second.newInstance()
-                    Log.d("MainActivity", fragment!!.hashCode().toString())
                     MainFragmentsCollection[this.first] = fragment
                 }
                 ShowMainFragment(fragment!!)

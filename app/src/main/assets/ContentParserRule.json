@@ -284,6 +284,257 @@
       }
     ]
   },
+  "RecommendList-TEXT": {
+    "RequestUrl": "https://piapro.jp/",
+    "RequestParameter": {},
+    "RequestCookie": {},
+    "Steps": [
+      {
+        "getElementsByClassSingle": {
+          "Name": "txt_list",
+          "Index": 0
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "li"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText",
+          "GenerateOutputRule": {
+            "Thumb": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "thumb",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "img",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "src"
+                }
+              }
+            ],
+            "ItemName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "title",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "ArtistName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "username",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "UploadDate": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "post",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "URL": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "title",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
+            "Opening": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "opening",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "p",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
   "RecommendList-IMAGE": {
     "Steps": [
       {
