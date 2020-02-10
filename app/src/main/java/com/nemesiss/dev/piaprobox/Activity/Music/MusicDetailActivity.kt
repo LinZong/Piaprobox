@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.util.TypedValue
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -16,6 +17,7 @@ import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
 import kotlinx.android.synthetic.main.activity_music_detail.*
 
 class MusicDetailActivity : PiaproboxBaseActivity() {
@@ -38,7 +40,7 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
         }
         val AvatarURL = GetAlbumThumb(contentInfo.ArtistAvatar)
         ShowArtistInfo(AvatarURL, contentInfo.Artist)
-        ShowWorkItemInfo(contentInfo.CreateDetail)
+        ShowWorkItemInfo(contentInfo.CreateDetail, MusicDetail_AutoWrap_Tag_Container)
         ShowWorkItemDetail(contentInfo.CreateDescription)
     }
 
@@ -52,7 +54,7 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
         MusicDetail_Artist.text = Artist
     }
 
-    private fun ShowWorkItemInfo(OriginalWorkInfoText: String) {
+    private fun ShowWorkItemInfo(OriginalWorkInfoText: String, AutoWrapContainer : AutoWrapLayout) {
         OriginalWorkInfoText.split(" | ").forEach {
             val DelimiterPos = it.indexOf('：')
             // Key: 0-DelimiterPos   Value: DelimiterPos+1-End
@@ -63,12 +65,13 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
             }
             val tv = TextView(this)
             tv.text = text
-
             val lp =
                 ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             lp.setMargins(0, 0, 12, 8)
             tv.layoutParams = lp
-            MusicDetail_AutoWrap_Tag_Container.addView(tv)
+//            MusicDetail_AutoWrap_Tag_Container.addView(tv)
+            AutoWrapContainer.addView(tv)
+
         }
     }
 

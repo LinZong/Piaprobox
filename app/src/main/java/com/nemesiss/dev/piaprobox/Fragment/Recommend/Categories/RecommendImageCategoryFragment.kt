@@ -64,23 +64,7 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
         val item = recommendListData!![index]
         val intent = Intent(context, IllustratorViewActivity::class.java)
         intent.putExtra(IllustratorViewActivity.IMAGE_DETAIL_INTENT_KEY, item)
-
-//        var bitmap : Bitmap? = null
-//        SquaringDrawable
-//        Log.d("XXXXXX",SharedImageView.drawable.toString())
-//        val glideBitmapDrawable : GlideBitmapDrawable? = SharedImageView.drawable as? GlideBitmapDrawable
-//        if(glideBitmapDrawable!=null) {
-//            bitmap = glideBitmapDrawable.bitmap
-//        }
-//        else {
-//            val normalBitmapDrawable = SharedImageView.drawable as? BitmapDrawable
-//            if(normalBitmapDrawable!=null) {
-//                bitmap = normalBitmapDrawable.bitmap
-//            }
-//        }
-//        if(bitmap != null) {
-            IllustratorViewActivity.SetPreShownDrawable(SharedImageView.drawable)
-//        }
+        IllustratorViewActivity.SetPreShownDrawable(SharedImageView.drawable)
         val options = ActivityOptionsCompat
             .makeSceneTransitionAnimation(activity!!, SharedImageView, resources.getString(R.string.ImageViewTransitionName))
         startActivity(intent, options.toBundle())

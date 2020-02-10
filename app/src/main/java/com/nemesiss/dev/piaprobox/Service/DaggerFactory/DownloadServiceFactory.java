@@ -1,5 +1,6 @@
 package com.nemesiss.dev.piaprobox.Service.DaggerFactory;
 
+import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity;
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity;
 import com.nemesiss.dev.piaprobox.Activity.TestSkeletonActivity;
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules;
@@ -13,4 +14,5 @@ public interface DownloadServiceFactory {
 
     void inject(TestSkeletonActivity ba);
     void inject(MusicPlayerActivity mpa);
+    void inject(IllustratorViewActivity illustratorViewActivity);
 }

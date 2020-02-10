@@ -25,6 +25,10 @@
     <string name="MusicDetailActivityParamWrong">Item content description parameter is incorrect.</string>
     <string name="MusicPlayInfoIsntPrepared">Info for playing this music is still preparing, cannot begin download music.</string>
 
+
+    <string name="ImageContentInfoIsPreparing">Current image content info is preparing. Cannot download image now.</string>
+
+
     <string name="NeedStroageAccessPermission">Need Access Storage Permission</string>
 
     <string name="WhyNeedStroageAccessPermission">To start a download, we need a permission to write file to your storage at the path you specified.</string>

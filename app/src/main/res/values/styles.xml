@@ -24,6 +24,12 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="PreviewImageTranslucentBar" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
     <style name="GenericTextView">
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">8pt</item>

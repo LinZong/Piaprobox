@@ -8,13 +8,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.AssetManager
 import android.content.res.Resources
+import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import android.support.v4.content.ContextCompat
 import android.view.View
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
+import java.io.File
 
 
 class AppUtil {
@@ -95,6 +98,21 @@ class AppUtil {
                 }
             }
             return flag
+        }
+
+
+        @JvmStatic
+        fun NotifyGalleryUpdate(context: Context, file : File) {
+//            MediaStore.Images.Media.insertImage(context.contentResolver, file.absolutePath, file.name, null)
+            context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.absolutePath)))
+        }
+
+        @JvmStatic
+        fun OpenBrowser(context: Context, Url : String) {
+            val intent = Intent()
+            intent.action = "android.intent.action.VIEW"
+            intent.data = Uri.parse(Url)
+            context.startActivity(intent)
         }
     }
 }
