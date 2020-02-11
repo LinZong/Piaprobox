@@ -2,14 +2,18 @@ package com.nemesiss.dev.piaprobox.Activity.Common
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.SharedElementCallback
 import android.support.v4.view.GravityCompat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Fragment.Main.*
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
@@ -22,10 +26,13 @@ class MainActivity : PiaproboxBaseActivity() {
 
     private lateinit var CurrentShowMainFragment: BaseMainFragment
 
+    private var ShouldRemapView : View? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         InitView()
+        BindReMapImageSharedElementListener()
     }
 
     private fun InitView() {
@@ -133,5 +140,36 @@ class MainActivity : PiaproboxBaseActivity() {
     override fun onDestroy() {
         MainFragmentsCollection.clear()
         super.onDestroy()
+    }
+
+    private fun BindReMapImageSharedElementListener() {
+        setExitSharedElementCallback(object : SharedElementCallback()
+        {
+            override fun onMapSharedElements(names: MutableList<String>?, sharedElements: MutableMap<String, View>?) {
+
+                Log.d("MainActivity", names?.size.toString())
+                if(names!!.size > 0 && ShouldRemapView!=null) {
+                    Log.d("MainActivity", names[0])
+                    sharedElements?.put(names[0], ShouldRemapView!!)
+                    ShouldRemapView = null
+                }
+            }
+        })
+    }
+
+    override fun onActivityReenter(resultCode: Int, data: Intent?) {
+        super.onActivityReenter(resultCode, data)
+        Log.d("MainActivity", resultCode.toString())
+        when(resultCode) {
+            IllustratorViewActivity2.RETEEN_RESULT_CODE -> {
+                Log.d("MainActivity", data?.getIntExtra("CURRENT_INDEX",-1).toString())
+                val index = data?.getIntExtra("CURRENT_INDEX",-1) ?: -1
+                if(index != -1)
+                {
+                    val currImageFrag = (CurrentShowMainFragment as? MainRecommendFragment)?.CurrentDisplayFragment() as? RecommendImageCategoryFragment
+                    ShouldRemapView = currImageFrag?.ScrollToPositionAndReturnView(index)
+                }
+            }
+        }
     }
 }

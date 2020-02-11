@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.app.SharedElementCallback
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -19,6 +20,7 @@ import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity
+import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
@@ -33,6 +35,7 @@ import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
 import com.nemesiss.dev.piaprobox.View.Common.SingleTagView
 import kotlinx.android.synthetic.main.recommend_category_layout.*
+import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
 import org.jsoup.Jsoup
 
 class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
@@ -59,17 +62,26 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
 
     }
 
-
-    fun OnRecommendItemSelectedWithSharedImageView(index: Int, SharedImageView : ImageView) {
-        val item = recommendListData!![index]
-        val intent = Intent(context, IllustratorViewActivity::class.java)
-        intent.putExtra(IllustratorViewActivity.IMAGE_DETAIL_INTENT_KEY, item)
-        IllustratorViewActivity.SetPreShownDrawable(SharedImageView.drawable)
-        val options = ActivityOptionsCompat
-            .makeSceneTransitionAnimation(activity!!, SharedImageView, resources.getString(R.string.ImageViewTransitionName))
-        startActivity(intent, options.toBundle())
+    fun ScrollToPositionAndReturnView(position : Int) : ImageView? {
+        Log.d("RecommendImage","ScrollToPositionAndReturnView  ${position}")
+        val view = recommendItemLayoutManager?.findViewByPosition(position)
+        if(view == null || recommendItemLayoutManager!!.isViewPartiallyVisible(view, false, true))
+        {
+            recommendItemLayoutManager?.scrollToPosition(position)
+        }
+        return (Recommend_Frag_Common_RecyclerView.findViewHolderForAdapterPosition(position) as? ImageRecommendItemAdapter.ImageRecommendItemViewHolder)?.itemView?.SingleImageWorkItemCard_WorkThumb
     }
 
+    fun OnRecommendItemSelectedWithSharedImageView(index: Int, SharedImageView : ImageView) {
+
+        val intent = Intent(context, IllustratorViewActivity2::class.java)
+        intent.putExtra(IllustratorViewActivity2.CLICKED_ITEM_INDEX, index)
+
+        IllustratorViewActivity2.SetItemList(recommendListData!!)
+        IllustratorViewActivity2.SetPreShownDrawable(SharedImageView.drawable)
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, SharedImageView, resources.getString(R.string.ImageViewTransitionName))
+        startActivity(intent, options.toBundle())
+    }
 
     override fun ParseRecommendListContent(HTMLString: String, contentType: RecommendListType) {
         val root = Jsoup.parse(HTMLString)

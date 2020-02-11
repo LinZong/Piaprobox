@@ -9,8 +9,12 @@ import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.View.Common.LoadingIndicatorView
 
 abstract class BaseMainFragment : Fragment() {
-    abstract fun Refresh()
-    abstract fun LoadBannerImage()
+    open fun Refresh() {
+
+    }
+    open fun LoadBannerImage() {
+
+    }
 
     protected var loadingIndicatorView : LoadingIndicatorView? = null
 

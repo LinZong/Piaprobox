@@ -82,6 +82,10 @@ class MainRecommendFragment : BaseMainFragment() {
         fragments[CurrentDisplayFragmentIndex].Refresh()
     }
 
+    fun CurrentDisplayFragment() : BaseRecommendCategoryFragment {
+        return fragments[CurrentDisplayFragmentIndex]
+    }
+
     private fun BindCategoryClickHandler() {
         arrayOf(Recommend_Category_Tag_Music, Recommend_Category_Tag_Image, Recommend_Category_Tag_Text)
             .zip(

@@ -76,7 +76,6 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
     @Inject
     lateinit var downloader: DownloadService
 
-
     // 状态相关变量
 
     private var CurremtImageRecommendInfo : RecommendItemModelImage? = null

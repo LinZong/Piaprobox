@@ -45,6 +45,7 @@
 
         </activity>
         <activity android:name=".Activity.Image.IllustratorViewActivity"/>
+        <activity android:name=".Activity.Image.IllustratorViewActivity2"/>
         <activity android:name=".Activity.Common.PreviewImageActivity"
                   android:theme="@style/PreviewImageTranslucentBar"
         />
