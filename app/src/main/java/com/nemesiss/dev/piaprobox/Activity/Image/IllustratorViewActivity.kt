@@ -1,13 +1,11 @@
 package com.nemesiss.dev.piaprobox.Activity.Image
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +14,8 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.target.SimpleTarget
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
@@ -78,38 +76,46 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
     @Inject
     lateinit var downloader: DownloadService
 
+
+    // 状态相关变量
+
     private var CurremtImageRecommendInfo : RecommendItemModelImage? = null
 
     private var CurrentImageContentInfo: ImageContentInfo? = null
 
     private var CurrentImageDownloadTokens : ArrayList<Pair<String,String>>? = null
 
-    private val LoadOriginalWorkImageListener = object : RequestListener<String, GlideDrawable> {
-        override fun onException(
-            e: java.lang.Exception?,
-            model: String?,
-            target: Target<GlideDrawable>?,
-            isFirstResource: Boolean
-        ): Boolean {
-            HideFrontImageView()
-            return false
-        }
+    private var IS_CURRENT_BIG_SIZE_IMAGE_LOADED = false
 
+    private val IS_CURRENT_IMAGE_INFO_LOADED
+        get() = CurrentImageContentInfo != null
+
+    // 监听器
+
+    private val LoadOriginalWorkDrawableToImageView = object : SimpleTarget<GlideDrawable>()
+    {
         override fun onResourceReady(
             resource: GlideDrawable?,
-            model: String?,
-            target: Target<GlideDrawable>?,
-            isFromMemoryCache: Boolean,
-            isFirstResource: Boolean
-        ): Boolean {
-            HideFrontImageView()
-            return false
+            glideAnimation: GlideAnimation<in GlideDrawable>?
+        ) {
+            IS_CURRENT_BIG_SIZE_IMAGE_LOADED = true
+            Illustrator_View_ItemImageView.setImageDrawable(resource)
         }
+    }
+
+
+    private fun ResetCurrentImageInfos() {
+        CurrentImageDownloadTokens = null
+        CurrentImageContentInfo = null
+        CurremtImageRecommendInfo = null
+        IS_CURRENT_BIG_SIZE_IMAGE_LOADED = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.illustrator_view_activity)
+
+        Illustrator_View_ItemImageView.setImageDrawable(PRE_SHOWN_BITMAP)
 
         DaggerHTMParserFactory
             .builder()
@@ -134,9 +140,8 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
 
     private fun BindButtons() {
         Illustrator_View_BackButton.setOnClickListener { onBackPressed() }
-        Illustrator_View_ItemImageView.setImageDrawable(PRE_SHOWN_BITMAP)
         Illustrator_View_DownloadImage.setOnClickListener { HandleDownloadImage() }
-        Illustrator_View_ItemImageView_Back.setOnClickListener { HandleEnterPinchImagePreview() }
+        Illustrator_View_ItemImageView.setOnClickListener { HandleEnterPinchImagePreview() }
         Illustrator_View_OpenBrowser.setOnClickListener {
             if(CurremtImageRecommendInfo!=null) {
                 AppUtil.OpenBrowser(this, MainRecommendFragment.DefaultTagUrl + CurremtImageRecommendInfo!!.URL)
@@ -144,16 +149,12 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
         }
     }
 
-    private val IsCurrentImageLoaded
-        get() = CurrentImageContentInfo != null
-
     private fun HandleEnterPinchImagePreview() {
-        if(!IsCurrentImageLoaded || Illustrator_View_ItemImageView_Back.drawable == null) {
+        if(!IS_CURRENT_BIG_SIZE_IMAGE_LOADED) {
             TellImageIsStillPreparing()
             return
         }
-
-        PreviewImageActivity.SetPreShownDrawable(Illustrator_View_ItemImageView_Back.drawable)
+        PreviewImageActivity.SetPreShownDrawable(Illustrator_View_ItemImageView.drawable)
         startActivity(Intent(this, PreviewImageActivity::class.java))
     }
 
@@ -162,7 +163,7 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
     }
 
     private fun HandleDownloadImage() {
-        if (!IsCurrentImageLoaded) {
+        if (!IS_CURRENT_IMAGE_INFO_LOADED) {
             TellImageIsStillPreparing()
             return
         }
@@ -184,9 +185,7 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
 
     private fun LoadRecommendImageDetailData(content: RecommendItemModelImage) {
 
-        CurremtImageRecommendInfo = null
-        CurrentImageContentInfo = null // 清空掉当前显示的图片的信息
-        CurrentImageDownloadTokens = null
+        ResetCurrentImageInfos() // 清空表示当前图片的变量信息。
 
         Glide.with(this)
             .load(HTMLParser.GetAlbumThumb(content.ArtistAvatar))
@@ -219,14 +218,6 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
             )
     }
 
-    private fun HideFrontImageView() {
-        if (Illustrator_View_ItemImageView.visibility != View.GONE) {
-            asyncExecutor.SendTaskMainThreadDelay(Runnable {
-                Illustrator_View_ItemImageView.visibility = View.GONE
-                Illustrator_View_ItemImageView.setImageDrawable(Illustrator_View_ItemImageView_Back.drawable)
-            }, 100)
-        }
-    }
 
     private fun ShowWorkItemInfo(OriginalWorkInfoText: String, AutoWrapContainer: AutoWrapLayout) {
         OriginalWorkInfoText.split(" | ").forEach {
@@ -280,8 +271,7 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
                     .priority(Priority.HIGH)
                     .dontAnimate()
                     .dontTransform()
-                    .listener(LoadOriginalWorkImageListener)
-                    .into(Illustrator_View_ItemImageView_Back)
+                    .into(LoadOriginalWorkDrawableToImageView)
                 Illustrator_View_ItemDetail.text = DetailContent.CreateDescription.replace("<br>".toRegex(), "\n")
                 Illustrator_View_ItemName.text = DetailContent.Title
                 ShowWorkItemInfo(DetailContent.CreateDetail, Illustrator_View_ItemInfoContainer)
@@ -299,9 +289,6 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
     }
 
     private fun HandleClose() {
-        if (Illustrator_View_ItemImageView.visibility == View.GONE) {
-            Illustrator_View_ItemImageView.visibility = View.VISIBLE
-        }
         supportFinishAfterTransition()
     }
 
