@@ -1,19 +1,11 @@
 package com.nemesiss.dev.piaprobox.Activity.Image
 
-import android.app.SharedElementCallback
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.view.ViewPager
-import android.transition.ChangeBounds
-import android.transition.ChangeClipBounds
-import android.transition.ChangeTransform
-import android.transition.TransitionSet
 import android.util.Log
-import android.util.Range
 import android.util.SparseArray
-import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
@@ -47,7 +39,7 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
 
 
         @JvmStatic
-        val RETEEN_RESULT_CODE = 6789
+        val REENTER_RESULT_CODE = 6789
 
         @JvmStatic
         val CLICKED_ITEM_INDEX = "CLICKED_ITEM_INDEX"
@@ -272,7 +264,7 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
     fun HandleClose() {
         val intent = Intent()
         intent.putExtra("CURRENT_INDEX", CURRENT_SHOW_IMAGE_INDEX)
-        setResult(RETEEN_RESULT_CODE,intent)
+        setResult(REENTER_RESULT_CODE,intent)
         supportFinishAfterTransition()
     }
 

@@ -28,8 +28,7 @@ import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
 import org.jsoup.Jsoup
 import javax.inject.Inject
 
-class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
-{
+class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
 
     @Inject
     lateinit var asyncExecutor: AsyncExecutor
@@ -54,9 +53,10 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.recommend_category_layout, container, false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        LoadDefaultPage(CurrentCategoryFragmentType,true)
+        LoadDefaultPage(CurrentCategoryFragmentType, true)
     }
 
     override fun Refresh() {
@@ -67,36 +67,37 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
 
     }
 
-    fun onActivityReenter(resultCode : Int, intent : Intent?) {
-        when(resultCode) {
-            IllustratorViewActivity2.RETEEN_RESULT_CODE -> {
-                val position = intent?.getIntExtra("CURRENT_INDEX",-1) ?: -1
-                if(position!=-1) {
-                    ScrollToPositionIfNotFullyVisible(position,false)
+    fun onActivityReenter(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            IllustratorViewActivity2.REENTER_RESULT_CODE -> {
+                val position = intent?.getIntExtra("CURRENT_INDEX", -1) ?: -1
+                if (position != -1) {
+                    ScrollToPositionIfNotFullyVisible(position, false)
                 }
                 val sharedElementCallback = MediaSharedElementCallback()
                 activity?.setExitSharedElementCallback(sharedElementCallback)
-                activity?.window?.sharedElementExitTransition?.addListener(object : BaseTransitionCallback()
-                {
+                activity?.window?.sharedElementExitTransition?.addListener(object : BaseTransitionCallback() {
                     override fun onTransitionEnd(p0: Transition?) {
                         removeCallback()
                     }
+
                     override fun onTransitionCancel(p0: Transition?) {
                         removeCallback()
                     }
+
                     private fun removeCallback() {
-                        if(activity!=null) {
+                        if (activity != null) {
                             activity!!.window.sharedElementExitTransition.removeListener(this)
-                            activity!!.setExitSharedElementCallback(object : SharedElementCallback(){})
+                            activity!!.setExitSharedElementCallback(object : SharedElementCallback() {})
                         }
                     }
                 })
                 activity?.supportPostponeEnterTransition()
-                Recommend_Frag_Common_RecyclerView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener
-                {
+                Recommend_Frag_Common_RecyclerView.viewTreeObserver.addOnPreDrawListener(object :
+                    ViewTreeObserver.OnPreDrawListener {
                     override fun onPreDraw(): Boolean {
                         val vh = Recommend_Frag_Common_RecyclerView.findViewHolderForAdapterPosition(position)
-                        if(vh != null && vh is ImageRecommendItemAdapter.ImageRecommendItemViewHolder) {
+                        if (vh != null && vh is ImageRecommendItemAdapter.ImageRecommendItemViewHolder) {
                             sharedElementCallback.setSharedElementViews(
                                 arrayOf(resources.getString(R.string.ImageViewTransitionName)),
                                 arrayOf(vh.itemView.SingleImageWorkItemCard_WorkThumb)
@@ -113,7 +114,7 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
         }
     }
 
-    fun ScrollToPositionIfNotFullyVisible(position: Int, smooth: Boolean) : Boolean {
+    fun ScrollToPositionIfNotFullyVisible(position: Int, smooth: Boolean): Boolean {
         val view = recommendItemLayoutManager?.findViewByPosition(position)
         val notVisible = view == null || recommendItemLayoutManager!!.isViewPartiallyVisible(view, false, true)
         if (notVisible) {
@@ -126,15 +127,15 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
         return notVisible
     }
 
-    fun ScrollToPositionAndReturnView(position : Int, smooth : Boolean) : ImageView? {
-        Log.d("RecommendImage","ScrollToPositionAndReturnView  $position")
-        ScrollToPositionIfNotFullyVisible(position,smooth)
+    fun ScrollToPositionAndReturnView(position: Int, smooth: Boolean): ImageView? {
+        Log.d("RecommendImage", "ScrollToPositionAndReturnView  $position")
+        ScrollToPositionIfNotFullyVisible(position, smooth)
         return (Recommend_Frag_Common_RecyclerView.findViewHolderForPosition(position) as? ImageRecommendItemAdapter.ImageRecommendItemViewHolder)?.itemView?.SingleImageWorkItemCard_WorkThumb
     }
 
-    fun OnRecommendItemSelectedWithSharedImageView(index: Int, SharedImageView : ImageView) {
+    fun OnRecommendItemSelectedWithSharedImageView(index: Int, SharedImageView: ImageView) {
 
-        val notVisible = ScrollToPositionIfNotFullyVisible(index,true)
+        val notVisible = ScrollToPositionIfNotFullyVisible(index, true)
 
         asyncExecutor.SendTaskMainThreadDelay(
             Runnable {
@@ -142,9 +143,13 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
                 intent.putExtra(IllustratorViewActivity2.CLICKED_ITEM_INDEX, index)
                 IllustratorViewActivity2.SetItemList(recommendListData!!)
                 IllustratorViewActivity2.SetPreShownDrawable(SharedImageView.drawable)
-                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, SharedImageView, resources.getString(R.string.ImageViewTransitionName))
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity!!,
+                    SharedImageView,
+                    resources.getString(R.string.ImageViewTransitionName)
+                )
                 startActivity(intent, options.toBundle())
-            }, if(notVisible) 100 else 0
+            }, if (notVisible) 100 else 0
         )
     }
 
@@ -152,13 +157,18 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
         val root = Jsoup.parse(HTMLString)
         val rule = htmlParser.Rules.getJSONObject("RecommendList-" + contentType.Name).getJSONArray("Steps")
         try {
-            recommendListData = (htmlParser.Parser.GoSteps(root, rule) as Array<*>).map { it as RecommendItemModelImage }
+            recommendListData =
+                (htmlParser.Parser.GoSteps(root, rule) as Array<*>).map { it as RecommendItemModelImage }
             activity?.runOnUiThread {
-                recommendItemLayoutManager = GridLayoutManager(context,2)
+                recommendItemLayoutManager = GridLayoutManager(context, 2)
                 Recommend_Frag_Common_RecyclerView.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
-                        ImageRecommendItemAdapter(recommendListData!!, context!!, this::OnRecommendItemSelectedWithSharedImageView)
+                        ImageRecommendItemAdapter(
+                            recommendListData!!,
+                            context!!,
+                            this::OnRecommendItemSelectedWithSharedImageView
+                        )
                     Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter
                 } else {
                     Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter
