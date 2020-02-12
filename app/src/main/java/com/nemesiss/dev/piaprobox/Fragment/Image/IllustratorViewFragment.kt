@@ -42,6 +42,14 @@ import kotlinx.android.synthetic.main.illustrator_view_fragment.view.*
 
 class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
+    companion object {
+        @JvmStatic
+        val CLICKED_ITEM_INDEX = "MyIndex"
+
+        @JvmStatic
+        val SHOULD_FETCH_DRAWABLE = "FetchDrawable"
+    }
+
     // 加载状态管理变量：
 
     private var VIEW_CREATED = false
@@ -56,9 +64,16 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     private val CURRENT_CAN_APPLY_VIEWMODEL
         get() = VIEW_CREATED && USER_CAN_VISITED
 
+
+
+    // 状态相关变量
+    private var CurrentViewModel: IllustratorViewFragmentViewModel? = null
+    private var IS_CURRENT_BIG_SIZE_IMAGE_LOADED = false
+    private var FRAG_INDEX: Int = 0
+    private var FETCH_DRAWABLE = false
+
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("IllustratorViewFragment", "onDestroy")
         VIEW_CREATED = false
         DATA_LOADED = false
     }
@@ -71,32 +86,29 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         USER_CAN_VISITED = isVisibleToUser
+
+        // 对当前可见的ImageView设置transitionName
+
         if(USER_CAN_VISITED && Illustrator2_View_ItemImageView!=null) {
             Illustrator2_View_ItemImageView.transitionName = resources.getString(R.string.ImageViewTransitionName)
         }
         else if(!USER_CAN_VISITED && Illustrator2_View_ItemImageView!=null) {
+
+            // 不可见的第一时间取消transitioName
+
             Illustrator2_View_ItemImageView.transitionName = null
         }
-        Log.d("IllustratorViewFragment", "USER_CAN_VISITED? :$USER_CAN_VISITED")
         TryLoadViewModelWhileFragmentStateChanged()
 
     }
 
     private fun TryLoadViewModelWhileFragmentStateChanged() {
         if (VIEW_CREATED && USER_CAN_VISITED && !DATA_LOADED) {
-            Log.d("IllustratorViewFragment", "询问Activity ViewModel.")
             (activity as? IllustratorViewActivity2)?.AskForViewModel(FRAG_INDEX, this)
         }
     }
 
-    // 状态相关变量
 
-    private var CurrentViewModel: IllustratorViewFragmentViewModel? = null
-
-    private var IS_CURRENT_BIG_SIZE_IMAGE_LOADED = false
-
-    private var FRAG_INDEX: Int = 0
-    private var FETCH_DRAWABLE = false
 
     private val LoadOriginalWorkDrawableToImageView = object : SimpleTarget<GlideDrawable>() {
         override fun onResourceReady(
@@ -112,9 +124,8 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FRAG_INDEX = arguments?.getInt("MyIndex", 0) ?: 0
-        FETCH_DRAWABLE = arguments?.getBoolean("FetchDrawable", false) ?: false
-
+        FRAG_INDEX = arguments?.getInt(CLICKED_ITEM_INDEX, 0) ?: 0
+        FETCH_DRAWABLE = arguments?.getBoolean(SHOULD_FETCH_DRAWABLE, false) ?: false
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

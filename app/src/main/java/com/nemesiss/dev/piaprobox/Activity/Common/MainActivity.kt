@@ -143,33 +143,25 @@ class MainActivity : PiaproboxBaseActivity() {
     }
 
     private fun BindReMapImageSharedElementListener() {
-        setExitSharedElementCallback(object : SharedElementCallback()
-        {
-            override fun onMapSharedElements(names: MutableList<String>?, sharedElements: MutableMap<String, View>?) {
-
-                Log.d("MainActivity", names?.size.toString())
-                if(names!!.size > 0 && ShouldRemapView!=null) {
-                    Log.d("MainActivity", names[0])
-                    sharedElements?.put(names[0], ShouldRemapView!!)
-                    ShouldRemapView = null
-                }
-            }
-        })
     }
 
     override fun onActivityReenter(resultCode: Int, data: Intent?) {
         super.onActivityReenter(resultCode, data)
-        Log.d("MainActivity", resultCode.toString())
-        when(resultCode) {
-            IllustratorViewActivity2.RETEEN_RESULT_CODE -> {
-                Log.d("MainActivity", data?.getIntExtra("CURRENT_INDEX",-1).toString())
-                val index = data?.getIntExtra("CURRENT_INDEX",-1) ?: -1
-                if(index != -1)
-                {
-                    val currImageFrag = (CurrentShowMainFragment as? MainRecommendFragment)?.CurrentDisplayFragment() as? RecommendImageCategoryFragment
-                    ShouldRemapView = currImageFrag?.ScrollToPositionAndReturnView(index)
-                }
-            }
-        }
+        ((CurrentShowMainFragment as? MainRecommendFragment)
+            ?.CurrentDisplayFragment() as? RecommendImageCategoryFragment)
+            ?.onActivityReenter(resultCode,data)
+
+
+//        when(resultCode) {
+//            IllustratorViewActivity2.RETEEN_RESULT_CODE -> {
+//                Log.d("MainActivity", " --- onActivityReenter")
+//                val index = data?.getIntExtra("CURRENT_INDEX",-1) ?: -1
+//                if(index != -1)
+//                {
+//                    val currImageFrag =
+//                    ShouldRemapView = currImageFrag?.ScrollToPositionAndReturnView(index,false)
+//                }
+//            }
+//        }
     }
 }

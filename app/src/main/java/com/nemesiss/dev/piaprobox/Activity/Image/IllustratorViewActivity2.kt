@@ -45,8 +45,9 @@ import javax.inject.Inject
 class IllustratorViewActivity2 : PiaproboxBaseActivity() {
     companion object {
 
+
         @JvmStatic
-        val RETEEN_RESULT_CODE = 6789;
+        val RETEEN_RESULT_CODE = 6789
 
         @JvmStatic
         val CLICKED_ITEM_INDEX = "CLICKED_ITEM_INDEX"
@@ -73,6 +74,14 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
         fun SetPreShownDrawable(drawable: Drawable) {
             PRE_SHOWN_IMAGE = drawable
         }
+    }
+
+    override fun onDestroy() {
+        // Help gc
+        CAN_VIEW_ITEM_LIST = null
+        PRE_SHOWN_IMAGE = null
+        super.onDestroy()
+
     }
 
     @Inject
@@ -115,8 +124,6 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
 
         val ClickedIndex = intent.getIntExtra(CLICKED_ITEM_INDEX, 0)
         // 把Fragment加载进来
-
-
         supportPostponeEnterTransition()
         InitFragmentPager(ClickedIndex)
     }
@@ -127,13 +134,12 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
 
     private fun InitFragmentPager(FirstShowIndex: Int) {
         if (CAN_VIEW_ITEM_LIST != null) {
-
             IntRange(0, CAN_VIEW_ITEM_LIST!!.size - 1).forEach {
                 val frag = IllustratorViewFragment().apply {
                     val bundle = Bundle()
-                    bundle.putInt("MyIndex", it)
+                    bundle.putInt(IllustratorViewFragment.CLICKED_ITEM_INDEX, it)
                     if (it == FirstShowIndex) {
-                        bundle.putBoolean("FetchDrawable", true) //放置可获取Drawable标记
+                        bundle.putBoolean(IllustratorViewFragment.SHOULD_FETCH_DRAWABLE, true) //放置可获取Drawable标记
                     }
                     arguments = bundle
                 }

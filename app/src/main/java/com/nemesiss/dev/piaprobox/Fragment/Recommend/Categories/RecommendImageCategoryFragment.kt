@@ -1,50 +1,55 @@
 package com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.SharedElementCallback
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
+import android.transition.Transition
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageView
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable
-import com.bumptech.glide.request.target.SquaringDrawable
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
-import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
-import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
-import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
-import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.ImageRecommendItemAdapter
-import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.MusicRecommendItemAdapter
-import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Service.HTMLParser
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
-import com.nemesiss.dev.piaprobox.View.Common.SingleTagView
+import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
+import com.nemesiss.dev.piaprobox.Util.BaseTransitionCallback
+import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback
 import kotlinx.android.synthetic.main.recommend_category_layout.*
 import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
 import org.jsoup.Jsoup
+import javax.inject.Inject
 
 class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
 {
+
+    @Inject
+    lateinit var asyncExecutor: AsyncExecutor
+
     private var recommendListAdapter: ImageRecommendItemAdapter? = null
     private var recommendItemLayoutManager: GridLayoutManager? = null
     private var recommendListData: List<RecommendItemModelImage>? = null
 
     override var CurrentCategoryFragmentType: RecommendListType = RecommendListType.IMAGE
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        DaggerAsyncExecutorFactory
+            .builder()
+            .hTMLParserModules(HTMLParserModules(context!!))
+            .build()
+            .inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.recommend_category_layout, container, false)
@@ -62,25 +67,85 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment()
 
     }
 
-    fun ScrollToPositionAndReturnView(position : Int) : ImageView? {
-        Log.d("RecommendImage","ScrollToPositionAndReturnView  ${position}")
-        val view = recommendItemLayoutManager?.findViewByPosition(position)
-        if(view == null || recommendItemLayoutManager!!.isViewPartiallyVisible(view, false, true))
-        {
-            recommendItemLayoutManager?.scrollToPosition(position)
+    fun onActivityReenter(resultCode : Int, intent : Intent?) {
+        when(resultCode) {
+            IllustratorViewActivity2.RETEEN_RESULT_CODE -> {
+                val position = intent?.getIntExtra("CURRENT_INDEX",-1) ?: -1
+                if(position!=-1) {
+                    ScrollToPositionIfNotFullyVisible(position,false)
+                }
+                val sharedElementCallback = MediaSharedElementCallback()
+                activity?.setExitSharedElementCallback(sharedElementCallback)
+                activity?.window?.sharedElementExitTransition?.addListener(object : BaseTransitionCallback()
+                {
+                    override fun onTransitionEnd(p0: Transition?) {
+                        removeCallback()
+                    }
+                    override fun onTransitionCancel(p0: Transition?) {
+                        removeCallback()
+                    }
+                    private fun removeCallback() {
+                        if(activity!=null) {
+                            activity!!.window.sharedElementExitTransition.removeListener(this)
+                            activity!!.setExitSharedElementCallback(object : SharedElementCallback(){})
+                        }
+                    }
+                })
+                activity?.supportPostponeEnterTransition()
+                Recommend_Frag_Common_RecyclerView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener
+                {
+                    override fun onPreDraw(): Boolean {
+                        val vh = Recommend_Frag_Common_RecyclerView.findViewHolderForAdapterPosition(position)
+                        if(vh != null && vh is ImageRecommendItemAdapter.ImageRecommendItemViewHolder) {
+                            sharedElementCallback.setSharedElementViews(
+                                arrayOf(resources.getString(R.string.ImageViewTransitionName)),
+                                arrayOf(vh.itemView.SingleImageWorkItemCard_WorkThumb)
+                            )
+                            Recommend_Frag_Common_RecyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+                            activity?.supportStartPostponedEnterTransition()
+                            // 可以清除CallbackListener.
+//                            Log.d("RecommendImage","目标ImageView 开始Predraw, 清除Listener. Activity继续动画")
+                        }
+                        return true
+                    }
+                })
+            }
         }
-        return (Recommend_Frag_Common_RecyclerView.findViewHolderForAdapterPosition(position) as? ImageRecommendItemAdapter.ImageRecommendItemViewHolder)?.itemView?.SingleImageWorkItemCard_WorkThumb
+    }
+
+    fun ScrollToPositionIfNotFullyVisible(position: Int, smooth: Boolean) : Boolean {
+        val view = recommendItemLayoutManager?.findViewByPosition(position)
+        val notVisible = view == null || recommendItemLayoutManager!!.isViewPartiallyVisible(view, false, true)
+        if (notVisible) {
+            if (smooth) {
+                Recommend_Frag_Common_RecyclerView.smoothScrollToPosition(position)
+            } else {
+                recommendItemLayoutManager?.scrollToPosition(position)
+            }
+        }
+        return notVisible
+    }
+
+    fun ScrollToPositionAndReturnView(position : Int, smooth : Boolean) : ImageView? {
+        Log.d("RecommendImage","ScrollToPositionAndReturnView  $position")
+        ScrollToPositionIfNotFullyVisible(position,smooth)
+        return (Recommend_Frag_Common_RecyclerView.findViewHolderForPosition(position) as? ImageRecommendItemAdapter.ImageRecommendItemViewHolder)?.itemView?.SingleImageWorkItemCard_WorkThumb
     }
 
     fun OnRecommendItemSelectedWithSharedImageView(index: Int, SharedImageView : ImageView) {
 
-        val intent = Intent(context, IllustratorViewActivity2::class.java)
-        intent.putExtra(IllustratorViewActivity2.CLICKED_ITEM_INDEX, index)
+        val notVisible = ScrollToPositionIfNotFullyVisible(index,true)
 
-        IllustratorViewActivity2.SetItemList(recommendListData!!)
-        IllustratorViewActivity2.SetPreShownDrawable(SharedImageView.drawable)
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, SharedImageView, resources.getString(R.string.ImageViewTransitionName))
-        startActivity(intent, options.toBundle())
+        asyncExecutor.SendTaskMainThreadDelay(
+            Runnable {
+                val intent = Intent(context, IllustratorViewActivity2::class.java)
+                intent.putExtra(IllustratorViewActivity2.CLICKED_ITEM_INDEX, index)
+                IllustratorViewActivity2.SetItemList(recommendListData!!)
+                IllustratorViewActivity2.SetPreShownDrawable(SharedImageView.drawable)
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, SharedImageView, resources.getString(R.string.ImageViewTransitionName))
+                startActivity(intent, options.toBundle())
+            }, if(notVisible) 100 else 0
+        )
     }
 
     override fun ParseRecommendListContent(HTMLString: String, contentType: RecommendListType) {
