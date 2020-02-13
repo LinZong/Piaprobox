@@ -1,9 +1,7 @@
 package com.nemesiss.dev.piaprobox.Activity.Image
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v4.view.ViewPager
 import android.util.Log
 import android.util.SparseArray
 import android.widget.ImageView
@@ -11,7 +9,7 @@ import android.widget.Toast
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
-import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
+import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Adapter.IllustratorPage.IllustratorViewPageFragmentAdapter
 import com.nemesiss.dev.piaprobox.Fragment.Image.IllustratorViewFragment
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
@@ -29,15 +27,14 @@ import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
 import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.Util.BaseOnPageChangeListener
 import kotlinx.android.synthetic.main.illustrator_view_activity2.*
 import org.jsoup.Jsoup
 import java.io.File
 import javax.inject.Inject
 
-class IllustratorViewActivity2 : PiaproboxBaseActivity() {
+class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     companion object {
-
-
         @JvmStatic
         val REENTER_RESULT_CODE = 6789
 
@@ -46,33 +43,6 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
 
         @JvmStatic
         val IMAGE_PRE_SHOWN_IMAGE_INTENT_KEY = "IMAGE_PRE_SHOWN_IMAGE_INTENT_KEY"
-
-        @JvmStatic
-        var CAN_VIEW_ITEM_LIST: List<RecommendItemModelImage>? = null
-            private set
-
-        @JvmStatic
-        var PRE_SHOWN_IMAGE: Drawable? = null
-            private set
-
-        @JvmStatic
-        @Synchronized
-        fun SetItemList(list: List<RecommendItemModelImage>) {
-            CAN_VIEW_ITEM_LIST = list
-        }
-
-        @JvmStatic
-        @Synchronized
-        fun SetPreShownDrawable(drawable: Drawable) {
-            PRE_SHOWN_IMAGE = drawable
-        }
-    }
-
-    override fun onDestroy() {
-        // Help gc
-        CAN_VIEW_ITEM_LIST = null
-        PRE_SHOWN_IMAGE = null
-        super.onDestroy()
 
     }
 
@@ -91,7 +61,6 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
     private var ItemPageViewModelCache = SparseArray<IllustratorViewFragmentViewModel>()
 
     private var LoadingItemPageViewModel = SparseArray<IllustratorViewFragmentViewModel>()
-
 
     private var CURRENT_SHOW_IMAGE_INDEX = 0
 
@@ -138,30 +107,21 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
                 ItemPages.add(frag)
             }
         }
-        Illustrator2_Item_Pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener
+        Illustrator2_Item_Pager.addOnPageChangeListener(object : BaseOnPageChangeListener()
         {
-            override fun onPageScrollStateChanged(p0: Int) {
-
-            }
-
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
-            }
-
             override fun onPageSelected(p0: Int) {
                 Log.d("Illustrator2","清除上一个可见性")
                 val imageView = ItemPages[CURRENT_SHOW_IMAGE_INDEX].view?.findViewById<ImageView>(R.id.Illustrator2_View_ItemImageView)
                 imageView?.transitionName = null
                 CURRENT_SHOW_IMAGE_INDEX = p0
             }
-
         })
         Illustrator2_Item_Pager.adapter = IllustratorViewPageFragmentAdapter(ItemPages, supportFragmentManager)
         Illustrator2_Item_Pager.offscreenPageLimit = 5
         Illustrator2_Item_Pager.currentItem = FirstShowIndex
     }
 
-
-    fun AskForViewModel(fragmentIndex: Int, self: IllustratorViewFragment) {
+    override fun AskForViewModel(fragmentIndex: Int, self: IllustratorViewFragment) {
         val model = ItemPageViewModelCache.get(fragmentIndex, null)
         if (model != null) {
             self.ApplyViewModel(model)
@@ -171,9 +131,8 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
         }
     }
 
-
     // 供给Fragment调用
-    fun HandleDownloadImage(ImageURL: String, Title: String) {
+    override fun HandleDownloadImage(ImageURL: String, Title: String) {
 
         var Ext = ImageURL.substring(ImageURL.lastIndexOf('.'))
         if (Ext.isEmpty()) {
@@ -225,22 +184,24 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
             )
     }
 
-
     private fun ParseImageItemDetailData(needFragmentIndex: Int, HTMLString: String) {
 
         // 从Cache中提取Model，继续填充信息
         val model = LoadingItemPageViewModel.get(needFragmentIndex)
 
         val root = Jsoup.parse(HTMLString)
-        val Steps = htmlParser.Rules.getJSONObject("ImageContent").getJSONArray("Steps")
+        val StepsImageContent = htmlParser.Rules.getJSONObject("ImageContent").getJSONArray("Steps")
+        val StepsRelatedImage = htmlParser.Rules.getJSONObject("RelatedImage").getJSONArray("Steps")
 
         try {
-            val DetailContent = htmlParser.Parser.GoSteps(root, Steps) as ImageContentInfo
+            val ImageContents = htmlParser.Parser.GoSteps(root, StepsImageContent) as ImageContentInfo
+            val RelatedItems = (htmlParser.Parser.GoSteps(root, StepsRelatedImage) as Array<*>).map { it as RelatedImageInfo }
 
-            model.Title = DetailContent.Title
-            model.CreateDescription = DetailContent.CreateDescription.replace("<br>".toRegex(), "\n")
-            model.CreateDetailRaw = DetailContent.CreateDetail
-            model.ItemImageUrl = HTMLParser.GetAlbumThumb(DetailContent.URL)
+            model.Title = ImageContents.Title
+            model.CreateDescription = ImageContents.CreateDescription.replace("<br>".toRegex(), "\n")
+            model.CreateDetailRaw = ImageContents.CreateDetail
+            model.ItemImageUrl = HTMLParser.GetAlbumThumb(ImageContents.URL)
+            model.RelatedItems = RelatedItems
 
             // 放到加载完的Cache中
             ItemPageViewModelCache.put(needFragmentIndex, model)
@@ -249,7 +210,6 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
             runOnUiThread {
                 ItemPages[needFragmentIndex].ApplyViewModel(model)
             }
-
         } catch (e: InvalidStepExecutorException) {
             LoadFailedTips(-1, "InvalidStepExecutorException: ${e.message}")
         } catch (e: ClassNotFoundException) {
@@ -261,16 +221,14 @@ class IllustratorViewActivity2 : PiaproboxBaseActivity() {
         }
     }
 
-    fun HandleClose() {
+    override fun HandleClose() {
         val intent = Intent()
         intent.putExtra("CURRENT_INDEX", CURRENT_SHOW_IMAGE_INDEX)
         setResult(REENTER_RESULT_CODE,intent)
         supportFinishAfterTransition()
     }
-
     override fun onBackPressed() {
         // 支持带共享元素动画的返回。
         HandleClose()
     }
-
 }

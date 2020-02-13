@@ -14,6 +14,7 @@ import android.view.ViewTreeObserver
 import android.widget.ImageView
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
+import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.ImageRecommendItemAdapter
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
@@ -69,6 +70,7 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
 
     fun onActivityReenter(resultCode: Int, intent: Intent?) {
         when (resultCode) {
+            // 处理来自IllustratorViewActivity2的Re-enter.
             IllustratorViewActivity2.REENTER_RESULT_CODE -> {
                 val position = intent?.getIntExtra("CURRENT_INDEX", -1) ?: -1
                 if (position != -1) {
@@ -141,8 +143,8 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
             Runnable {
                 val intent = Intent(context, IllustratorViewActivity2::class.java)
                 intent.putExtra(IllustratorViewActivity2.CLICKED_ITEM_INDEX, index)
-                IllustratorViewActivity2.SetItemList(recommendListData!!)
-                IllustratorViewActivity2.SetPreShownDrawable(SharedImageView.drawable)
+                IllustratorImageProviderActivity.SetItemList(recommendListData!!)
+                IllustratorImageProviderActivity.SetPreShownDrawable(SharedImageView.drawable)
                 val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                     activity!!,
                     SharedImageView,

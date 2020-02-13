@@ -1,13 +1,10 @@
 package com.nemesiss.dev.piaprobox.Fragment.Image
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.transition.*
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -19,24 +16,13 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
-import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
+import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
-import kotlinx.android.synthetic.main.illustrator_view_activity.*
-import kotlinx.android.synthetic.main.illustrator_view_activity.Illustrator_View_ArtistAvatar
-import kotlinx.android.synthetic.main.illustrator_view_activity.Illustrator_View_ArtistName
-import kotlinx.android.synthetic.main.illustrator_view_activity.Illustrator_View_BackButton
-import kotlinx.android.synthetic.main.illustrator_view_activity.Illustrator_View_DownloadImage
-import kotlinx.android.synthetic.main.illustrator_view_activity.Illustrator_View_ItemImageView
-import kotlinx.android.synthetic.main.illustrator_view_activity.Illustrator_View_ItemName
-import kotlinx.android.synthetic.main.illustrator_view_activity.Illustrator_View_OpenBrowser
-import kotlinx.android.synthetic.main.illustrator_view_activity2.*
 import kotlinx.android.synthetic.main.illustrator_view_fragment.*
 import kotlinx.android.synthetic.main.illustrator_view_fragment.view.*
 
@@ -65,7 +51,6 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         get() = VIEW_CREATED && USER_CAN_VISITED
 
 
-
     // 状态相关变量
     private var CurrentViewModel: IllustratorViewFragmentViewModel? = null
     private var IS_CURRENT_BIG_SIZE_IMAGE_LOADED = false
@@ -83,31 +68,30 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         super.onDestroyView()
     }
 
+    private fun UpdateTransitionNameBasedOnUserVisible() {
+        if (USER_CAN_VISITED && Illustrator2_View_ItemImageView != null) {
+            Illustrator2_View_ItemImageView.transitionName = resources.getString(R.string.ImageViewTransitionName)
+        } else if (!USER_CAN_VISITED && Illustrator2_View_ItemImageView != null) {
+            // 不可见的第一时间取消transitioName
+            Illustrator2_View_ItemImageView.transitionName = null
+        }
+    }
+
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         USER_CAN_VISITED = isVisibleToUser
 
         // 对当前可见的ImageView设置transitionName
-
-        if(USER_CAN_VISITED && Illustrator2_View_ItemImageView!=null) {
-            Illustrator2_View_ItemImageView.transitionName = resources.getString(R.string.ImageViewTransitionName)
-        }
-        else if(!USER_CAN_VISITED && Illustrator2_View_ItemImageView!=null) {
-
-            // 不可见的第一时间取消transitioName
-
-            Illustrator2_View_ItemImageView.transitionName = null
-        }
+        UpdateTransitionNameBasedOnUserVisible()
         TryLoadViewModelWhileFragmentStateChanged()
 
     }
 
     private fun TryLoadViewModelWhileFragmentStateChanged() {
         if (VIEW_CREATED && USER_CAN_VISITED && !DATA_LOADED) {
-            (activity as? IllustratorViewActivity2)?.AskForViewModel(FRAG_INDEX, this)
+            (activity as? IllustratorImageProviderActivity)?.AskForViewModel(FRAG_INDEX, this)
         }
     }
-
 
 
     private val LoadOriginalWorkDrawableToImageView = object : SimpleTarget<GlideDrawable>() {
@@ -124,16 +108,19 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FRAG_INDEX = arguments?.getInt(CLICKED_ITEM_INDEX, 0) ?: 0
-        FETCH_DRAWABLE = arguments?.getBoolean(SHOULD_FETCH_DRAWABLE, false) ?: false
+        FRAG_INDEX = arguments?.getInt(CLICKED_ITEM_INDEX, 0)!!
+        FETCH_DRAWABLE = arguments?.getBoolean(SHOULD_FETCH_DRAWABLE, false)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.illustrator_view_fragment, container, false)
-        if(FETCH_DRAWABLE) {
+
+        // 对于需要从Provider处获取Drawable的Fragment，指示它获取Drawable，并且监听视图树。
+
+        if (FETCH_DRAWABLE) {
             root.Illustrator2_View_ItemImageView.transitionName = resources.getString(R.string.ImageViewTransitionName)
-            root.Illustrator2_View_ItemImageView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener
-            {
+            root.Illustrator2_View_ItemImageView.viewTreeObserver.addOnPreDrawListener(object :
+                ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
                     root.Illustrator2_View_ItemImageView.viewTreeObserver.removeOnPreDrawListener(this)
                     activity?.supportStartPostponedEnterTransition()
@@ -148,7 +135,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         super.onViewCreated(view, savedInstanceState)
         VIEW_CREATED = true
         if (FETCH_DRAWABLE) {
-            Illustrator2_View_ItemImageView.setImageDrawable(IllustratorViewActivity2.PRE_SHOWN_IMAGE)
+            Illustrator2_View_ItemImageView.setImageDrawable(IllustratorImageProviderActivity.PRE_SHOWN_IMAGE)
         }
         BindButtons()
     }
@@ -163,14 +150,14 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
     private fun HandleDownloadImage() {
         // Call activity method.
-        (activity as? IllustratorViewActivity2)?.HandleDownloadImage(
+        (activity as? IllustratorImageProviderActivity)?.HandleDownloadImage(
             CurrentViewModel!!.ItemImageUrl,
             CurrentViewModel!!.Title
         )
     }
 
     private fun BindButtons() {
-        Illustrator2_View_BackButton.setOnClickListener { (activity as? IllustratorViewActivity2)?.HandleClose() }
+        Illustrator2_View_BackButton.setOnClickListener { (activity as? IllustratorImageProviderActivity)?.HandleClose() }
         Illustrator2_View_DownloadImage.setOnClickListener { HandleDownloadImage() }
         Illustrator2_View_ItemImageView.setOnClickListener { HandleEnterPinchImagePreview() }
         Illustrator2_View_OpenBrowser.setOnClickListener {

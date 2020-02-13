@@ -583,6 +583,19 @@
                 }
               }
             ],
+            "ArtistURL": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "i_icon",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
             "ArtistName": [
               {
                 "getElementsByClassSingle": {
@@ -892,6 +905,75 @@
       {
         "forEachOutput": {
           "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo",
+          "GenerateOutputRule": {
+            "URL": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
+            "Thumb": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "getStyleAttributeBgImageSingle": {
+                  "UrlPrefix": ""
+                }
+              }
+            ],
+            "Title": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "rel-works-title",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "Artist": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "rel-works-author",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "RelatedImage":{
+    "Steps": [
+      {
+        "getElementByIdSingle": {
+          "Name": "recommendBox"
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "li"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo",
           "GenerateOutputRule": {
             "URL": [
               {
