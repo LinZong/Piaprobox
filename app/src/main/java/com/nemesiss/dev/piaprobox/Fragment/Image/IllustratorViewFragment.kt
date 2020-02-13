@@ -1,10 +1,12 @@
 package com.nemesiss.dev.piaprobox.Fragment.Image
 
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -18,11 +20,11 @@ import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
-import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
+import com.nemesiss.dev.piaprobox.databinding.IllustratorViewFragmentBinding
 import kotlinx.android.synthetic.main.illustrator_view_fragment.*
 import kotlinx.android.synthetic.main.illustrator_view_fragment.view.*
 
@@ -48,8 +50,9 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     private var DATA_LOADED = false
 
     private val CURRENT_CAN_APPLY_VIEWMODEL
-        get() = VIEW_CREATED && USER_CAN_VISITED
+        get() = VIEW_CREATED && USER_CAN_VISITED && !DATA_LOADED
 
+    private lateinit var binding: IllustratorViewFragmentBinding
 
     // 状态相关变量
     private var CurrentViewModel: IllustratorViewFragmentViewModel? = null
@@ -113,9 +116,9 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.illustrator_view_fragment, container, false)
-
+        binding = DataBindingUtil.inflate(inflater, R.layout.illustrator_view_fragment, container, false)
         // 对于需要从Provider处获取Drawable的Fragment，指示它获取Drawable，并且监听视图树。
+        val root = binding.root
 
         if (FETCH_DRAWABLE) {
             root.Illustrator2_View_ItemImageView.transitionName = resources.getString(R.string.ImageViewTransitionName)
@@ -171,15 +174,19 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     fun ApplyViewModel(model: IllustratorViewFragmentViewModel) {
         if (CURRENT_CAN_APPLY_VIEWMODEL) {
             CurrentViewModel = model
-            Glide.with(context!!)
-                .load(model.ArtistAvatarUrl)
-                .priority(Priority.HIGH)
-                .into(Illustrator2_View_ArtistAvatar)
+            binding.model = CurrentViewModel
 
-            Illustrator2_View_ArtistName.text = model.ArtistName
-            Illustrator2_View_ItemName.text = model.Title
-            Illustrator2_View_ItemDetail.text = model.CreateDescription
-            ShowWorkItemInfo(model.CreateDetailRaw, Illustrator2_View_ItemInfoContainer)
+            // 替换成Data binding
+
+//            Glide.with(context!!)
+//                .load(model.ArtistAvatarUrl)
+//                .priority(Priority.HIGH)
+//                .into(Illustrator2_View_ArtistAvatar)
+//
+//            Illustrator2_View_ArtistName.text = model.ArtistName
+//            Illustrator2_View_ItemName.text = model.Title
+//            Illustrator2_View_ItemDetail.text = model.CreateDescription
+//            ShowWorkItemInfo(model.CreateDetailRaw, Illustrator2_View_ItemInfoContainer)
 
             Glide.with(context!!)
                 .load(model.ItemImageUrl)

@@ -11,6 +11,11 @@ android {
             storePassword 'lznb008828'
         }
     }
+
+    dataBinding {
+        enabled = true
+    }
+
     compileSdkVersion 28
     buildToolsVersion "29.0.2"
     defaultConfig {
