@@ -22,7 +22,7 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor:
     fun go(): Response {
         val hds = Headers
             .Builder()
-            .add("Cookie", cookies.joinToString(";") { "${it.first}=${it.second}" } ?: "")
+            .add("Cookie", cookies.joinToString(";") { "${it.first}=${it.second}" })
             .build()
 
         CheckParameter()
@@ -37,7 +37,7 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor:
     fun goAsync(resolve: (Response) -> Unit, unexpectedFail: (Exception) -> Unit) {
         val hds = Headers
             .Builder()
-            .add("Cookie", cookies.joinToString(";") { "${it.first}=${it.second}" } ?: "")
+            .add("Cookie", cookies.joinToString(";") { "${it.first}=${it.second}" })
             .build()
 
         CheckParameter()

@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.fragment_header.*
 
 class IllustratorFragment : BaseMainFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.illustrator_fragment, container, false)
+        return inflater.inflate(R.layout.illustrator_main_fragment, container, false)
     }
 
     override fun Refresh() {

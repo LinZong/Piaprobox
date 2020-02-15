@@ -81,6 +81,7 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
     }
 
     protected open fun LoadRecommendList(tagUrl: String, contentType: RecommendListType) {
+        ShowLoadingIndicator()
         LoadFragmentPage(CurrentLoadTagPageURL, CurrentCategoryFragmentType, {
             ParseRecommendListContent(it as String, contentType)
         }, { code, _ ->

@@ -2,6 +2,7 @@ package com.nemesiss.dev.piaprobox.Activity.Image
 
 import android.graphics.drawable.Drawable
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
+import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Fragment.Image.IllustratorViewFragment
 
@@ -23,11 +24,9 @@ abstract class IllustratorImageProviderActivity : PiaproboxBaseActivity() {
         }
         @JvmStatic
         @Synchronized
-        fun SetPreShownDrawable(drawable: Drawable) {
+        fun SetPreShownDrawable(drawable: Drawable?) {
             PRE_SHOWN_IMAGE = drawable
         }
-
-
         @JvmStatic
         @Synchronized
         fun CleanUp() {
@@ -44,6 +43,8 @@ abstract class IllustratorImageProviderActivity : PiaproboxBaseActivity() {
 
 
     abstract fun AskForViewModel(fragmentIndex: Int, self: IllustratorViewFragment)
+
+    abstract fun AskForViewModel(fragmentIndex: Int, relatedImageInfo: RelatedImageInfo)
 
     abstract fun HandleDownloadImage(ImageURL: String, Title: String)
 

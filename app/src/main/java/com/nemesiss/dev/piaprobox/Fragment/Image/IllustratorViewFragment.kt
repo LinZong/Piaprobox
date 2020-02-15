@@ -3,6 +3,7 @@ package com.nemesiss.dev.piaprobox.Fragment.Image
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -13,13 +14,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
+import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
+import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
+import com.nemesiss.dev.piaprobox.Adapter.IllustratorPage.RelatedImageListAdapter
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
@@ -60,6 +65,22 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     private var FRAG_INDEX: Int = 0
     private var FETCH_DRAWABLE = false
 
+    // Custom image load handler.
+    private val LoadOriginalWorkDrawableToImageView = object : SimpleTarget<GlideDrawable>() {
+        override fun onResourceReady(
+            resource: GlideDrawable?,
+            glideAnimation: GlideAnimation<in GlideDrawable>?
+        ) {
+            IS_CURRENT_BIG_SIZE_IMAGE_LOADED = true
+            if (Illustrator2_View_ItemImageView != null) {
+                Illustrator2_View_ItemImageView.setImageDrawable(resource)
+            }
+        }
+    }
+
+    private var relatedImageListAdapter: RelatedImageListAdapter? = null
+    private var relatedImagGridLayoutManager: GridLayoutManager = GridLayoutManager(context, 3)
+
     override fun onDestroy() {
         super.onDestroy()
         VIEW_CREATED = false
@@ -87,25 +108,11 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         // 对当前可见的ImageView设置transitionName
         UpdateTransitionNameBasedOnUserVisible()
         TryLoadViewModelWhileFragmentStateChanged()
-
     }
 
     private fun TryLoadViewModelWhileFragmentStateChanged() {
         if (VIEW_CREATED && USER_CAN_VISITED && !DATA_LOADED) {
             (activity as? IllustratorImageProviderActivity)?.AskForViewModel(FRAG_INDEX, this)
-        }
-    }
-
-
-    private val LoadOriginalWorkDrawableToImageView = object : SimpleTarget<GlideDrawable>() {
-        override fun onResourceReady(
-            resource: GlideDrawable?,
-            glideAnimation: GlideAnimation<in GlideDrawable>?
-        ) {
-            IS_CURRENT_BIG_SIZE_IMAGE_LOADED = true
-            if (Illustrator2_View_ItemImageView != null) {
-                Illustrator2_View_ItemImageView.setImageDrawable(resource)
-            }
         }
     }
 
@@ -119,7 +126,6 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.illustrator_view_fragment, container, false)
         // 对于需要从Provider处获取Drawable的Fragment，指示它获取Drawable，并且监听视图树。
         val root = binding.root
-
         if (FETCH_DRAWABLE) {
             root.Illustrator2_View_ItemImageView.transitionName = resources.getString(R.string.ImageViewTransitionName)
             root.Illustrator2_View_ItemImageView.viewTreeObserver.addOnPreDrawListener(object :
@@ -134,6 +140,11 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         return root
     }
 
+    override fun OnRelatedItemSelected(index: Int, relatedImageInfo: RelatedImageInfo) {
+        DATA_LOADED = false
+        (activity as? IllustratorImageProviderActivity)?.AskForViewModel(FRAG_INDEX, relatedImageInfo)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         VIEW_CREATED = true
@@ -143,11 +154,17 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         BindButtons()
     }
 
+    private fun TellImageIsStillPreparing() {
+        Toast.makeText(context, R.string.ImageContentInfoIsPreparing, Toast.LENGTH_SHORT).show()
+    }
+
     private fun HandleEnterPinchImagePreview() {
         if (IS_CURRENT_BIG_SIZE_IMAGE_LOADED) {
             val intent = Intent(context!!, PreviewImageActivity::class.java)
             PreviewImageActivity.SetPreShownDrawable(Illustrator2_View_ItemImageView.drawable)
             startActivity(intent)
+        } else {
+            TellImageIsStillPreparing()
         }
     }
 
@@ -173,20 +190,14 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     // Activity调用，喂数据给Fragment
     fun ApplyViewModel(model: IllustratorViewFragmentViewModel) {
         if (CURRENT_CAN_APPLY_VIEWMODEL) {
+
+            binding.root.Illustrator2_ScrollView.scrollTo(0, 0)
+
             CurrentViewModel = model
             binding.model = CurrentViewModel
 
-            // 替换成Data binding
 
-//            Glide.with(context!!)
-//                .load(model.ArtistAvatarUrl)
-//                .priority(Priority.HIGH)
-//                .into(Illustrator2_View_ArtistAvatar)
-//
-//            Illustrator2_View_ArtistName.text = model.ArtistName
-//            Illustrator2_View_ItemName.text = model.Title
-//            Illustrator2_View_ItemDetail.text = model.CreateDescription
-//            ShowWorkItemInfo(model.CreateDetailRaw, Illustrator2_View_ItemInfoContainer)
+            ShowWorkItemInfo(CurrentViewModel!!.CreateDetailRaw, binding.Illustrator2ViewItemInfoContainer)
 
             Glide.with(context!!)
                 .load(model.ItemImageUrl)
@@ -194,10 +205,22 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
                 .into(LoadOriginalWorkDrawableToImageView)
 
             DATA_LOADED = true
+
+            // Load Related Items.
+            if (relatedImageListAdapter == null) {
+                relatedImageListAdapter = RelatedImageListAdapter(model.RelatedItems, this::OnRelatedItemSelected)
+                binding.root.Illustrator2_View_RelatedItems.adapter = relatedImageListAdapter
+                binding.root.Illustrator2_View_RelatedItems.layoutManager = relatedImagGridLayoutManager
+            } else {
+                relatedImageListAdapter?.items = model.RelatedItems
+                relatedImageListAdapter?.notifyDataSetChanged()
+            }
         }
     }
 
     private fun ShowWorkItemInfo(OriginalWorkInfoText: String, AutoWrapContainer: AutoWrapLayout) {
+        AutoWrapContainer.removeAllViews()
+
         OriginalWorkInfoText.split(" | ").forEach {
             val DelimiterPos = it.indexOf('：')
             // Key: 0-DelimiterPos   Value: DelimiterPos+1-End

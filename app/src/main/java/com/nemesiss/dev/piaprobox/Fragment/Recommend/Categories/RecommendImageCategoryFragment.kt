@@ -67,7 +67,6 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
     override fun OnRecommendItemSelected(index: Int) {
 
     }
-
     fun onActivityReenter(resultCode: Int, intent: Intent?) {
         when (resultCode) {
             // 处理来自IllustratorViewActivity2的Re-enter.
@@ -107,7 +106,6 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
                             Recommend_Frag_Common_RecyclerView.viewTreeObserver.removeOnPreDrawListener(this)
                             activity?.supportStartPostponedEnterTransition()
                             // 可以清除CallbackListener.
-//                            Log.d("RecommendImage","目标ImageView 开始Predraw, 清除Listener. Activity继续动画")
                         }
                         return true
                     }
@@ -129,11 +127,11 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
         return notVisible
     }
 
-    fun ScrollToPositionAndReturnView(position: Int, smooth: Boolean): ImageView? {
-        Log.d("RecommendImage", "ScrollToPositionAndReturnView  $position")
-        ScrollToPositionIfNotFullyVisible(position, smooth)
-        return (Recommend_Frag_Common_RecyclerView.findViewHolderForPosition(position) as? ImageRecommendItemAdapter.ImageRecommendItemViewHolder)?.itemView?.SingleImageWorkItemCard_WorkThumb
-    }
+//    fun ScrollToPositionAndReturnView(position: Int, smooth: Boolean): ImageView? {
+//        Log.d("RecommendImage", "ScrollToPositionAndReturnView  $position")
+//        ScrollToPositionIfNotFullyVisible(position, smooth)
+//        return (Recommend_Frag_Common_RecyclerView.findViewHolderForPosition(position) as? ImageRecommendItemAdapter.ImageRecommendItemViewHolder)?.itemView?.SingleImageWorkItemCard_WorkThumb
+//    }
 
     fun OnRecommendItemSelectedWithSharedImageView(index: Int, SharedImageView: ImageView) {
 

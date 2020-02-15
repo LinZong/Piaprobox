@@ -8,7 +8,6 @@ import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.ViewPager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,7 @@ import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.RecommendImageCa
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.RecommendTextCategoryFragment
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.fragment_header.*
-import kotlinx.android.synthetic.main.recommand_fragment.*
+import kotlinx.android.synthetic.main.recommand_main_fragment.*
 
 enum class RecommendListType(var Name: String, var Index: Int, var CookieName: String) {
     MUSIC("MUSIC", 0, "music"),
@@ -44,7 +43,7 @@ class MainRecommendFragment : BaseMainFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 //        Log.d("MainRecommendFragment","创建View")
-        return inflater.inflate(R.layout.recommand_fragment, container, false)
+        return inflater.inflate(R.layout.recommand_main_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

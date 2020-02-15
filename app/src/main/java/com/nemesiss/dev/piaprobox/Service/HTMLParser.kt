@@ -21,6 +21,9 @@ class HTMLParser @Inject constructor(val context: Context) {
         val LOGTAG = "HTMLParser"
 
         @JvmStatic
+        val MAIN_DOMAIN = "https://piapro.jp"
+
+        @JvmStatic
         fun ProvideRuleJsonFileHandle() : File {
             val cachePath = AppUtil.GetAppCachePath()
             return File(cachePath).resolve("ContentParserRule.json")
@@ -32,9 +35,18 @@ class HTMLParser @Inject constructor(val context: Context) {
                 ValueFromParser
             }
             else if (ValueFromParser.contains("cdn")) {
-                "http://${ValueFromParser}"
+                "http:${ValueFromParser}"
             } else {
                 MainRecommendFragment.DefaultTagUrl + ValueFromParser
+            }
+        }
+
+        @JvmStatic
+        fun WrapDomain(urlForWrap : String) : String {
+            return if(urlForWrap.startsWith("http")) {
+                urlForWrap
+            } else {
+                MAIN_DOMAIN + urlForWrap
             }
         }
     }

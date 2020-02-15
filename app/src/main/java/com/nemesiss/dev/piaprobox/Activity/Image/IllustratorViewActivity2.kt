@@ -89,10 +89,6 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
         InitFragmentPager(ClickedIndex)
     }
 
-    private fun TellImageIsStillPreparing() {
-        Toast.makeText(this, R.string.ImageContentInfoIsPreparing, Toast.LENGTH_SHORT).show()
-    }
-
     private fun InitFragmentPager(FirstShowIndex: Int) {
         if (CAN_VIEW_ITEM_LIST != null) {
             IntRange(0, CAN_VIEW_ITEM_LIST!!.size - 1).forEach {
@@ -107,11 +103,11 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
                 ItemPages.add(frag)
             }
         }
-        Illustrator2_Item_Pager.addOnPageChangeListener(object : BaseOnPageChangeListener()
-        {
+        Illustrator2_Item_Pager.addOnPageChangeListener(object : BaseOnPageChangeListener() {
             override fun onPageSelected(p0: Int) {
-                Log.d("Illustrator2","清除上一个可见性")
-                val imageView = ItemPages[CURRENT_SHOW_IMAGE_INDEX].view?.findViewById<ImageView>(R.id.Illustrator2_View_ItemImageView)
+                Log.d("Illustrator2", "清除上一个可见性")
+                val imageView =
+                    ItemPages[CURRENT_SHOW_IMAGE_INDEX].view?.findViewById<ImageView>(R.id.Illustrator2_View_ItemImageView)
                 imageView?.transitionName = null
                 CURRENT_SHOW_IMAGE_INDEX = p0
             }
@@ -129,6 +125,16 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             // Load model from network.
             LoadRecommendImageDetailData(fragmentIndex, CAN_VIEW_ITEM_LIST!![fragmentIndex])
         }
+    }
+
+    override fun AskForViewModel(fragmentIndex: Int, relatedImageInfo: RelatedImageInfo) {
+
+        val model = RecommendItemModelImage().apply {
+            ArtistName = relatedImageInfo.Artist
+            URL = relatedImageInfo.URL
+        }
+
+        LoadRecommendImageDetailData(fragmentIndex, model)
     }
 
     // 供给Fragment调用
@@ -154,10 +160,15 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
         // 第一阶段创建ViewModel， 放到正在Loading的Cache中。
         val model = IllustratorViewFragmentViewModel()
 
-        model.ArtistAvatarUrl = HTMLParser.GetAlbumThumb(content.ArtistAvatar)
-        model.ArtistName = content.ArtistName
+//        不再使用RecommendItemModelImage中带过来的ArtistAvatar, 转去使用详情页的AvatarUrl.
+//        model.ArtistAvatarUrl = HTMLParser.GetAlbumThumb(content.ArtistAvatar)
 
-        val url = MainRecommendFragment.DefaultTagUrl + content.URL
+        model.apply {
+            ArtistName = content.ArtistName
+        }
+
+//        val url = MainRecommendFragment.DefaultTagUrl + content.URL
+        val url = HTMLParser.WrapDomain(content.URL)
 
         model.BrowserPageUrl = url
         LoadingItemPageViewModel.put(needFragmentIndex, model)
@@ -195,13 +206,17 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
 
         try {
             val ImageContents = htmlParser.Parser.GoSteps(root, StepsImageContent) as ImageContentInfo
-            val RelatedItems = (htmlParser.Parser.GoSteps(root, StepsRelatedImage) as Array<*>).map { it as RelatedImageInfo }
+            val relatedItems =
+                (htmlParser.Parser.GoSteps(root, StepsRelatedImage) as Array<*>).map { it as RelatedImageInfo }
 
-            model.Title = ImageContents.Title
-            model.CreateDescription = ImageContents.CreateDescription.replace("<br>".toRegex(), "\n")
-            model.CreateDetailRaw = ImageContents.CreateDetail
-            model.ItemImageUrl = HTMLParser.GetAlbumThumb(ImageContents.URL)
-            model.RelatedItems = RelatedItems
+            model.apply {
+                ArtistAvatarUrl = HTMLParser.GetAlbumThumb(ImageContents.ArtistAvatar)
+                Title = ImageContents.Title
+                CreateDescription = ImageContents.CreateDescription.replace("<br>".toRegex(), "\n")
+                CreateDetailRaw = ImageContents.CreateDetail
+                ItemImageUrl = HTMLParser.GetAlbumThumb(ImageContents.URL)
+                RelatedItems = relatedItems
+            }
 
             // 放到加载完的Cache中
             ItemPageViewModelCache.put(needFragmentIndex, model)
@@ -210,6 +225,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             runOnUiThread {
                 ItemPages[needFragmentIndex].ApplyViewModel(model)
             }
+
         } catch (e: InvalidStepExecutorException) {
             LoadFailedTips(-1, "InvalidStepExecutorException: ${e.message}")
         } catch (e: ClassNotFoundException) {
@@ -224,9 +240,10 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     override fun HandleClose() {
         val intent = Intent()
         intent.putExtra("CURRENT_INDEX", CURRENT_SHOW_IMAGE_INDEX)
-        setResult(REENTER_RESULT_CODE,intent)
+        setResult(REENTER_RESULT_CODE, intent)
         supportFinishAfterTransition()
     }
+
     override fun onBackPressed() {
         // 支持带共享元素动画的返回。
         HandleClose()

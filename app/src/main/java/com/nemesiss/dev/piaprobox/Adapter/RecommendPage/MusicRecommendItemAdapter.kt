@@ -26,7 +26,7 @@ class MusicRecommendItemAdapter(var items : List<RecommendItemModel>,
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, index: Int): RecommendItemVH {
-        return RecommendItemVH(LayoutInflater.from(viewGroup.context).inflate(R.layout.single_recommend_item, viewGroup,false))
+        return RecommendItemVH(LayoutInflater.from(viewGroup.context).inflate(R.layout.single_recommend_item_no_databinding, viewGroup,false))
     }
 
     override fun getItemCount(): Int {

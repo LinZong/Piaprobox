@@ -18,6 +18,7 @@
             android:layout_height="match_parent">
 
         <ScrollView
+                android:id="@+id/Illustrator2_ScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -157,6 +158,18 @@
                             app:cardCornerRadius="4dp"
                             android:layout_margin="6dp">
 
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                            <android.support.v7.widget.RecyclerView
+                                    android:nestedScrollingEnabled="false"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Illustrator2_View_RelatedItems"/>
+
+                        </LinearLayout>
                     </android.support.v7.widget.CardView>
                 </LinearLayout>
 
