@@ -15,7 +15,6 @@ class ImageRecommendItemAdapter(
     val OnItemSelected: (Int, ImageView) -> Unit
 ) : RecyclerView.Adapter<ImageRecommendItemAdapter.ImageRecommendItemViewHolder>() {
 
-
     class ImageRecommendItemViewHolder private constructor(val binding: SingleRecommendImageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         companion object {

@@ -10,6 +10,8 @@ import android.content.res.AssetManager
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
+import android.provider.Browser
 import android.provider.MediaStore
 import android.support.v4.content.ContextCompat
 import android.view.View
@@ -103,15 +105,21 @@ class AppUtil {
 
         @JvmStatic
         fun NotifyGalleryUpdate(context: Context, file : File) {
-//            MediaStore.Images.Media.insertImage(context.contentResolver, file.absolutePath, file.name, null)
             context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.absolutePath)))
         }
 
         @JvmStatic
-        fun OpenBrowser(context: Context, Url : String) {
+        fun OpenBrowser(context: Context, Url : String, headers : List<Pair<String, String>>? = null) {
             val intent = Intent()
             intent.action = "android.intent.action.VIEW"
             intent.data = Uri.parse(Url)
+            if(headers!=null) {
+                val headerBundle = Bundle()
+                headers.forEach {
+                    headerBundle.putString(it.first,it.second)
+                }
+                intent.putExtra(Browser.EXTRA_HEADERS, headerBundle)
+            }
             context.startActivity(intent)
         }
     }

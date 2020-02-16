@@ -19,36 +19,44 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".Activity.Common.SplashActivity"
-                  android:theme="@style/SplashScreenTheme">
+        <activity
+                android:name=".Activity.Common.SplashActivity"
+                android:theme="@style/SplashScreenTheme">
 
-        </activity>
-        <activity android:name=".Activity.Common.MainActivity"
-                  android:launchMode="singleTop"
-        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.Music.MusicControlActivity"
-                  android:parentActivityName=".Activity.Common.MainActivity"
-                  android:launchMode="singleTop"
-        >
-        </activity>
-        <activity android:name=".Activity.TestSkeletonActivity"
-        >
+        <activity
+                android:name=".Activity.Common.MainActivity"
+                android:launchMode="singleTop"
+                >
 
         </activity>
+        <activity
+                android:name=".Activity.Music.MusicControlActivity"
+                android:parentActivityName=".Activity.Common.MainActivity"
+                android:launchMode="singleTop"
+                >
+        </activity>
+        <activity android:name=".Activity.TestSkeletonActivity"
+                >
+        </activity>
+
         <service android:name=".Service.MusicPlayer.MusicPlayerService"/>
+
         <activity android:name=".Activity.Music.MusicDetailActivity">
 
         </activity>
         <activity android:name=".Activity.Image.IllustratorViewActivity"/>
         <activity android:name=".Activity.Image.IllustratorViewActivity2"/>
-        <activity android:name=".Activity.Common.PreviewImageActivity"
-                  android:theme="@style/PreviewImageTranslucentBar"
-        />
+        <activity
+                android:name=".Activity.Common.PreviewImageActivity"
+                android:theme="@style/PreviewImageTranslucentBar"
+                />
+        <activity android:name=".Activity.Text.TextDetailActivity"/>
+        <activity android:name=".Activity.Common.AppSettingActivity"/>
     </application>
 
 </manifest>

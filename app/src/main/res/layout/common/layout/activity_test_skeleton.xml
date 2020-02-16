@@ -5,10 +5,10 @@
               tools:context=".Activity.TestSkeletonActivity"
               android:layout_height="match_parent">
 
-    <Button android:layout_width="wrap_content"
-            android:id="@+id/TestNotification_SendNotification"
+
+    <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send Custom Noti"
-            android:onClick="SendNotification"
-            android:textAllCaps="false"/>
+            android:id="@+id/Test_Parse_A_Tag"/>
+
 </LinearLayout>

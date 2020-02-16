@@ -46,7 +46,7 @@ class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        htmlParser = HTMLParser(context ?: PiaproboxApplication.Self.applicationContext)
+        super.onViewCreated(view, savedInstanceState)
         LoadDefaultPage(CurrentCategoryFragmentType)
     }
 

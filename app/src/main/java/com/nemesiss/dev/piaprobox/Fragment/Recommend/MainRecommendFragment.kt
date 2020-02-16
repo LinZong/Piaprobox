@@ -42,16 +42,14 @@ class MainRecommendFragment : BaseMainFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-//        Log.d("MainRecommendFragment","创建View")
         return inflater.inflate(R.layout.recommand_main_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        Log.d("MainRecommendFragment","View 被创建")
+        ResetCategoriesIndicator()
         BindCategoryClickHandler()
-        Recommend_Category_Tag_Music.isSelected = true
-        Recommend_Category_Tag_Music.setTextColor(Color.WHITE)
+
         fragments = arrayListOf(
             RecommendMusicCategoryFragment(),
             RecommendImageCategoryFragment(),
@@ -71,7 +69,6 @@ class MainRecommendFragment : BaseMainFragment() {
                 FadeInAndOutCategoryTagBackground(CurrentDisplayFragmentIndex, index)
                 CurrentDisplayFragmentIndex = index
             }
-
         })
         Recommend_Category_Frag_Pager.offscreenPageLimit = fragments.size
     }
@@ -105,7 +102,26 @@ class MainRecommendFragment : BaseMainFragment() {
             }
     }
 
+    private fun ResetCategoriesIndicator() {
+        val childs = Recommend_Category_Tag_Container.childCount
+        for(i in 0 until childs) {
+            val textView = Recommend_Category_Tag_Container.getChildAt(i) as TextView
+            if(i == CurrentDisplayFragmentIndex) {
+                textView.isSelected = true
+                textView.background.alpha = 255
+                textView.setTextColor(Color.rgb(255,255,255))
+            }
+            else {
+                textView.isSelected = false
+                textView.background.alpha = 255
+                textView.setTextColor(Color.rgb(128, 128, 128))
+            }
+        }
+    }
+
     private fun FadeInAndOutCategoryTagBackground(DimIndex: Int, BrightIndex: Int) {
+        if(DimIndex == BrightIndex)
+            return
         val dimView = Recommend_Category_Tag_Container.getChildAt(DimIndex) as TextView
         val brightView = Recommend_Category_Tag_Container.getChildAt(BrightIndex) as TextView
 

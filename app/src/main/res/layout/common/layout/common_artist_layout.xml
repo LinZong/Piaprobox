@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+                name="artistName"
+                type="String"/>
+
+        <variable
+                name="artistAvatarUrl"
+                type="String"/>
+
+        <variable
+                name="createDetailRaw"
+                type="String"/>
+    </data>
+
+    <com.nemesiss.dev.piaprobox.View.Common.ArtistInfoLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                bind:imageUrlWithPrefix="@{artistAvatarUrl}"
+                android:id="@+id/Illustrator2_View_ArtistAvatar"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_toEndOf="@id/Illustrator2_View_ArtistAvatar"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginStart="2dp"
+                    style="@style/GenericTextView"
+                    android:textColor="@color/IllustratorArtistNameColor"
+                    android:id="@+id/Illustrator2_View_ArtistName"
+                    android:text="@{artistName}"/>
+
+
+            <com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    bind:createDetail="@{createDetailRaw}"
+                    android:id="@+id/Illustrator2_View_ItemInfoContainer"/>
+
+        </LinearLayout>
+    </com.nemesiss.dev.piaprobox.View.Common.ArtistInfoLayout>
+</layout>

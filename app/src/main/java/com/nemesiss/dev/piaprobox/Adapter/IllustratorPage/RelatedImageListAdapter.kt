@@ -16,7 +16,6 @@ class RelatedImageListAdapter(
         RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun create(viewGroup: ViewGroup): RelatedImageItemViewHolder {
-                Log.d("RelatedImageList","Create viewholder!")
                 return RelatedImageItemViewHolder(
                     SingleRelatedImageItemBinding.inflate(
                         LayoutInflater.from(viewGroup.context),

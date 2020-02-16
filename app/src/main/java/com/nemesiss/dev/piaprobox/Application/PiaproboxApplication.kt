@@ -19,8 +19,8 @@ class PiaproboxApplication : Application() {
 
     companion object {
         lateinit var Self: PiaproboxApplication
+            private set
     }
-
 
     private fun TrustAllCetificates() {
         val sslContext = SSLContext.getInstance("TLS")

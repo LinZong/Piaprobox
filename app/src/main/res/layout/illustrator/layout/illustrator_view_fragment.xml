@@ -8,7 +8,6 @@
         <variable
                 name="model"
                 type="com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel"/>
-
         <import type="com.nemesiss.dev.piaprobox.Service.HTMLParser"/>
 
     </data>
@@ -75,46 +74,10 @@
                                     android:layout_marginEnd="18dp"
                                     />
 
-                            <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-
-                                <de.hdodenhof.circleimageview.CircleImageView
-                                        android:layout_width="64dp"
-                                        android:layout_height="64dp"
-                                        android:layout_centerVertical="true"
-                                        android:layout_margin="8dp"
-                                        bind:imageUrlWithPrefix="@{model.ArtistAvatarUrl}"
-                                        android:id="@+id/Illustrator2_View_ArtistAvatar"/>
-
-                                <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_toEndOf="@id/Illustrator2_View_ArtistAvatar"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:layout_margin="8dp"
-                                        android:orientation="vertical">
-
-                                    <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginBottom="2dp"
-                                            android:layout_marginStart="2dp"
-                                            style="@style/GenericTextView"
-                                            android:textColor="@color/IllustratorArtistNameColor"
-                                            android:id="@+id/Illustrator2_View_ArtistName"
-                                            android:text="@{model.ArtistName}"/>
-
-
-                                    <com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_margin="6dp"
-                                            android:id="@+id/Illustrator2_View_ItemInfoContainer"/>
-
-                                </LinearLayout>
-                            </RelativeLayout>
-
+                            <include layout="@layout/common_artist_layout"
+                                     app:artistName="@{model.ArtistName}"
+                                     app:artistAvatarUrl="@{model.ArtistAvatarUrl}"
+                                     app:createDetailRaw="@{model.CreateDetailRaw}"/>
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
 
@@ -137,7 +100,7 @@
                                     android:id="@+id/Illustrator2_View_ItemDetail"
                                     android:textSize="7pt"
                                     android:layout_margin="4dp"
-                                    android:text="@{model.CreateDescription}"
+                                    bind:textWithUrl="@{model.CreateDescription}"
                                     style="@style/GenericTextView"/>
                         </LinearLayout>
 

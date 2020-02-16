@@ -19,7 +19,6 @@ abstract class BaseMainFragment : Fragment() {
     protected var loadingIndicatorView : LoadingIndicatorView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         LoadBannerImage()
     }
 
@@ -52,5 +51,4 @@ abstract class BaseMainFragment : Fragment() {
             loadingIndicatorView = null
         }
     }
-
 }

@@ -43,7 +43,6 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
 
         @JvmStatic
         val IMAGE_PRE_SHOWN_IMAGE_INTENT_KEY = "IMAGE_PRE_SHOWN_IMAGE_INTENT_KEY"
-
     }
 
     @Inject
@@ -63,6 +62,14 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     private var LoadingItemPageViewModel = SparseArray<IllustratorViewFragmentViewModel>()
 
     private var CURRENT_SHOW_IMAGE_INDEX = 0
+
+    override fun onDestroy() {
+        Illustrator2_Item_Pager.removeAllViews()
+        ItemPageViewModelCache.clear()
+        LoadingItemPageViewModel.clear()
+        ItemPages.clear()
+        super.onDestroy()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,7 +146,6 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
 
     // 供给Fragment调用
     override fun HandleDownloadImage(ImageURL: String, Title: String) {
-
         var Ext = ImageURL.substring(ImageURL.lastIndexOf('.'))
         if (Ext.isEmpty()) {
             Ext = ".png"

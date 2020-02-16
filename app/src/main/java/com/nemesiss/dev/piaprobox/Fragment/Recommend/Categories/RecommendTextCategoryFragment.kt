@@ -6,20 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
-import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
-import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.MusicRecommendItemAdapter
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.TextRecommendItemAdapter
-import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Service.HTMLParser
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
-import com.nemesiss.dev.piaprobox.View.Common.SingleTagView
 import kotlinx.android.synthetic.main.recommend_category_layout.*
 import org.jsoup.Jsoup
 
@@ -37,6 +27,7 @@ class RecommendTextCategoryFragment : BaseRecommendCategoryFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         LoadDefaultPage(RecommendListType.TEXT)
     }
     override fun Refresh() {

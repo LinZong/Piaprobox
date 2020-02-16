@@ -853,6 +853,97 @@
       }
     ]
   },
+  "TextContent": {
+    "Steps": [
+      {
+        "OutputSingle": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.TextContentInfo",
+          "GenerateOutputRule": {
+            "ContentID": [
+              {
+                "HTMLTextRegexMatchSingle": {
+                  "Regex": "(?<=contentId:').*(?=')"
+                }
+              }
+            ],
+            "Title": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "cd_works-title",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "CreateDetail": [
+              {
+                "getElementsByClassSingle":{
+                  "Name": "cd_dtl_data",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle":{
+                  "Name": "p",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "CreateDescription": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "cd_dtl_cap",
+                  "Index": 0
+                }
+              },
+              {
+                "htmlSingle": {}
+              }
+            ],
+            "Artist": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "cd_user-name",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "ArtistAvatar": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "cd_user-icon",
+                  "Index": 0
+                }
+              },
+              {
+                "getStyleAttributeBgImageSingle": {
+                  "UrlPrefix": ""
+                }
+              }
+            ],
+            "Text": [
+              {
+                "getElementByIdSingle": {
+                  "Name": "_txt_main"
+                }
+              },
+              {
+                "htmlSingle": {}
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
   "MusicPlayInfo": {
     "Steps": [
       {

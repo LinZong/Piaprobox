@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +22,6 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
-import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Adapter.IllustratorPage.RelatedImageListAdapter
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
@@ -85,6 +83,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         super.onDestroy()
         VIEW_CREATED = false
         DATA_LOADED = false
+        CurrentViewModel = null
     }
 
     override fun onDestroyView() {
@@ -197,7 +196,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
             binding.model = CurrentViewModel
 
 
-            ShowWorkItemInfo(CurrentViewModel!!.CreateDetailRaw, binding.Illustrator2ViewItemInfoContainer)
+//            ShowWorkItemInfo(CurrentViewModel!!.CreateDetailRaw, binding.Illustrator2ViewItemInfoContainer)
 
             Glide.with(context!!)
                 .load(model.ItemImageUrl)

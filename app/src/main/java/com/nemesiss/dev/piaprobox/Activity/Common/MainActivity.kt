@@ -19,20 +19,23 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.ref.WeakReference
 
 class MainActivity : PiaproboxBaseActivity() {
 
     private val MainFragmentsCollection: HashMap<Int, BaseMainFragment> = HashMap()
-
     private lateinit var CurrentShowMainFragment: BaseMainFragment
 
-    private var ShouldRemapView : View? = null
+
+    override fun onDestroy() {
+        MainFragmentsCollection.clear()
+        super.onDestroy()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         InitView()
-        BindReMapImageSharedElementListener()
     }
 
     private fun InitView() {
@@ -45,7 +48,6 @@ class MainActivity : PiaproboxBaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_toolbar_right_menu, menu)
-
         return true
     }
 
@@ -121,7 +123,7 @@ class MainActivity : PiaproboxBaseActivity() {
             .run {
                 var fragment = MainFragmentsCollection[this.first]
                 if (fragment == null) {
-//                    // 保证单例
+//                    保证单例
                     fragment = this.second.newInstance()
                     MainFragmentsCollection[this.first] = fragment
                 }
@@ -136,32 +138,10 @@ class MainActivity : PiaproboxBaseActivity() {
         CurrentShowMainFragment = fragment
     }
 
-
-    override fun onDestroy() {
-        MainFragmentsCollection.clear()
-        super.onDestroy()
-    }
-
-    private fun BindReMapImageSharedElementListener() {
-    }
-
     override fun onActivityReenter(resultCode: Int, data: Intent?) {
         super.onActivityReenter(resultCode, data)
         ((CurrentShowMainFragment as? MainRecommendFragment)
             ?.CurrentDisplayFragment() as? RecommendImageCategoryFragment)
-            ?.onActivityReenter(resultCode,data)
-
-
-//        when(resultCode) {
-//            IllustratorViewActivity2.RETEEN_RESULT_CODE -> {
-//                Log.d("MainActivity", " --- onActivityReenter")
-//                val index = data?.getIntExtra("CURRENT_INDEX",-1) ?: -1
-//                if(index != -1)
-//                {
-//                    val currImageFrag =
-//                    ShouldRemapView = currImageFrag?.ScrollToPositionAndReturnView(index,false)
-//                }
-//            }
-//        }
+            ?.onActivityReenter(resultCode, data)
     }
 }

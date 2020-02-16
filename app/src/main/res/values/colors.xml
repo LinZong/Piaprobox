@@ -21,4 +21,7 @@
     <color name="IllustratorArtistNameColor">#009BDE</color>
 
     <color name="WorkDetailText">#606060</color>
+
+    <color name="TextPaperBackground">#fdfdf4</color>
+    <color name="TextPaperBorderInsetColor">#f6eed7</color>
 </resources>
