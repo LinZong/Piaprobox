@@ -1,14 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
+        <variable
+                name="model"
+                type="com.nemesiss.dev.piaprobox.Model.Text.TextDetailActivityViewModel"/>
     </data>
 
-
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
             android:layout_width="match_parent"
+            android:orientation="vertical"
             android:layout_height="match_parent">
 
-    </android.support.constraint.ConstraintLayout>
+        <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:id="@+id/TextDetail_Toolbar"
+                    android:background="@color/PiaproColor"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    app:popupTheme="@style/Theme.AppCompat.Light"
+                    app:titleTextAppearance="@style/MusicPlayerToolbarTitle"
+                    app:title="@{model.Titie}"
+                    android:layout_height="?attr/actionBarSize">
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                <include
+                        layout="@layout/common_artist_layout"
+                        app:artistName="@{model.ArtistName}"
+                        app:artistAvatarUrl="@{model.ArtistAvatarUrl}"
+                        app:createDetailRaw="@{model.CreateDetailRaw}"/>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="8dp"
+                        android:background="@color/DividerColor"/>
+
+                <include layout="@layout/text_reader_layout"
+                         app:text="@{model.Text}"/>
+            </LinearLayout>
+
+    </LinearLayout>
 </layout>

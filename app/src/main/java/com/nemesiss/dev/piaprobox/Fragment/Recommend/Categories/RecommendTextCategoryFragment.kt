@@ -1,5 +1,6 @@
 package com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
+import com.nemesiss.dev.piaprobox.Activity.Text.TextDetailActivity
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.TextRecommendItemAdapter
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
@@ -35,9 +37,11 @@ class RecommendTextCategoryFragment : BaseRecommendCategoryFragment()
     }
 
     override fun OnRecommendItemSelected(index: Int) {
-
+        val item = recommendListData!![index]
+        val intent = Intent(context, TextDetailActivity::class.java)
+        intent.putExtra(TextDetailActivity.SHOWN_TEXT_INTENT_KEY, item)
+        startActivity(intent)
     }
-
 
     override fun ParseRecommendListContent(HTMLString: String, contentType: RecommendListType) {
         val root = Jsoup.parse(HTMLString)

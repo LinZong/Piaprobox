@@ -19,10 +19,13 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerErrorHandlerFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.ErrorHandlerModules
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
 import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
+import com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler.ParseContentErrorHandler
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
@@ -31,6 +34,7 @@ import com.nemesiss.dev.piaprobox.Util.BaseOnPageChangeListener
 import kotlinx.android.synthetic.main.illustrator_view_activity2.*
 import org.jsoup.Jsoup
 import java.io.File
+import java.lang.Exception
 import javax.inject.Inject
 
 class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
@@ -54,6 +58,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     @Inject
     lateinit var downloader: DownloadService
 
+    lateinit var errorHandler: ParseContentErrorHandler
     // 状态相关变量
     private var ItemPages = ArrayList<IllustratorViewFragment>()
 
@@ -89,6 +94,9 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             .downloadServiceModules(DownloadServiceModules(this))
             .build()
             .inject(this)
+
+
+        errorHandler = DaggerErrorHandlerFactory.builder().errorHandlerModules(ErrorHandlerModules(this)).build().handler()
 
         val ClickedIndex = intent.getIntExtra(CLICKED_ITEM_INDEX, 0)
         // 把Fragment加载进来
@@ -223,23 +231,20 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
                 ItemImageUrl = HTMLParser.GetAlbumThumb(ImageContents.URL)
                 RelatedItems = relatedItems
             }
-
-            // 放到加载完的Cache中
-            ItemPageViewModelCache.put(needFragmentIndex, model)
-            // 从正在加载的Cache中移除
-            LoadingItemPageViewModel.delete(needFragmentIndex)
-            runOnUiThread {
-                ItemPages[needFragmentIndex].ApplyViewModel(model)
+            synchronized(ItemPages) {
+                if(ItemPages.isNotEmpty()) {
+                    // 放到加载完的Cache中
+                    ItemPageViewModelCache.put(needFragmentIndex, model)
+                    // 从正在加载的Cache中移除
+                    LoadingItemPageViewModel.delete(needFragmentIndex)
+                    runOnUiThread {
+                        ItemPages[needFragmentIndex].ApplyViewModel(model)
+                    }
+                }
             }
 
-        } catch (e: InvalidStepExecutorException) {
-            LoadFailedTips(-1, "InvalidStepExecutorException: ${e.message}")
-        } catch (e: ClassNotFoundException) {
-            LoadFailedTips(-2, "ClassNotFoundException: ${e.message}")
-        } catch (e: Exception) {
-            LoadFailedTips(-3, "Exception: ${e.message}")
-        } finally {
-
+        } catch (e : Exception) {
+            errorHandler.Handle(e)
         }
     }
 

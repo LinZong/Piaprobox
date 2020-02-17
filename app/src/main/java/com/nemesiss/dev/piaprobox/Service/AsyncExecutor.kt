@@ -14,10 +14,7 @@ import javax.inject.Singleton
 
 
 
-class AsyncExecutor {
-
-    @Inject
-    constructor()
+class AsyncExecutor @Inject constructor() {
 
     companion object {
         @JvmStatic
@@ -51,7 +48,7 @@ class AsyncExecutor {
         InnerTaskThreadPool.execute(Task)
     }
 
-    fun SendTaskMainThread(Task : () -> Unit) {
+    fun SendTaskMainThread(Task :Runnable) {
         val message = Message()
         message.what = DELAY_TASK_MAIN_MESSAGE
         message.obj = Task

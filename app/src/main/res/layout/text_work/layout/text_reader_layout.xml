@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+                name="text"
+                type="String"/>
+
+    </data>
+
+    <com.nemesiss.dev.piaprobox.View.Common.PinchScaleTextReader
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:requiresFadingEdge="vertical"
+            android:fadingEdgeLength="30dp"
+            android:background="@drawable/text_paper_background"
+            android:fillViewport="true">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{text}"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                style="@style/SmallTextView"
+                android:textColor="#808080"
+                android:id="@+id/TextReader_Content"/>
+
+    </com.nemesiss.dev.piaprobox.View.Common.PinchScaleTextReader>
+</layout>

@@ -2,6 +2,7 @@ package com.nemesiss.dev.piaprobox.Service.DaggerFactory;
 
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity;
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2;
+import com.nemesiss.dev.piaprobox.Activity.Text.TextDetailActivity;
 import com.nemesiss.dev.piaprobox.Fragment.Image.IllustratorViewFragment;
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.BaseRecommendCategoryFragment;
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules;
@@ -20,5 +21,5 @@ public interface HTMParserFactory {
     void inject(IllustratorViewFragment illustratorViewFragment);
     void inject(IllustratorViewActivity illustratorViewActivity);
     void inject(BaseRecommendCategoryFragment baseRecommendCategoryFragment);
-
+    void inject(TextDetailActivity textDetailActivity);
 }

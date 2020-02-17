@@ -32,11 +32,9 @@ fun TextView.SetTextWithClickableUrl(text: String) {
         val total = result.groups[0]
         val href = result.groups[2]
         val innerText = result.groups[3]
-
         val hrefBegin = total!!.range.first
         val replaceHtmlTagText = text.replace(regex, innerText!!.value)
         val clickUrlText = SpannableString(replaceHtmlTagText)
-
         clickUrlText.setSpan(
             UrlClickableSpan(this.context, HTMLParser.WrapDomain(href!!.value)) { url, _ ->
                 AppUtil.OpenBrowser(this.context, url, listOf(Pair("Referer", "https://piapro.jp/t/8tQS")))
