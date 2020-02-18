@@ -20,7 +20,13 @@ class SplashActivity : PiaproboxBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        DaggerAsyncExecutorFactory.builder().hTMLParserModules(HTMLParserModules(this)).build().inject(this)
+
+        DaggerAsyncExecutorFactory
+            .builder()
+            .hTMLParserModules(HTMLParserModules(this))
+            .build()
+            .inject(this)
+
         AppUtil.HideNavigationBar(this)
         FadeInPiaproIcon()
     }

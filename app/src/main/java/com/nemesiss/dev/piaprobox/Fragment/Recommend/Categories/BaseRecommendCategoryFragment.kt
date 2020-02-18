@@ -99,7 +99,6 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
                 val view = tagVH.itemView as SingleTagView
                 if (i == index) {
                     view.SetSelected()
-                    ShowLoadingIndicator()
                     CurrentLoadTagPageURL = MainRecommendFragment.DefaultTagUrl + tagListData!![i].URL
                     LoadRecommendList(CurrentLoadTagPageURL, CurrentCategoryFragmentType)
                 } else {

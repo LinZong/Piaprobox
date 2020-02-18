@@ -85,7 +85,6 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
                     override fun onTransitionCancel(p0: Transition?) {
                         removeCallback()
                     }
-
                     private fun removeCallback() {
                         if (activity != null) {
                             activity!!.window.sharedElementExitTransition.removeListener(this)

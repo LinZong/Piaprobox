@@ -25,7 +25,6 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
     companion object {
         @JvmStatic
         val MUSIC_CONTENT_INFO_INTENT_KEY = "MUSIC_CONTENT_INFO_INTENT_KEY"
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

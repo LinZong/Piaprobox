@@ -44,8 +44,6 @@ class TextDetailActivity : PiaproboxBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
         DaggerHTMParserFactory
             .builder()
             .hTMLParserModules(HTMLParserModules(this))
@@ -53,11 +51,16 @@ class TextDetailActivity : PiaproboxBaseActivity() {
             .inject(this)
 
         errorHandler =
-            DaggerErrorHandlerFactory.builder().errorHandlerModules(ErrorHandlerModules(this)).build().handler()
+            DaggerErrorHandlerFactory
+                .builder()
+                .errorHandlerModules(ErrorHandlerModules(this))
+                .build()
+                .handler()
 
         // Create data binding.
         binding = TextDetailActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         ShowToolbarBackIcon(TextDetail_Toolbar)
 
         val data = intent.getSerializableExtra(SHOWN_TEXT_INTENT_KEY) as? RecommendItemModelText
@@ -69,6 +72,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
     }
 
     private fun LoadTextContent(content: RecommendItemModelText) {
+
         DaggerFetchFactory
             .create()
             .fetcher()

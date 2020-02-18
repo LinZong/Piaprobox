@@ -4,12 +4,9 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.GestureDetector
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.widget.ScrollView
-import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.databinding.TextReaderLayoutBinding
 import kotlinx.android.synthetic.main.text_reader_layout.view.*
 
@@ -36,10 +33,9 @@ class PinchScaleTextReader : ScrollView, ScaleGestureDetector.OnScaleGestureList
     ) {
         InitView()
     }
-
-
     private fun InitView() {
         scaleDetector = ScaleGestureDetector(context,this)
+
     }
 
     override fun onAttachedToWindow() {
