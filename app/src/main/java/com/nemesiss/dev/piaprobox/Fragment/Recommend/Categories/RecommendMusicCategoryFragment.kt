@@ -19,9 +19,6 @@ import org.jsoup.Jsoup
 
 class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
 
-
-//    private lateinit var htmlParser: HTMLParser
-
     private var recommendListAdapter: MusicRecommendItemAdapter? = null
     private var recommendItemLayoutManager: LinearLayoutManager? = null
     private var recommendListData: List<RecommendItemModel>? = null
@@ -29,7 +26,6 @@ class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
     override var CurrentCategoryFragmentType = RecommendListType.MUSIC
 
     override fun Refresh() {
-//        LoadDefaultPage(CurrentCategoryFragmentType,false)
         LoadRecommendList(CurrentLoadTagPageURL, CurrentCategoryFragmentType)
     }
 
