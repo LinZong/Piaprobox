@@ -1118,5 +1118,588 @@
         }
       }
     ]
+  },
+  "Submission-MUSIC": {
+    "RequestUrl": "https://piapro.jp/",
+    "RequestParameter": {},
+    "RequestCookie": {},
+    "Steps": [
+      {
+        "getElementsByClassSingle": {
+          "Name": "snd_list",
+          "Index": 0
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "li"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel",
+          "GenerateOutputRule": {
+            "Thumb": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "thumb-card",
+                  "Index": 0
+                }
+              },
+              {
+                "getRecommendThumbImageSingle": {}
+              }
+            ],
+            "ItemName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "title",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "ArtistName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "username",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "UploadDate": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "post",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "URL": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "title",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
+            "UploadTime": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "time",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "Submission-TEXT": {
+    "RequestUrl": "https://piapro.jp/",
+    "RequestParameter": {},
+    "RequestCookie": {},
+    "Steps": [
+      {
+        "getElementsByClassSingle": {
+          "Name": "txt_list",
+          "Index": 0
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "li"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText",
+          "GenerateOutputRule": {
+            "Thumb": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "thumb",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "img",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "src"
+                }
+              }
+            ],
+            "ItemName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "title",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "ArtistName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "username",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "UploadDate": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "post",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "URL": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "title",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
+            "Opening": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "databox",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "table",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tbody",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "tr",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByClassSingle": {
+                  "Name": "opening",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "p",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "Submission-IMAGE": {
+    "Steps": [
+      {
+        "getElementByIdSingle": {
+          "Name": "itemcont"
+        }
+      },
+      {
+        "getElementsByClass": {
+          "Name": "item"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage",
+          "GenerateOutputRule": {
+            "Thumb": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "getStyleAttributeBgImageSingle": {
+                  "UrlPrefix": ""
+                }
+              }
+            ],
+            "ArtistAvatar": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "i_icon",
+                  "Index": 0
+                }
+              },
+              {
+                "getElementsByTagSingle": {
+                  "Name": "img",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "src"
+                }
+              }
+            ],
+            "ArtistURL": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "i_icon",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
+            "ArtistName": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "i_title",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "UploadDate": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "post",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {}
+              }
+            ],
+            "URL": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "i_image",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
   }
 }

@@ -21,4 +21,9 @@ class TextWorkFragment : BaseMainFragment() {
         BaseMainFragment_Banner_ImageView.setImageResource(R.drawable.text_banner)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+    }
 }
