@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Fragment.Recommend
+package com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend
 
 import RecommendMusicCategoryFragment
 import android.animation.Animator
@@ -14,9 +14,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.RecommendCategoryFragmentPageAdapter
 import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.BaseRecommendCategoryFragment
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.RecommendImageCategoryFragment
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.RecommendTextCategoryFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendTextCategoryFragment
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.recommand_main_fragment.*

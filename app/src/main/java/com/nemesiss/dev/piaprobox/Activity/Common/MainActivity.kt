@@ -2,24 +2,22 @@ package com.nemesiss.dev.piaprobox.Activity.Common
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.SharedElementCallback
 import android.support.v4.view.GravityCompat
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Illustrator.IllustratorFragment
 import com.nemesiss.dev.piaprobox.Fragment.Main.*
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.RecommendImageCategoryFragment
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Music.MusicFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.TextWork.TextWorkFragment
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.ref.WeakReference
 
 class MainActivity : PiaproboxBaseActivity() {
 

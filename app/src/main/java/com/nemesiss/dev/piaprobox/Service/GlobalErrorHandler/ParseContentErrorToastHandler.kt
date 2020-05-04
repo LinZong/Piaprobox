@@ -22,7 +22,6 @@ class ParseContentErrorToastHandler @Inject constructor(val context: Context) : 
         })
     }
 
-
     @Qualifier
     @Retention
     annotation class ToastHandler {}

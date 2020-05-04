@@ -20,7 +20,7 @@ import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor

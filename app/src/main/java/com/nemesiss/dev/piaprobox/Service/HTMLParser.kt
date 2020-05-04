@@ -5,7 +5,7 @@ import android.util.Log
 import com.alibaba.fastjson.JSONObject
 import com.nemesiss.dev.HTMLContentParser.ContentParserFactory
 import com.nemesiss.dev.HTMLContentParser.Steps.ContentParserImpl
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.HTMLParser.RuleVersion
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import java.io.BufferedReader

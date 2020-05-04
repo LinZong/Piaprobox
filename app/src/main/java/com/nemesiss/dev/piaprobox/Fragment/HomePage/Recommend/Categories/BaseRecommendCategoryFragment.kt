@@ -1,15 +1,14 @@
-package com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories
+package com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.View
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules

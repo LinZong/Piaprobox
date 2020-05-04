@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Fragment.Image
+package com.nemesiss.dev.piaprobox.Fragment.ImageViewer
 
 import android.content.Intent
 import android.databinding.DataBindingUtil

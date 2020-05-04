@@ -3,7 +3,7 @@ package com.nemesiss.dev.piaprobox.Adapter.IllustratorPage
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import com.nemesiss.dev.piaprobox.Fragment.Image.BaseIllustratorViewFragment
+import com.nemesiss.dev.piaprobox.Fragment.ImageViewer.BaseIllustratorViewFragment
 
 class IllustratorViewPageFragmentAdapter(var fragments: List<BaseIllustratorViewFragment>, fm: FragmentManager) :
     FragmentPagerAdapter(

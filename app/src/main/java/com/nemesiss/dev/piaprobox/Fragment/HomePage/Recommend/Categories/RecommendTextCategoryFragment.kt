@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories
+package com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +10,7 @@ import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Activity.Text.TextDetailActivity
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.TextRecommendItemAdapter
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.recommend_category_layout.*
 import org.jsoup.Jsoup

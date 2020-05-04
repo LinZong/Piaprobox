@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories
+package com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.SharedElementCallback
 import android.support.v7.widget.GridLayoutManager
 import android.transition.Transition
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,7 @@ import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.ImageRecommendItemAdapter
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory

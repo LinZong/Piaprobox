@@ -11,6 +11,4 @@ public interface ErrorHandlerFactory {
 
     @ParseContentErrorToastHandler.ToastHandler
     ParseContentErrorHandler handler();
-
-
 }

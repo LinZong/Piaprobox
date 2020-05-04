@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
-import com.nemesiss.dev.piaprobox.Fragment.Image.IllustratorViewFragment
+import com.nemesiss.dev.piaprobox.Fragment.ImageViewer.IllustratorViewFragment
 
 abstract class IllustratorImageProviderActivity : PiaproboxBaseActivity() {
 

@@ -90,8 +90,6 @@ class TextDetailActivity : PiaproboxBaseActivity() {
                 }
             )
     }
-
-
     private fun ParseTextDetailContent(HTMLString: String) {
         try {
             val root = Jsoup.parse(HTMLString)

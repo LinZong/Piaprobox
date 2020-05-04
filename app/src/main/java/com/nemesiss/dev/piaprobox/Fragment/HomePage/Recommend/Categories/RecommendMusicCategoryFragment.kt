@@ -10,9 +10,9 @@ import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.MusicRecommendItemAdapter
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.BaseRecommendCategoryFragment
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment.Companion.DefaultTagUrl
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment.Companion.DefaultTagUrl
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.recommend_category_layout.*
 import org.jsoup.Jsoup
