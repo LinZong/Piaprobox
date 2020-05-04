@@ -28,7 +28,7 @@ import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
 import com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler.ParseContentErrorHandler
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
+import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.Util.BaseOnPageChangeListener
 import kotlinx.android.synthetic.main.illustrator_view_activity2.*
@@ -59,6 +59,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     lateinit var downloader: DownloadService
 
     lateinit var errorHandler: ParseContentErrorHandler
+
     // 状态相关变量
     private var ItemPages = ArrayList<IllustratorViewFragment>()
 
@@ -96,7 +97,8 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             .inject(this)
 
 
-        errorHandler = DaggerErrorHandlerFactory.builder().errorHandlerModules(ErrorHandlerModules(this)).build().handler()
+        errorHandler =
+            DaggerErrorHandlerFactory.builder().errorHandlerModules(ErrorHandlerModules(this)).build().handler()
 
         val ClickedIndex = intent.getIntExtra(CLICKED_ITEM_INDEX, 0)
         // 把Fragment加载进来
@@ -192,16 +194,15 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             .fetcher()
             .visit(url)
             .goAsync(
-                {
-                    SimpleResponseHandler(it, String::class)
-                        .Handle(
-                            { htmlString ->
-                                ParseImageItemDetailData(needFragmentIndex, htmlString)
-                            },
-                            { code, _ ->
-                                runOnUiThread { Toast.makeText(this, code, Toast.LENGTH_SHORT).show() }
-                            }
-                        )
+                { response ->
+                    response.handle<String>(
+                        { htmlString ->
+                            ParseImageItemDetailData(needFragmentIndex, htmlString)
+                        },
+                        { code, _ ->
+                            runOnUiThread { Toast.makeText(this, code, Toast.LENGTH_SHORT).show() }
+                        }
+                    )
                 },
                 { e ->
                     runOnUiThread { LoadFailedTips(-4, e.message ?: "") }
@@ -232,7 +233,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
                 RelatedItems = relatedItems
             }
             synchronized(ItemPages) {
-                if(ItemPages.isNotEmpty()) {
+                if (ItemPages.isNotEmpty()) {
                     // 放到加载完的Cache中
                     ItemPageViewModelCache.put(needFragmentIndex, model)
                     // 从正在加载的Cache中移除
@@ -243,7 +244,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
                 }
             }
 
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             errorHandler.Handle(e)
         }
     }

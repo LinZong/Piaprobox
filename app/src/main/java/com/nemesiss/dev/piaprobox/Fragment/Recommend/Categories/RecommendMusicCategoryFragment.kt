@@ -1,26 +1,19 @@
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
-import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.MusicRecommendItemAdapter
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
+import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.MainRecommendFragment.Companion.DefaultTagUrl
 import com.nemesiss.dev.piaprobox.Fragment.Recommend.RecommendListType
-import com.nemesiss.dev.piaprobox.Fragment.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Service.HTMLParser
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
-import com.nemesiss.dev.piaprobox.View.Common.SingleTagView
 import kotlinx.android.synthetic.main.recommend_category_layout.*
 import org.jsoup.Jsoup
 

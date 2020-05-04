@@ -32,7 +32,7 @@ import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
+import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import kotlinx.android.synthetic.main.music_player_layout.*
 import org.jsoup.Jsoup
 import javax.inject.Inject
@@ -40,7 +40,7 @@ import javax.inject.Inject
 open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     @Inject
-    lateinit var downloadService : DownloadService
+    lateinit var downloadService: DownloadService
 
     private lateinit var htmlParser: HTMLParser
     protected var relatedMusicListData: List<RelatedMusicInfo>? = null
@@ -54,7 +54,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     protected var CurrentMusicContentInfo: MusicContentInfo? = null
 
 
-    private val RECOVER_STATUS_RESOURCE_IS_OK : Boolean
+    private val RECOVER_STATUS_RESOURCE_IS_OK: Boolean
         get() = LAST_MUSIC_PLAYER_ACTIVITY_STATUS != null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,18 +85,17 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             val Cond1 = (ClickToolbarIcon || MusicContentUrl == LAST_LOAD_CONTENT_URL)
             val Cond2 = RECOVER_STATUS_RESOURCE_IS_OK
 
-            if(Cond1 && Cond2) {
+            if (Cond1 && Cond2) {
                 // 点击的和上次是一样的，恢复.
                 RecoverActivityStatusFromPersistObject(LAST_MUSIC_PLAYER_ACTIVITY_STATUS!!)
-            }
-            else {
+            } else {
                 LAST_MUSIC_PLAYER_ACTIVITY_STATUS = null
-                LoadMusicContentInfo(MusicContentUrl,true)
+                LoadMusicContentInfo(MusicContentUrl, true)
             }
         }
     }
 
-    private fun RecoverActivityStatusFromPersistObject(activityStatus : MusicPlayerActivityStatus) {
+    private fun RecoverActivityStatusFromPersistObject(activityStatus: MusicPlayerActivityStatus) {
         Log.d("MusicPlayerActivity", "MusicPlayerActivity  开始恢复上一次的Activity状态")
         relatedMusicListData = activityStatus.relatedMusicListData
         lyricListData = activityStatus.lyrics
@@ -104,18 +103,16 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         CurrentMusicContentInfo = activityStatus.currentPlayMusicContentInfo
         MusicPlayer_Toolbar.title = activityStatus.currentPlayMusicContentInfo.Title
 
-        if(LAST_MUSIC_BITMAP != null)
-        {
+        if (LAST_MUSIC_BITMAP != null) {
             MusicPlayer_ThumbBackground.setImageDrawable(LAST_MUSIC_BITMAP)
-        }
-        else {
+        } else {
             GlideLoadThumbToImageView(CurrentMusicPlayInfo?.Thumb ?: "")
         }
         ActivateLyricRecyclerViewAdapter()
         ActivateRelatedMusicRecyclerViewAdapter()
     }
 
-    private fun LoadMusicContentInfo(Url: String, ShouldUpdateRelatedMusicList : Boolean) {
+    private fun LoadMusicContentInfo(Url: String, ShouldUpdateRelatedMusicList: Boolean) {
         if (Url.isEmpty()) {
             Toast.makeText(this, resources.getString(R.string.MusicContentUrlEmpty), Toast.LENGTH_SHORT).show()
             return
@@ -129,9 +126,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             .fetcher()
             .visit(Url)
             .goAsync({ response ->
-                SimpleResponseHandler(response, String::class)
-                    .Handle({
-                        ParseMusicContentInfo(it as String, ShouldUpdateRelatedMusicList)
+                response.handle<String>({
+                        ParseMusicContentInfo(it, ShouldUpdateRelatedMusicList)
                     }, { code, _ ->
                         HideLoadingIndicator(MusicPlayer_ContentContainer)
                         LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
@@ -144,7 +140,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             })
     }
 
-    private fun ParseMusicContentInfo(HTMLString: String,ShouldUpdateRelatedMusicList : Boolean) {
+    private fun ParseMusicContentInfo(HTMLString: String, ShouldUpdateRelatedMusicList: Boolean) {
         val root = Jsoup.parse(HTMLString)
         val parseMusicContentStep = htmlParser
             .Rules
@@ -156,7 +152,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
         CurrentMusicContentInfo = contentInfo
 
-        if(ShouldUpdateRelatedMusicList) {
+        if (ShouldUpdateRelatedMusicList) {
             val parseRelatedMusicInfoSteps = htmlParser
                 .Rules
                 .getJSONObject("RelatedMusic")
@@ -185,13 +181,12 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             .fetcher()
             .visit(Url)
             .goAsync({ response ->
-                SimpleResponseHandler(response, String::class)
-                    .Handle({
-                        ParseMusicPlayInfo(it as String)
-                    }, { code, _ ->
-                        HideLoadingIndicator(MusicPlayer_ContentContainer)
-                        LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
-                    })
+                response.handle<String>({
+                    ParseMusicPlayInfo(it)
+                }, { code, _ ->
+                    HideLoadingIndicator(MusicPlayer_ContentContainer)
+                    LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
+                })
             }, { e ->
                 runOnUiThread {
                     HideLoadingIndicator(MusicPlayer_ContentContainer)
@@ -200,7 +195,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             })
     }
 
-    private fun GlideLoadThumbToImageView(url : String) {
+    private fun GlideLoadThumbToImageView(url: String) {
         Glide.with(this)
             .load(url)
             .priority(Priority.HIGH)
@@ -228,10 +223,10 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
         val intent = Intent(this, MusicPlayerService::class.java)
         intent.action = "UPDATE_INFO"
-        intent.putExtra("UpdateMusicContentInfo",CurrentMusicContentInfo)
-        intent.putExtra("WillPlayMusicURL",playInfo.URL)
+        intent.putExtra("UpdateMusicContentInfo", CurrentMusicContentInfo)
+        intent.putExtra("WillPlayMusicURL", playInfo.URL)
         val ExtendedThis = (this as? MusicControlActivity)
-        ExtendedThis?.PersistMusicPlayerActivityStatus(MusicStatus.STOP,false)
+        ExtendedThis?.PersistMusicPlayerActivityStatus(MusicStatus.STOP, false)
 
         startService(intent)
         HideLoadingIndicator(MusicPlayer_ContentContainer)
@@ -286,23 +281,22 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     private fun RelatedItemSelected(index: Int) {
         val item = relatedMusicListData!![index]
-        LoadMusicContentInfo(item.URL,false)
+        LoadMusicContentInfo(item.URL, false)
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.player_toolbar_menu,menu)
+        menuInflater.inflate(R.menu.player_toolbar_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         super.onOptionsItemSelected(item)
-        when(item?.itemId) {
+        when (item?.itemId) {
             R.id.MusicPlayer_Toolbar_Download -> {
-                if(CurrentMusicPlayInfo == null || CurrentMusicContentInfo == null || CurrentMusicContentInfo!!.Title.isEmpty()) {
-                    Toast.makeText(this,R.string.MusicPlayInfoIsntPrepared,Toast.LENGTH_SHORT).show()
-                }
-                else  {
+                if (CurrentMusicPlayInfo == null || CurrentMusicContentInfo == null || CurrentMusicContentInfo!!.Title.isEmpty()) {
+                    Toast.makeText(this, R.string.MusicPlayInfoIsntPrepared, Toast.LENGTH_SHORT).show()
+                } else {
                     ConfirmDownloadRequest()
                 }
             }
@@ -314,8 +308,14 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         AlertDialog.Builder(this)
             .setTitle(R.string.DownloadMusicRequestDialogTitle)
             .setMessage(R.string.DownloadMusicRequestDialogMessgae)
-            .setPositiveButton("OK") {_,_ -> downloadService.DownloadMusic("${CurrentMusicContentInfo?.Title ?: System.currentTimeMillis()}.mp3", CurrentMusicPlayInfo?.URL!!, CheckPermissionModel(this)) }
-            .setNegativeButton("Cancel") {_,_ -> }
+            .setPositiveButton("OK") { _, _ ->
+                downloadService.DownloadMusic(
+                    "${CurrentMusicContentInfo?.Title ?: System.currentTimeMillis()}.mp3",
+                    CurrentMusicPlayInfo?.URL!!,
+                    CheckPermissionModel(this)
+                )
+            }
+            .setNegativeButton("Cancel") { _, _ -> }
             .show()
     }
 
@@ -331,10 +331,10 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         val PERSIST_STATUS_INTENT_KEY = "ActivityLastStatus"
 
         @JvmStatic
-        var LAST_MUSIC_PLAYER_ACTIVITY_STATUS : MusicPlayerActivityStatus? = null
+        var LAST_MUSIC_PLAYER_ACTIVITY_STATUS: MusicPlayerActivityStatus? = null
 
         @JvmStatic
-        private var LAST_MUSIC_BITMAP : GlideDrawable? = null
+        private var LAST_MUSIC_BITMAP: GlideDrawable? = null
 
         @JvmStatic
         var LAST_LOAD_CONTENT_URL = ""

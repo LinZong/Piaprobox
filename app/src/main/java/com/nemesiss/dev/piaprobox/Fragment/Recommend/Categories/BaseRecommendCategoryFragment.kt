@@ -15,7 +15,7 @@ import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
+import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.View.Common.SingleTagView
 import kotlinx.android.synthetic.main.recommend_category_layout.*
 import okhttp3.Response
@@ -52,7 +52,7 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
     protected open fun LoadFragmentPage(
         visitUrl: String,
         contentType: RecommendListType,
-        resolve: (Any) -> Unit,
+        resolve: (String) -> Unit,
         rejected: (Int, Response) -> Unit
     ) {
         DaggerFetchFactory.create()
@@ -60,8 +60,7 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
             .visit(visitUrl)
             .cookie("top_view", contentType.CookieName)
             .goAsync({ response ->
-                SimpleResponseHandler(response, String::class)
-                    .Handle(resolve, rejected)
+                response.handle(resolve, rejected)
             }, { e ->
                 HideLoadingIndicator()
                 activity?.runOnUiThread { LoadFailedTips(-4, e.message ?: "") }

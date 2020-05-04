@@ -7,7 +7,6 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.TypedValue
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -33,7 +32,7 @@ import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
 import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
+import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.Util.whenClicks
 import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
@@ -207,16 +206,15 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
             .fetcher()
             .visit(url)
             .goAsync(
-                {
-                    SimpleResponseHandler(it, String::class)
-                        .Handle(
-                            { htmlString ->
-                                ParseImageItemDetailData(htmlString)
-                            },
-                            { code, _ ->
-                                runOnUiThread { Toast.makeText(this, code, Toast.LENGTH_SHORT).show() }
-                            }
-                        )
+                { response ->
+                    response.handle<String>(
+                        { htmlString ->
+                            ParseImageItemDetailData(htmlString)
+                        },
+                        { code, _ ->
+                            runOnUiThread { Toast.makeText(this, code, Toast.LENGTH_SHORT).show() }
+                        }
+                    )
                 },
                 { e ->
                     runOnUiThread { LoadFailedTips(-4, e.message ?: "") }

@@ -14,7 +14,7 @@ import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
 import com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler.ParseContentErrorHandler
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
+import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.databinding.TextDetailActivityBinding
 import kotlinx.android.synthetic.main.text_detail_activity.*
 import org.jsoup.Jsoup
@@ -34,7 +34,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
     lateinit var errorHandler: ParseContentErrorHandler
 
 
-    private var CuurentTextContentInfo : TextContentInfo? = null
+    private var CuurentTextContentInfo: TextContentInfo? = null
 
     private lateinit var binding: TextDetailActivityBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,16 +75,15 @@ class TextDetailActivity : PiaproboxBaseActivity() {
             .fetcher()
             .visit(HTMLParser.WrapDomain(content.URL))
             .goAsync(
-                {
-                    SimpleResponseHandler(it, String::class)
-                        .Handle(
-                            { htmlString ->
-                                ParseTextDetailContent(htmlString)
-                            },
-                            { code, _ ->
-                                runOnUiThread { Toast.makeText(this, code, Toast.LENGTH_SHORT).show() }
-                            }
-                        )
+                { response ->
+                    response.handle<String>(
+                        { htmlString ->
+                            ParseTextDetailContent(htmlString)
+                        },
+                        { code, _ ->
+                            runOnUiThread { Toast.makeText(this, code, Toast.LENGTH_SHORT).show() }
+                        }
+                    )
                 },
                 { e ->
                     runOnUiThread { LoadFailedTips(-4, e.message ?: "") }
@@ -107,7 +106,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
                 Titie = textContentInfo.Title
                 CreateDescription = textContentInfo.CreateDescription
                 CreateDetailRaw = textContentInfo.CreateDetail
-                Text = textContentInfo.Text.replace("<br> ","\n")
+                Text = textContentInfo.Text.replace("<br> ", "\n")
             }
 
             binding.model = viewModel
@@ -123,7 +122,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
 //        TextDetail_Content.setTextSize(TypedValue.COMPLEX_UNIT_PX, TextDetail_Content.textSize-1)
     }
 
-    fun BiggerFont(view : View) {
+    fun BiggerFont(view: View) {
 //        TextDetail_Content.setTextSize(TypedValue.COMPLEX_UNIT_PX, TextDetail_Content.textSize+1)
     }
 }
