@@ -14,6 +14,7 @@ import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
 import com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler.ParseContentErrorHandler
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
+import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.databinding.TextDetailActivityBinding
 import kotlinx.android.synthetic.main.text_detail_activity.*
@@ -69,7 +70,6 @@ class TextDetailActivity : PiaproboxBaseActivity() {
     }
 
     private fun LoadTextContent(content: RecommendItemModelText) {
-
         DaggerFetchFactory
             .create()
             .fetcher()
