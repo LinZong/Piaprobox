@@ -62,6 +62,7 @@ android {
         }
         return folders
     }
+
     sourceSets {
         main {
             res.srcDirs = listSubFile()

@@ -18,6 +18,7 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
+import com.nemesiss.dev.piaprobox.View.Common.SetTextWithClickableUrl
 import kotlinx.android.synthetic.main.activity_music_detail.*
 
 class MusicDetailActivity : PiaproboxBaseActivity() {
@@ -76,14 +77,14 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
 
     private fun ShowWorkItemDetail(OriginalWorkItemDetailText: String) {
 
-        OriginalWorkItemDetailText.split("<br>").forEach {
+        OriginalWorkItemDetailText.split("<br> ").forEach {
 
             val tv = TextView(this)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            tv.text = it
+            tv.SetTextWithClickableUrl(it)
             tv.layoutParams = lp
             lp.setMargins(0, 0, 0, AppUtil.Dp2Px(resources, 8))
             tv.setTextColor(resources.getColor(R.color.WorkDetailText))

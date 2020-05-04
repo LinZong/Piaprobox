@@ -35,6 +35,7 @@ import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
 import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.Util.whenClicks
 import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
 import kotlinx.android.synthetic.main.illustrator_view_activity.*
 import org.jsoup.Jsoup
@@ -53,6 +54,7 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
 
         @JvmStatic
         var PRE_SHOWN_BITMAP: Drawable? = null
+            @Synchronized
             get() {
                 val last = field
                 field = null
@@ -78,11 +80,11 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
 
     // 状态相关变量
 
-    private var CurremtImageRecommendInfo : RecommendItemModelImage? = null
+    private var CurremtImageRecommendInfo: RecommendItemModelImage? = null
 
     private var CurrentImageContentInfo: ImageContentInfo? = null
 
-    private var CurrentImageDownloadTokens : ArrayList<Pair<String,String>>? = null
+    private var CurrentImageDownloadTokens: ArrayList<Pair<String, String>>? = null
 
     private var IS_CURRENT_BIG_SIZE_IMAGE_LOADED = false
 
@@ -91,8 +93,7 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
 
     // 监听器
 
-    private val LoadOriginalWorkDrawableToImageView = object : SimpleTarget<GlideDrawable>()
-    {
+    private val LoadOriginalWorkDrawableToImageView = object : SimpleTarget<GlideDrawable>() {
         override fun onResourceReady(
             resource: GlideDrawable?,
             glideAnimation: GlideAnimation<in GlideDrawable>?
@@ -138,18 +139,24 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
     }
 
     private fun BindButtons() {
-        Illustrator_View_BackButton.setOnClickListener { onBackPressed() }
-        Illustrator_View_DownloadImage.setOnClickListener { HandleDownloadImage() }
-        Illustrator_View_ItemImageView.setOnClickListener { HandleEnterPinchImagePreview() }
-        Illustrator_View_OpenBrowser.setOnClickListener {
-            if(CurremtImageRecommendInfo!=null) {
-                AppUtil.OpenBrowser(this, MainRecommendFragment.DefaultTagUrl + CurremtImageRecommendInfo!!.URL)
-            }
-        }
+        listOf(
+            Illustrator_View_BackButton,
+            Illustrator_View_DownloadImage,
+            Illustrator_View_ItemImageView,
+            Illustrator_View_OpenBrowser
+        ).whenClicks(
+            { onBackPressed() },
+            { HandleDownloadImage() },
+            { HandleEnterPinchImagePreview() },
+            {
+                if (CurremtImageRecommendInfo != null) {
+                    AppUtil.OpenBrowser(this, MainRecommendFragment.DefaultTagUrl + CurremtImageRecommendInfo!!.URL)
+                }
+            })
     }
 
     private fun HandleEnterPinchImagePreview() {
-        if(!IS_CURRENT_BIG_SIZE_IMAGE_LOADED) {
+        if (!IS_CURRENT_BIG_SIZE_IMAGE_LOADED) {
             TellImageIsStillPreparing()
             return
         }
@@ -241,12 +248,12 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
     private fun ParseDownloadTokenData(root: Document) {
         val downloadTokens = ArrayList<Pair<String, String>>()
         var downloadRoot = root.getElementById("_form_download")
-        if(downloadRoot==null) {
+        if (downloadRoot == null) {
             downloadRoot = root.getElementById("_form_download_bookmark")
         }
         val inputs = downloadRoot.getElementsByTag("input")
-        for(input in inputs) {
-            downloadTokens.add(Pair(input.attr("name"),input.attr("value")))
+        for (input in inputs) {
+            downloadTokens.add(Pair(input.attr("name"), input.attr("value")))
         }
         CurrentImageDownloadTokens = downloadTokens
     }
@@ -296,3 +303,4 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
         HandleClose()
     }
 }
+

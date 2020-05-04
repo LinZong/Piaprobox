@@ -1,9 +1,7 @@
 package com.nemesiss.dev.piaprobox.Activity.Text
 
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
 import com.nemesiss.dev.HTMLContentParser.Model.TextContentInfo
@@ -17,11 +15,9 @@ import com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler.ParseContentErrorHa
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
-import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.databinding.TextDetailActivityBinding
 import kotlinx.android.synthetic.main.text_detail_activity.*
 import org.jsoup.Jsoup
-import java.lang.Double.min
 import javax.inject.Inject
 
 class TextDetailActivity : PiaproboxBaseActivity() {
@@ -59,6 +55,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
 
         // Create data binding.
         binding = TextDetailActivityBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
         ShowToolbarBackIcon(TextDetail_Toolbar)
@@ -112,6 +109,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
                 CreateDetailRaw = textContentInfo.CreateDetail
                 Text = textContentInfo.Text.replace("<br> ","\n")
             }
+
             binding.model = viewModel
 
         } catch (e: Exception) {

@@ -71,7 +71,7 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
         when (resultCode) {
             // 处理来自IllustratorViewActivity2的Re-enter.
             IllustratorViewActivity2.REENTER_RESULT_CODE -> {
-                val position = intent?.getIntExtra("CURRENT_INDEX", -1) ?: -1
+                val position = intent?.getIntExtra("CURRENT_INDEX", -1)!!
                 if (position != -1) {
                     ScrollToPositionIfNotFullyVisible(position, false)
                 }

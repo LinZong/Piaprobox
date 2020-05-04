@@ -50,6 +50,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         }
     private var USER_CAN_VISITED = false
 
+    @Volatile
     private var DATA_LOADED = false
 
     private val CURRENT_CAN_APPLY_VIEWMODEL
@@ -194,9 +195,6 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
             CurrentViewModel = model
             binding.model = CurrentViewModel
-
-
-//            ShowWorkItemInfo(CurrentViewModel!!.CreateDetailRaw, binding.Illustrator2ViewItemInfoContainer)
 
             Glide.with(context!!)
                 .load(model.ItemImageUrl)

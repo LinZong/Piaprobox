@@ -146,19 +146,13 @@ class MusicPlayerService : Service() {
     }
 
     // Activity 主动调用的.
-    fun UpdateWakeupMusicPlayerActivityIntent(
-        musicPlayerActivityStatus: MusicPlayerActivityStatus, playerStatus: MusicStatus
-    ) {
+    fun UpdateWakeupMusicPlayerActivityIntent(musicPlayerActivityStatus: MusicPlayerActivityStatus) {
         val intent = Intent(PiaproboxApplication.Self.applicationContext, MusicControlActivity::class.java)
         intent.putExtra(MusicPlayerActivity.PERSIST_STATUS_INTENT_KEY, musicPlayerActivityStatus)
         musicPlayerNotificationManager.activityIntent = intent
-        musicPlayerNotificationManager.SendNotification(
-            MusicNotificationModel(
-                musicPlayerActivityStatus.currentPlayMusicContentInfo.Title,
-                musicPlayerActivityStatus.currentPlayMusicContentInfo.Artist,
-                playerStatus
-            ), false
-        )
+
+        // 不需要再从Activity主动触发通知更新
+
         Log.d("MusicPlayerService", "已更新重入Activity的信息.")
     }
 
@@ -175,14 +169,14 @@ class MusicPlayerService : Service() {
 
     override fun onBind(p0: Intent?): IBinder? {
         Log.d("MusicPlayerService", "初次启动, 对象HashCode: ${this.hashCode()}")
-        IS_BINDED = true
-        SERVICE_AVAILABLE.onNext(true)
+        NotifyServiceIsOK()
         return MusicPlayerBinder()
     }
 
     override fun onRebind(intent: Intent?) {
         super.onRebind(intent)
-        IS_BINDED = true
+        NotifyServiceIsOK()
+        Log.d("MusicPlayerService", "重新绑定, 对象HashCode: ${this.hashCode()}")
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
@@ -191,7 +185,7 @@ class MusicPlayerService : Service() {
         return super.onUnbind(intent)
     }
 
-    fun NotifyServiceIsOK() {
+    private fun NotifyServiceIsOK() {
         IS_BINDED = true
         SERVICE_AVAILABLE.onNext(true)
     }
@@ -199,9 +193,9 @@ class MusicPlayerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.d("MusicPlayerService", "即将onStartCommand, 对象HashCode: ${this.hashCode()}")
-        if (IS_BINDED && !SERVICE_AVAILABLE.value!!) {
+//        if (IS_BINDED && !SERVICE_AVAILABLE.value!!) {
             SERVICE_AVAILABLE.onNext(true)
-        }
+//        }
         when (intent?.action) {
             "DESTORY" -> {
                 Log.d("MusicPlayerService", "即将停止, 对象HashCode: ${this.hashCode()}")
@@ -223,7 +217,6 @@ class MusicPlayerService : Service() {
                 PlayingMusicContentInfo = intent.getSerializableExtra("UpdateMusicContentInfo") as MusicContentInfo?
                 if (PlayingMusicContentInfo != null) {
                     ServiceController.Stop()
-//                    UpdateNotification(MusicStatus.STOP, PlayingMusicContentInfo!!)
                     WillPlayMusicURLFromActivity = intent.getStringExtra("WillPlayMusicURL")
                 }
             }
