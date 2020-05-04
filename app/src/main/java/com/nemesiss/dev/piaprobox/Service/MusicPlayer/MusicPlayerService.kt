@@ -221,7 +221,6 @@ class MusicPlayerService : Service() {
                 }
             }
         }
-
         return START_STICKY
     }
 

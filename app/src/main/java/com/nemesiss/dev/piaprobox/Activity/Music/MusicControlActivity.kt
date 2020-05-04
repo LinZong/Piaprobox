@@ -33,16 +33,15 @@ class MusicControlActivity : MusicPlayerActivity() {
         set(value) {
             PlayerServiceController?.Loop(value)
             Persistence.SetMusicPlayerLoopStatus(value)
-            if (value) {
-                MusicPlayer_Control_Repeat.setImageResource(R.drawable.ic_repeat_one_red_600_24dp)
-            } else {
-                MusicPlayer_Control_Repeat.setImageResource(R.drawable.ic_repeat_red_600_24dp)
-            }
+            MusicPlayer_Control_Repeat.setImageResource(
+                if (value)
+                    R.drawable.ic_repeat_one_red_600_24dp
+                else R.drawable.ic_repeat_red_600_24dp
+            )
             field = value
         }
 
     private var PendingPrepareURL = ""
-
     private var PlayerService: MusicPlayerService? = null
     private var PlayerServiceController: MusicPlayerServiceController? = null
     private var CurrentMusicTotalDuration = 0
@@ -52,7 +51,6 @@ class MusicControlActivity : MusicPlayerActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         InitView()
-
         LoadUserPreferenceSetup()
         PrepareActivityStatus()
     }
@@ -91,6 +89,7 @@ class MusicControlActivity : MusicPlayerActivity() {
                         (Duration2Time(Progress2Duration(progress, CurrentMusicTotalDuration)))
                 }
             }
+
             override fun onStartTrackingTouch(seekbar: SeekBar?) {
                 IS_SEEKING = true
                 PlayerServiceController?.DisableElapsedTimeDispatcher()
@@ -103,22 +102,13 @@ class MusicControlActivity : MusicPlayerActivity() {
             }
         })
     }
-    private fun InitView() {
-//        MusicPlayer_Control_Play.setOnClickListener
-//        MusicPlayer_Control_MoreInfo.setOnClickListener {
-//            val intent = Intent(this, MusicDetailActivity::class.java)
-//            intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, CurrentMusicContentInfo)
-//            startActivity(intent)
-//        }
-//
-//        MusicPlayer_Control_Repeat.setOnClickListener {
-//            IS_ENABLE_LOOPING = !IS_ENABLE_LOOPING
-//        }
 
+    private fun InitView() {
         listOf(
             MusicPlayer_Control_Play,
             MusicPlayer_Control_MoreInfo,
-            MusicPlayer_Control_Repeat)
+            MusicPlayer_Control_Repeat
+        )
             .whenClicks({
                 if (MusicPlayerService.SERVICE_AVAILABLE.value == true) {
                     when (PlayerServiceController?.PlayerStatusValue()) {
@@ -136,11 +126,11 @@ class MusicControlActivity : MusicPlayerActivity() {
                     PendingPrepareURL = CurrentMusicPlayInfo?.URL ?: ""
                     StartService()
                 }
-            },{
+            }, {
                 val intent = Intent(this, MusicDetailActivity::class.java)
                 intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, CurrentMusicContentInfo)
                 startActivity(intent)
-            },{
+            }, {
                 IS_ENABLE_LOOPING = !IS_ENABLE_LOOPING
             })
         InitSeekbarController()
@@ -167,14 +157,12 @@ class MusicControlActivity : MusicPlayerActivity() {
 
         override fun onServiceConnected(componentName: ComponentName?, service: IBinder?) {
             PlayerService = (service as MusicPlayerService.MusicPlayerBinder).GetService()
-//            PlayerService?.NotifyServiceIsOK()
             Log.d("MusicControlActivity", "音乐播放器服务Bind完成  ${PlayerService?.hashCode()}")
             PlayerServiceController = PlayerService!!.ServiceController
             SubscribeMusicPlayerStatus()
         }
     }
 
-    @Synchronized
     private fun HandlePendingPrepareURL() {
         if (PendingPrepareURL.isNotEmpty()) {
             PlayerServiceController?.PrepareAsync(PendingPrepareURL, CurrentMusicContentInfo!!)
@@ -193,7 +181,7 @@ class MusicControlActivity : MusicPlayerActivity() {
     }
 
     private fun CanPersistMusicPlayerActivityStatus() =
-                relatedMusicListData != null &&
+        relatedMusicListData != null &&
                 lyricListData != null &&
                 CurrentMusicContentInfo != null &&
                 CurrentMusicPlayInfo != null
@@ -229,13 +217,14 @@ class MusicControlActivity : MusicPlayerActivity() {
             val sec = duration / 1000 % 60
             return (if (min < 10) "0$min" else min.toString() + "") + ":" + if (sec < 10) "0$sec" else sec.toString() + ""
         }
+
         @JvmStatic
         private fun Progress2Duration(progress: Int, totalDuration: Int): Int {
             return (progress.toFloat() / 100 * totalDuration).toInt()
         }
     }
 
-    private val HAVE_A_PENDING_PLAY_REQ : Boolean
+    private val HAVE_A_PENDING_PLAY_REQ: Boolean
         get() = PlayerServiceController?.PlayerStatus()?.value == MusicStatus.STOP && NEW_MUSIC_LOADED
 
     @SuppressLint("CheckResult")
@@ -355,7 +344,4 @@ class MusicControlActivity : MusicPlayerActivity() {
                 it?.dispose()
         }
     }
-
-
-
 }
