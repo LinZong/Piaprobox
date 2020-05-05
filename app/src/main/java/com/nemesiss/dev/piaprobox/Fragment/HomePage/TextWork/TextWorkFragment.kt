@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
+import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.fragment_header.*
 

@@ -6,7 +6,7 @@ import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
-import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
+import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R

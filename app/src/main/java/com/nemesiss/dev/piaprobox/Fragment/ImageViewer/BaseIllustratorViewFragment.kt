@@ -1,7 +1,7 @@
 package com.nemesiss.dev.piaprobox.Fragment.ImageViewer
 
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
-import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
+import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
 
 abstract class BaseIllustratorViewFragment : BaseMainFragment()
 {

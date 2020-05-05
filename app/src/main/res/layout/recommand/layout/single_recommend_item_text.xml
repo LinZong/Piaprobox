@@ -7,7 +7,7 @@
     <data>
         <variable
                 name="model"
-                type="com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel"/>
+                type="com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText"/>
 
     </data>
 
@@ -62,18 +62,18 @@
                         android:layout_marginTop="4dp"
                         android:text="@{model.ItemName}"/>
 
-<!--                <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:maxLines="2"-->
-<!--                        android:ellipsize="end"-->
-<!--                        android:textSize="5.5pt"-->
-<!--                        android:textColor="@color/MainFragmentItemOpeningInfo"-->
-<!--                        style="@style/SmallTextView"-->
-<!--                        android:id="@+id/SingleWorkItemCard_Opening"-->
-<!--                        android:layout_marginTop="2dp"-->
-<!--                        android:layout_below="@id/SingleWorkItemCard_WorkName"-->
-<!--                        android:text=""/>-->
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textSize="5.5pt"
+                        android:textColor="@color/MainFragmentItemOpeningInfo"
+                        style="@style/SmallTextView"
+                        android:id="@+id/SingleWorkItemCard_Opening"
+                        android:layout_marginTop="2dp"
+                        android:layout_below="@id/SingleWorkItemCard_WorkName"
+                        android:text="@{model.Opening}"/>
 
                 <LinearLayout
                         android:layout_width="wrap_content"

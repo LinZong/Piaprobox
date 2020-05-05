@@ -6,19 +6,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.databinding.SingleRecommendItemBinding
+import com.nemesiss.dev.piaprobox.databinding.SingleRecommendItemTextBinding
 
 class TextRecommendItemAdapter(
     var items: List<RecommendItemModelText>,
     val context: Context,
-    val itemSelected: (Int) -> Unit
+    inline val itemSelected: (Int) -> Unit
 ) : RecyclerView.Adapter<TextRecommendItemAdapter.TextRecommendItemVH>() {
 
-    class TextRecommendItemVH private constructor(val binding: SingleRecommendItemBinding) :
+    class TextRecommendItemVH private constructor(val binding: SingleRecommendItemTextBinding) :
         RecyclerView.ViewHolder(binding.root) {
         companion object {
+            @JvmStatic
             fun create(viewGroup: ViewGroup): TextRecommendItemVH {
                 return TextRecommendItemVH(
-                    SingleRecommendItemBinding.inflate(
+                    SingleRecommendItemTextBinding.inflate(
                         LayoutInflater.from(viewGroup.context),
                         viewGroup,
                         false

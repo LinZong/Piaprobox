@@ -8,8 +8,8 @@ import android.view.MenuItem
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
+import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Illustrator.IllustratorFragment
-import com.nemesiss.dev.piaprobox.Fragment.Main.*
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Music.MusicFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment

@@ -15,7 +15,7 @@ import com.nemesiss.dev.piaprobox.R
 
 class MusicRecommendItemAdapter(var items : List<RecommendItemModel>,
                                 val context: Context,
-                                val itemSelected : (Int)->Unit
+                                inline val itemSelected : (Int)->Unit
 ) : RecyclerView.Adapter<MusicRecommendItemAdapter.RecommendItemVH>() {
 
     class RecommendItemVH(itemView: View) : RecyclerView.ViewHolder(itemView) {

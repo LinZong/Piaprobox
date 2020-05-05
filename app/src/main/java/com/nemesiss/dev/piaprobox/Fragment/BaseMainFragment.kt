@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Fragment.Main
+package com.nemesiss.dev.piaprobox.Fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

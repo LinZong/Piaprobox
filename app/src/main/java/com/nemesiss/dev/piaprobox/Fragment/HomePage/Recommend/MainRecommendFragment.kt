@@ -13,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.RecommendCategoryFragmentPageAdapter
-import com.nemesiss.dev.piaprobox.Fragment.Main.BaseMainFragment
+import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendTextCategoryFragment

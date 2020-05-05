@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
 class ImageRecommendItemAdapter(
     var items: List<RecommendItemModelImage>,
     val context: Context,
-    val OnItemSelected: (Int, ImageView) -> Unit
+    inline val OnItemSelected: (Int, ImageView) -> Unit
 ) : RecyclerView.Adapter<ImageRecommendItemAdapter.ImageRecommendItemViewHolder>() {
 
     class ImageRecommendItemViewHolder private constructor(val binding: SingleRecommendImageItemBinding) :
@@ -28,6 +28,7 @@ class ImageRecommendItemAdapter(
             }
         }
     }
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, index: Int) = ImageRecommendItemViewHolder.create(viewGroup)
 
     override fun getItemCount() = items.size

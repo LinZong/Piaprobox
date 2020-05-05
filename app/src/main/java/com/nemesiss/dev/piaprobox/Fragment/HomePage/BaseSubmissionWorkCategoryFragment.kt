@@ -37,29 +37,8 @@ class SubmissionWorkUrlBuilder {
     fun build(): URI = builder.build()
 }
 
-class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragment() {
+abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragment() {
 
 
-    override fun Refresh() {
-    }
-
-    override fun OnRecommendItemSelected(index: Int) {
-
-    }
-
-    override fun ParseRecommendListContent(HTMLString: String, contentType: RecommendListType) {
-
-    }
-
-    private fun LoadMore() {
-
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
+    protected abstract fun LoadMore()
 }
