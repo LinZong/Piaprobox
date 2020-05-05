@@ -91,7 +91,7 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
                 response.handle(resolve, rejected)
             }, { e ->
                 HideLoadingIndicator()
-                activity?.runOnUiThread { LoadFailedTips(-4, e.message ?: "") }
+                LoadFailedTips(-4, e.message ?: "")
             })
     }
 

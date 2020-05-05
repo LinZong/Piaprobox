@@ -103,6 +103,7 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
             activity?.runOnUiThread {
                 if (recommendListData is MutableList<RecommendItemModel>) {
                     val mutableRecommendList = recommendListData as MutableList<RecommendItemModel>
+                    val listOldLength = mutableRecommendList.size
                     mutableRecommendList.addAll(appendixItem)
                     // 取消掉finally中对失败情形进行集中处理的逻辑
                     indicatorCleared = true
@@ -110,7 +111,8 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
                     CurrentPage++
                     // 因为接下来马上就要notifyDataSetChanged了。所以不需要在HideLoadMoreIndicator中再刷新一个DataSet.
                     HideLoadMoreIndicatorOnRecyclerView(true)
-                    recommendListAdapter?.notifyDataSetChanged()
+                    // 使用itemRangeChanged方法，减少闪屏
+                    recommendListAdapter?.notifyItemRangeChanged(listOldLength, 1 + appendixItem.size)
                 } else {
                     LoadFailedTips(
                         -5,
@@ -125,9 +127,9 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
         } catch (e: Exception) {
             LoadFailedTips(-3, "Exception: ${e.message}")
         } finally {
-//            if (!indicatorCleared) {
-//                HideLoadMoreIndicatorOnRecyclerView(false)
-//            }
+            if (!indicatorCleared) {
+                HideLoadMoreIndicatorOnRecyclerView(false)
+            }
         }
     }
 
@@ -146,7 +148,7 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
             val mutableRecommendList = recommendListData as MutableList<RecommendItemModel>
             val removedIndex = mutableRecommendList.removeIndicator()
             if (!PendingRefreshAdapterStatus && removedIndex > 0) {
-                recommendListAdapter?.notifyItemRemoved(removedIndex)
+                activity?.runOnUiThread { recommendListAdapter?.notifyItemRemoved(removedIndex) }
             }
         }
         // 告知它已经完成加载了.

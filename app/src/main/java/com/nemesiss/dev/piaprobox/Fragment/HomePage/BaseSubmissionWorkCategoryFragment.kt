@@ -60,7 +60,7 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
             }, { code, _ ->
                 // Should not pending refresh adapter status, but clear the loading indicator immediately
                 // due to a failed load more request.
-                activity?.runOnUiThread { HideLoadMoreIndicatorOnRecyclerView(false) }
+                HideLoadMoreIndicatorOnRecyclerView(false)
                 LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
             })
     }
