@@ -9,6 +9,7 @@ import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
@@ -44,10 +45,6 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
             .inject(this)
     }
 
-    override fun LoadBannerImage() {
-
-    }
-
     protected open fun LoadFragmentPage(
         visitUrl: String,
         contentType: RecommendListType,
@@ -66,16 +63,36 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
             })
     }
 
-    protected open fun LoadDefaultPage(contentType: RecommendListType, ShouldUpdateTagList: Boolean = true) {
+    protected open fun LoadFragmentPage(
+        visitUrl: String,
+        resolve: (String) -> Unit,
+        rejected: (Int, Response) -> Unit
+    ) {
+        DaggerFetchFactory.create()
+            .fetcher()
+            .visit(visitUrl)
+            .goAsync({ response ->
+                response.handle(resolve, rejected)
+            }, { e ->
+                HideLoadingIndicator()
+                activity?.runOnUiThread { LoadFailedTips(-4, e.message ?: "") }
+            })
+    }
+
+    protected open fun LoadDefaultRecommendPage(contentType: RecommendListType, ShouldUpdateTagList: Boolean = true) {
         ShowLoadingIndicator()
         LoadFragmentPage(CurrentLoadTagPageURL, CurrentCategoryFragmentType, {
             if (ShouldUpdateTagList)
-                ParseTagListContent(it as String) // Load tags.
-            ParseRecommendListContent(it as String, contentType) // Load all recommend item.
+                ParseTagListContent(it) // Load tags.
+            ParseRecommendListContent(it, contentType) // Load all recommend item.
         }, { code, _ ->
             HideLoadingIndicator()
             LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
         })
+    }
+
+    protected open fun LoadDefaultSubmissionWorkPage(submissionWorkType: SubmissionWorkType) {
+
     }
 
     protected open fun LoadRecommendList(tagUrl: String, contentType: RecommendListType) {
@@ -136,6 +153,11 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
         }
     }
 
-    abstract fun ParseRecommendListContent(HTMLString: String, contentType: RecommendListType)
+    open fun ParseRecommendListContent(HTMLString: String, contentType: RecommendListType) {
 
+    }
+
+    open fun ParseSubmissionWorkListContent(HTMLString: String, contentType: SubmissionWorkType) {
+
+    }
 }

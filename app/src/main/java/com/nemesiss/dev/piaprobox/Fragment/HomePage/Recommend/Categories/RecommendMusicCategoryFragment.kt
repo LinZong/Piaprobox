@@ -36,7 +36,7 @@ class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        LoadDefaultPage(CurrentCategoryFragmentType)
+        LoadDefaultRecommendPage(CurrentCategoryFragmentType)
     }
 
     override fun OnRecommendItemSelected(index: Int) {

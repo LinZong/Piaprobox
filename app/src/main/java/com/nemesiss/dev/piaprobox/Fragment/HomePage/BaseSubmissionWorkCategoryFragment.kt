@@ -1,23 +1,24 @@
 package com.nemesiss.dev.piaprobox.Fragment.HomePage
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
-import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
+import com.nemesiss.dev.piaprobox.R
 import org.apache.http.client.utils.URIBuilder
 import java.net.URI
 
 
-enum class SubmissionWorkType(val StepRulePostfix: String, val UrlSegmentName: String) {
+enum class SubmissionWorkType(val StepRulePostfix: String, val UrlPathName: String) {
     MUSIC("MUSIC", "music"),
     ILLUSTRATION("IMAGE", "illust"),
     TEXT("TEXT", "text");
 }
 
-class SubmissionWorkUrlBuilder {
-    private val builder = URIBuilder("https://piapro.jp/")
+class SubmissionWorkUrlBuilder(fromUrl: String = "https://piapro.jp/") {
+    private val builder = URIBuilder(fromUrl)
+    fun type(type: SubmissionWorkType): SubmissionWorkUrlBuilder {
+        builder.path = type.UrlPathName
+        return this
+    }
+
     fun tag(tagString: String): SubmissionWorkUrlBuilder {
         builder.addParameter("tag", tagString)
         return this
@@ -39,6 +40,40 @@ class SubmissionWorkUrlBuilder {
 
 abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragment() {
 
+    companion object {
+        @JvmStatic
+        private val PageLimit = 30
+    }
 
-    protected abstract fun LoadMore()
+    protected fun LoadMore(CurrentVisitUrl: String, NextPage: Int, submissionWorkType: SubmissionWorkType) {
+        if (!(1..PageLimit).contains(NextPage)) {
+            AppendSubmissionWorkListContent("", submissionWorkType, true)
+            return
+        }
+        ShowLoadingIndicator()
+        LoadFragmentPage(SubmissionWorkUrlBuilder(CurrentVisitUrl).page(NextPage).buildString(),
+            {
+                AppendSubmissionWorkListContent(it, submissionWorkType) // Load all recommend item.
+            }, { code, _ ->
+                HideLoadingIndicator()
+                LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
+            })
+    }
+
+    override fun LoadDefaultSubmissionWorkPage(submissionWorkType: SubmissionWorkType) {
+        ShowLoadingIndicator()
+        LoadFragmentPage(SubmissionWorkUrlBuilder().type(submissionWorkType).buildString(),
+            {
+                ParseSubmissionWorkListContent(it, submissionWorkType) // Load all recommend item.
+            }, { code, _ ->
+                HideLoadingIndicator()
+                LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
+            })
+    }
+
+    abstract fun AppendSubmissionWorkListContent(
+        HTMLString: String,
+        submissionWorkType: SubmissionWorkType,
+        ReachPageLimit: Boolean = false
+    )
 }

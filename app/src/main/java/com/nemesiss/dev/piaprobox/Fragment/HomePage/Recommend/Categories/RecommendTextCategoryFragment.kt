@@ -30,7 +30,7 @@ class RecommendTextCategoryFragment : BaseRecommendCategoryFragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        LoadDefaultPage(RecommendListType.TEXT)
+        LoadDefaultRecommendPage(RecommendListType.TEXT)
     }
     override fun Refresh() {
         LoadRecommendList(CurrentLoadTagPageURL, CurrentCategoryFragmentType)

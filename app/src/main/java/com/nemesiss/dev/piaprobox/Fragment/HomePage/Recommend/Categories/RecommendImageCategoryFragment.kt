@@ -56,7 +56,7 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        LoadDefaultPage(CurrentCategoryFragmentType, true)
+        LoadDefaultRecommendPage(CurrentCategoryFragmentType, true)
     }
 
     override fun Refresh() {
