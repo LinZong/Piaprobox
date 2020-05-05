@@ -669,19 +669,19 @@
             ],
             "CreateDetail": [
               {
-                "getElementsByClassSingle":{
+                "getElementsByClassSingle": {
                   "Name": "cd_dtl_data",
                   "Index": 0
                 }
               },
               {
-                "getElementsByTagSingle":{
+                "getElementsByTagSingle": {
                   "Name": "p",
                   "Index": 0
                 }
               },
               {
-                "getElementsByTagSingle":{
+                "getElementsByTagSingle": {
                   "Name": "p",
                   "Index": 0
                 }
@@ -779,13 +779,13 @@
             ],
             "CreateDetail": [
               {
-                "getElementsByClassSingle":{
+                "getElementsByClassSingle": {
                   "Name": "cd_dtl_data",
                   "Index": 0
                 }
               },
               {
-                "getElementsByTagSingle":{
+                "getElementsByTagSingle": {
                   "Name": "p",
                   "Index": 0
                 }
@@ -879,13 +879,13 @@
             ],
             "CreateDetail": [
               {
-                "getElementsByClassSingle":{
+                "getElementsByClassSingle": {
                   "Name": "cd_dtl_data",
                   "Index": 0
                 }
               },
               {
-                "getElementsByTagSingle":{
+                "getElementsByTagSingle": {
                   "Name": "p",
                   "Index": 0
                 }
@@ -1050,7 +1050,7 @@
       }
     ]
   },
-  "RelatedImage":{
+  "RelatedImage": {
     "Steps": [
       {
         "getElementByIdSingle": {
@@ -1694,6 +1694,110 @@
               {
                 "attrSingle": {
                   "Name": "href"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "Submission-FilterCategory": {
+    "Steps": [
+      {
+        "getElementByIdSingle": {
+          "Name": "_filterbox_category"
+        }
+      },
+      {
+        "getElementsByClassSingle": {
+          "Name": "filterlist",
+          "Index": 0
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "li"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel",
+          "GenerateOutputRule": {
+            "URL": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
+            "Name": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "Submission-FilterMenu": {
+    "Steps": [
+      {
+        "getElementByIdSingle": {
+          "Name": "_filterbox_character"
+        }
+      },
+      {
+        "getElementsByClassSingle": {
+          "Name": "filterlist",
+          "Index": 0
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "li"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel",
+          "GenerateOutputRule": {
+            "URL": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
+            "Name": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {
                 }
               }
             ]

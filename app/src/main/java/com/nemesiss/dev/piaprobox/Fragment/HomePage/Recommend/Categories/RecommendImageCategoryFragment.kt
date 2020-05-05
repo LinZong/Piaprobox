@@ -125,11 +125,6 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
         return notVisible
     }
 
-//    fun ScrollToPositionAndReturnView(position: Int, smooth: Boolean): ImageView? {
-//        Log.d("RecommendImage", "ScrollToPositionAndReturnView  $position")
-//        ScrollToPositionIfNotFullyVisible(position, smooth)
-//        return (Recommend_Frag_Common_RecyclerView.findViewHolderForPosition(position) as? ImageRecommendItemAdapter.ImageRecommendItemViewHolder)?.itemView?.SingleImageWorkItemCard_WorkThumb
-//    }
 
     fun OnRecommendItemSelectedWithSharedImageView(index: Int, SharedImageView: ImageView) {
 
