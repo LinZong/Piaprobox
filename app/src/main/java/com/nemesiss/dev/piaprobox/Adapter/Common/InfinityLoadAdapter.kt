@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
 abstract class InfinityLoadAdapter<TViewHolder : RecyclerView.ViewHolder>(
-    private val attachedRecyclerView: RecyclerView,
+    attachedRecyclerView: RecyclerView,
     protected inline val ShouldLoadMoreItem: () -> Unit
 ) : RecyclerView.Adapter<TViewHolder>() {
 
