@@ -90,6 +90,11 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
         submissionWorkType: SubmissionWorkType,
         ReachPageLimit: Boolean
     ) {
+        if(ReachPageLimit) {
+            ShowNothingMoreIndicatorOnRecyclerView()
+            return
+        }
+
         var indicatorCleared = false
         val Steps = htmlParser
             .Rules
@@ -164,15 +169,17 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
                 }
             )
             recommendListAdapter?.notifyItemInserted(mutableRecommendList.size - 1)
-
-            asyncExecutor.SendTaskMainThreadDelay(Runnable {
-                val removedIndex = mutableRecommendList.removeIndicator()
-                if (removedIndex > 0) {
-                    recommendListAdapter?.notifyItemRemoved(removedIndex)
-                }
-                // 告知它已经完成加载了.
-                recommendListAdapter?.loaded()
-            }, 2000L)
+            recommendListAdapter?.loaded()
+            recommendListAdapter?.disable()
+            // 保持 "再怎么找也没有啦 >_< 显示在RecyclerView的最下面"
+//            asyncExecutor.SendTaskMainThreadDelay(Runnable {
+//                val removedIndex = mutableRecommendList.removeIndicator()
+//                if (removedIndex > 0) {
+//                    recommendListAdapter?.notifyItemRemoved(removedIndex)
+//                }
+//                // 告知它已经完成加载了.
+//                recommendListAdapter?.loaded()
+//            }, 2000L)
         }
     }
 }

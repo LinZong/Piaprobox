@@ -11,6 +11,7 @@ abstract class InfinityLoadAdapter<TViewHolder : RecyclerView.ViewHolder>(
 
     var visibleThreshold = 3
     private var loading = false
+    private var disabled = false
 
     init {
         val attachedLayoutManager = attachedRecyclerView.layoutManager
@@ -18,8 +19,9 @@ abstract class InfinityLoadAdapter<TViewHolder : RecyclerView.ViewHolder>(
             @Synchronized
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (loading)
+                if (loading || disabled)
                     return
+
                 val itemCount = attachedLayoutManager?.itemCount ?: -1
                 if (itemCount == -1)
                     return
@@ -45,5 +47,13 @@ abstract class InfinityLoadAdapter<TViewHolder : RecyclerView.ViewHolder>(
 
     fun loaded() {
         loading = false
+    }
+
+    fun disable() {
+        disabled = true
+    }
+
+    fun enable() {
+        disabled = false
     }
 }
