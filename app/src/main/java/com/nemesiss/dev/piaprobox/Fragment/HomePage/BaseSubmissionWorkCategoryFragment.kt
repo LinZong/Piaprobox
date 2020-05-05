@@ -1,41 +1,41 @@
 package com.nemesiss.dev.piaprobox.Fragment.HomePage
 
+import android.net.Uri
+import android.util.Log
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.R
-import org.apache.http.client.utils.URIBuilder
-import java.net.URI
 
 
 enum class SubmissionWorkType(val StepRulePostfix: String, val UrlPathName: String) {
-    MUSIC("MUSIC", "music"),
-    ILLUSTRATION("IMAGE", "illust"),
-    TEXT("TEXT", "text");
+    MUSIC("MUSIC", "music/"),
+    ILLUSTRATION("IMAGE", "illust/"),
+    TEXT("TEXT", "text/");
 }
 
-class SubmissionWorkUrlBuilder(fromUrl: String = "https://piapro.jp/") {
-    private val builder = URIBuilder(fromUrl)
+class SubmissionWorkUrlBuilder(fromUrl: String = "https://piapro.jp") {
+    private val builder = Uri.parse(fromUrl).buildUpon()
     fun type(type: SubmissionWorkType): SubmissionWorkUrlBuilder {
-        builder.path = type.UrlPathName
+        builder.appendPath(type.UrlPathName)
         return this
     }
 
     fun tag(tagString: String): SubmissionWorkUrlBuilder {
-        builder.addParameter("tag", tagString)
+        builder.appendQueryParameter("tag", tagString)
         return this
     }
 
     fun category(id: Int): SubmissionWorkUrlBuilder {
-        builder.addParameter("categoryId", id.toString(10))
+        builder.appendQueryParameter("categoryId", id.toString(10))
         return this
     }
 
     fun page(page: Int): SubmissionWorkUrlBuilder {
-        builder.addParameter("page", page.toString(10))
+        builder.appendQueryParameter("page", page.toString(10))
         return this
     }
 
-    fun buildString() = builder.build().toString()
-    fun build(): URI = builder.build()
+    fun buildString() = builder.build().toString().replace("%2F", "/")
+    fun build() = builder.build()
 }
 
 abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragment() {
@@ -45,17 +45,22 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
         private val PageLimit = 30
     }
 
-    protected fun LoadMore(CurrentVisitUrl: String, NextPage: Int, submissionWorkType: SubmissionWorkType) {
+    protected fun LoadMoreItem(CurrentVisitUrl: String, NextPage: Int, submissionWorkType: SubmissionWorkType) {
         if (!(1..PageLimit).contains(NextPage)) {
             AppendSubmissionWorkListContent("", submissionWorkType, true)
             return
         }
-        ShowLoadingIndicator()
+        // Show a small loading indicator at the 'last' position of RecyclerView.
+        // Determined by the subclass.
+        Log.d("CategoryFragment", "即将加载第: $NextPage 页")
+        ShowLoadMoreIndicatorOnRecyclerView()
         LoadFragmentPage(SubmissionWorkUrlBuilder(CurrentVisitUrl).page(NextPage).buildString(),
             {
                 AppendSubmissionWorkListContent(it, submissionWorkType) // Load all recommend item.
             }, { code, _ ->
-                HideLoadingIndicator()
+                // Should not pending refresh adapter status, but clear the loading indicator immediately
+                // due to a failed load more request.
+                activity?.runOnUiThread { HideLoadMoreIndicatorOnRecyclerView(false) }
                 LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
             })
     }
@@ -76,4 +81,10 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
         submissionWorkType: SubmissionWorkType,
         ReachPageLimit: Boolean = false
     )
+
+    protected abstract fun ShowLoadMoreIndicatorOnRecyclerView()
+
+    protected abstract fun HideLoadMoreIndicatorOnRecyclerView(PendingRefreshAdapterStatus: Boolean = true)
+
+    protected abstract fun ShowNothingMoreIndicatorOnRecyclerView()
 }

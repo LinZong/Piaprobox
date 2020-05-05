@@ -9,7 +9,7 @@ import android.widget.Toast
 import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
-import com.nemesiss.dev.piaprobox.Adapter.IllustratorPage.IllustratorViewPageFragmentAdapter
+import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.IllustratorViewPageFragmentAdapter
 import com.nemesiss.dev.piaprobox.Fragment.ImageViewer.IllustratorViewFragment
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel

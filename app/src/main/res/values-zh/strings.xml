@@ -23,6 +23,6 @@
     <string name="DownloadMusicRequestDialogTitle">下载音乐</string>
     <string name="DownloadMusicRequestDialogMessgae">看上去您准备下载这首音乐，您必须遵守作者发布此作品时声明的权利许可，您只能在权利许可允许的范围内使用下载的文件。对于任何侵权行为，本软件及作者不负任何责任。</string>
 
-
     <string name="ImageContentInfoIsPreparing">图片信息正在加载，还不能开始下载图片。</string>
+    <string name="RecyclerViewNoMoreItem">这里什么都没有啦 >_&lt; </string>
 </resources>

@@ -12,21 +12,26 @@ import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.Misc.StaticResourcesMap
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Util.fixThumb
 
-class MusicRecommendItemAdapter(var items : List<RecommendItemModel>,
-                                val context: Context,
-                                inline val itemSelected : (Int)->Unit
+class MusicRecommendItemAdapter(
+    var items: List<RecommendItemModel>,
+    val context: Context,
+    inline val itemSelected: (Int) -> Unit
 ) : RecyclerView.Adapter<MusicRecommendItemAdapter.RecommendItemVH>() {
 
     class RecommendItemVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val Thumb : ImageView = itemView.findViewById(R.id.SingleWorkItemCard_WorkThumb)
-        val WorkName : TextView = itemView.findViewById(R.id.SingleWorkItemCard_WorkName)
-        val UploadUser : TextView = itemView.findViewById(R.id.SingleWorkItemCard_UploadUser)
-        val UploadTime : TextView = itemView.findViewById(R.id.SingleWorkItemCard_UploadTime)
+        val Thumb: ImageView = itemView.findViewById(R.id.SingleWorkItemCard_WorkThumb)
+        val WorkName: TextView = itemView.findViewById(R.id.SingleWorkItemCard_WorkName)
+        val UploadUser: TextView = itemView.findViewById(R.id.SingleWorkItemCard_UploadUser)
+        val UploadTime: TextView = itemView.findViewById(R.id.SingleWorkItemCard_UploadTime)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, index: Int): RecommendItemVH {
-        return RecommendItemVH(LayoutInflater.from(viewGroup.context).inflate(R.layout.single_recommend_item_no_databinding, viewGroup,false))
+        return RecommendItemVH(
+            LayoutInflater.from(viewGroup.context)
+                .inflate(R.layout.single_recommend_item_no_databinding, viewGroup, false)
+        )
     }
 
     override fun getItemCount(): Int {
@@ -40,10 +45,7 @@ class MusicRecommendItemAdapter(var items : List<RecommendItemModel>,
         vh.UploadUser.text = current.ArtistName
         vh.UploadTime.text = "${current.UploadDate} ${current.UploadTime}"
 
-        if(current.Thumb.matches("^th-.*".toRegex())) {
-            vh.Thumb.setImageResource(StaticResourcesMap.DefaultThumbMaps[current.Thumb] ?: R.drawable.thumb_empty)
-        }
-        else {
+        if (!current.fixThumb(vh.Thumb)) {
             Glide.with(context)
                 .load(current.Thumb)
                 .priority(Priority.HIGH)

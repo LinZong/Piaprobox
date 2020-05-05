@@ -19,8 +19,8 @@ import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
-import com.nemesiss.dev.piaprobox.Adapter.MusicPage.MusicLyricAdapter
-import com.nemesiss.dev.piaprobox.Adapter.MusicPage.RelatedMusicListAdapter
+import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.MusicLyricAdapter
+import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.RelatedMusicListAdapter
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus

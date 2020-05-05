@@ -11,6 +11,8 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragm
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
@@ -26,6 +28,10 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
 
     @Inject
     protected lateinit var htmlParser: HTMLParser
+
+    @Inject
+    protected lateinit var asyncExecutor: AsyncExecutor
+
     protected open var tagListAdapter: TagItemAdapter? = null
     protected open var tagListLayoutManager: LinearLayoutManager? = null
     protected open var tagListData: List<RecommendTagModel>? = null
@@ -38,9 +44,19 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val htmlParserModules = HTMLParserModules(context ?: PiaproboxApplication.Self.applicationContext)
+
         DaggerHTMParserFactory
             .builder()
-            .hTMLParserModules(HTMLParserModules(context ?: PiaproboxApplication.Self.applicationContext))
+            .hTMLParserModules(htmlParserModules)
+            .build()
+            .inject(this)
+
+
+        DaggerAsyncExecutorFactory
+            .builder()
+            .hTMLParserModules(htmlParserModules)
             .build()
             .inject(this)
     }
@@ -132,12 +148,12 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
             tagListData = (htmlParser.Parser.GoSteps(root, rule) as Array<*>).map { it as RecommendTagModel }
             activity?.runOnUiThread {
                 tagListLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                Recommend_Frag_Common_Tag_RecyclerView.layoutManager = tagListLayoutManager
+                Recommend_Frag_Common_Tag_RecyclerView?.layoutManager = tagListLayoutManager
                 if (tagListAdapter == null) {
                     tagListAdapter = TagItemAdapter(tagListData!!, this::OnTagItemSelected)
-                    Recommend_Frag_Common_Tag_RecyclerView.adapter = tagListAdapter
+                    Recommend_Frag_Common_Tag_RecyclerView?.adapter = tagListAdapter
                 } else {
-                    Recommend_Frag_Common_Tag_RecyclerView.adapter = tagListAdapter
+                    Recommend_Frag_Common_Tag_RecyclerView?.adapter = tagListAdapter
                     tagListAdapter?.items = tagListData!!
                     tagListAdapter?.notifyDataSetChanged()
                 }

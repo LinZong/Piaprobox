@@ -4,13 +4,13 @@
               android:layout_height="wrap_content"
               android:orientation="vertical" >
 
-    <ProgressBar
+    <TextView
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
-            android:id="@+id/Common_RecyclerView_LoadMore"
-            android:indeterminate="true"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            style="?android:attr/progressBarStyle"
-            android:layout_height="wrap_content" />
+            style="@style/MainFragmentMidInfoText"
+            android:text="@string/RecyclerViewNoMoreItem"/>
+
 </LinearLayout>

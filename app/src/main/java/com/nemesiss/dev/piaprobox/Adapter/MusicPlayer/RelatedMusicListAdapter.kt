@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Adapter.MusicPage
+package com.nemesiss.dev.piaprobox.Adapter.MusicPlayer
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
-import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb

@@ -26,5 +26,5 @@
 
 
     <string name="ImageContentInfoIsPreparing">Current image content info is preparing. Cannot download image now.</string>
-
+    <string name="RecyclerViewNoMoreItem">ここは何もないけど >_&lt; </string>
 </resources>

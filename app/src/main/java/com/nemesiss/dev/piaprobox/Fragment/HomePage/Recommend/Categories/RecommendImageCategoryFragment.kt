@@ -30,9 +30,6 @@ import javax.inject.Inject
 
 class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
 
-    @Inject
-    lateinit var asyncExecutor: AsyncExecutor
-
     private var recommendListAdapter: ImageRecommendItemAdapter? = null
     private var recommendItemLayoutManager: GridLayoutManager? = null
     private var recommendListData: List<RecommendItemModelImage>? = null

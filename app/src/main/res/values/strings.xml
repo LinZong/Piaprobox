@@ -41,5 +41,6 @@
 <!--    In-App use flags-->
 
     <string name="ImageViewTransitionName">ImageViewTransitionName</string>
+    <string name="RecyclerViewNoMoreItem">Nothing more >_&lt; </string>
 
 </resources>

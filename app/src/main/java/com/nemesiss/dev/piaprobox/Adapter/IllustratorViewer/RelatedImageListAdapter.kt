@@ -1,7 +1,6 @@
-package com.nemesiss.dev.piaprobox.Adapter.IllustratorPage
+package com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo

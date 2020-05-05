@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Adapter.MusicPage
+package com.nemesiss.dev.piaprobox.Adapter.MusicPlayer
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Adapter.IllustratorPage
+package com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager

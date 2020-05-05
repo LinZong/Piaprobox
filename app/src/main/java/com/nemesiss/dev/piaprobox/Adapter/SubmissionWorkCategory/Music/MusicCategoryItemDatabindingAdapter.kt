@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Adapter.RecommendPage
+package com.nemesiss.dev.piaprobox.Adapter.SubmissionWorkCategory.Music
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
+import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.MusicRecommendItemDatabindingAdapter
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.fixThumb
@@ -15,11 +16,14 @@ import com.nemesiss.dev.piaprobox.View.Common.RecyclerViewLoadingIndicatorViewHo
 import com.nemesiss.dev.piaprobox.View.Common.RecyclerViewNothingMoreIndicatorViewHolder
 import com.nemesiss.dev.piaprobox.databinding.SingleRecommendItemBinding
 
-class MusicRecommendItemDatabindingAdapter(
+class MusicCategoryItemDatabindingAdapter(
     var items: List<RecommendItemModel>,
     val context: Context,
-    private inline val itemSelected: (Int) -> Unit
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(
+    private inline val itemSelected: (Int) -> Unit,
+    attachedRecyclerView: RecyclerView,
+    ShouldLoadMoreItem: () -> Unit
+) : InfinityLoadAdapter<RecyclerView.ViewHolder>(
+    attachedRecyclerView, ShouldLoadMoreItem
 ) {
     class RecommendItemDatabindingVH private constructor(val binding: SingleRecommendItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -58,17 +62,10 @@ class MusicRecommendItemDatabindingAdapter(
 
     override fun getItemCount(): Int = items.size
 
+
     override fun onBindViewHolder(vh: RecyclerView.ViewHolder, position: Int) {
         if (vh is RecommendItemDatabindingVH) {
             vh.binding.model = items[position]
-//            vh.binding.executePendingBindings()
-//            if (!items[position].fixThumb(vh.binding.SingleWorkItemCardWorkThumb)) {
-//                Glide.with(context)
-//                    .load(items[position].Thumb)
-//                    .priority(Priority.HIGH)
-//                    .error(R.drawable.thumb_miku)
-//                    .into(vh.binding.SingleWorkItemCardWorkThumb)
-//            }
             vh.binding.root.setOnClickListener { itemSelected(position) }
         }
     }

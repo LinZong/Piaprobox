@@ -22,7 +22,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
-import com.nemesiss.dev.piaprobox.Adapter.IllustratorPage.RelatedImageListAdapter
+import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.RelatedImageListAdapter
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
