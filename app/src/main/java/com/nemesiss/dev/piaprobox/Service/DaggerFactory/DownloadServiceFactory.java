@@ -18,8 +18,12 @@ public interface DownloadServiceFactory {
     DownloadService ds();
 
     void inject(TestSkeletonActivity ba);
+
     void inject(MusicPlayerActivity mpa);
+
     void inject(IllustratorViewActivity2 illustratorViewActivity);
+
     void inject(IllustratorViewActivity illustratorViewActivity);
+
     void inject(IllustratorViewFragment illustratorViewFragment);
 }

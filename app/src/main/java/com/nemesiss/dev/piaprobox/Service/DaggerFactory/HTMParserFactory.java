@@ -18,8 +18,12 @@ public interface HTMParserFactory {
     HTMLParser parser();
 
     void inject(IllustratorViewActivity2 illustratorViewActivity);
+
     void inject(IllustratorViewFragment illustratorViewFragment);
+
     void inject(IllustratorViewActivity illustratorViewActivity);
+
     void inject(BaseRecommendCategoryFragment baseRecommendCategoryFragment);
+
     void inject(TextDetailActivity textDetailActivity);
 }
