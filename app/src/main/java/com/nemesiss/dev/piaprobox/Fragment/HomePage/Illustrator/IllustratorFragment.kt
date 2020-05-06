@@ -1,23 +1,36 @@
 package com.nemesiss.dev.piaprobox.Fragment.HomePage.Illustrator
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
-import com.nemesiss.dev.piaprobox.R
-import kotlinx.android.synthetic.main.fragment_header.*
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.BaseSubmissionWorkCategoryFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 
-class IllustratorFragment : BaseMainFragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.illustrator_main_fragment, container, false)
+class IllustratorFragment : BaseSubmissionWorkCategoryFragment() {
+    override fun AppendSubmissionWorkListContent(
+        HTMLString: String,
+        submissionWorkType: SubmissionWorkType,
+        ReachPageLimit: Boolean
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun ShowLoadMoreIndicatorOnRecyclerView() {
+        TODO("Not yet implemented")
+    }
+
+    override fun HideLoadMoreIndicatorOnRecyclerView(PendingRefreshAdapterStatus: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun ShowNothingMoreIndicatorOnRecyclerView() {
+        TODO("Not yet implemented")
     }
 
     override fun Refresh() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("Not yet implemented")
     }
 
-    override fun LoadBannerImage() {
-        BaseMainFragment_Banner_ImageView.setImageResource(R.drawable.illu_banner)
+    override fun OnRecommendItemSelected(index: Int) {
+        TODO("Not yet implemented")
     }
+
+
 }

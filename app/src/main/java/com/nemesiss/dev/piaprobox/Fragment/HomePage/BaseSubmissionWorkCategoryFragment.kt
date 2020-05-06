@@ -1,9 +1,14 @@
 package com.nemesiss.dev.piaprobox.Fragment.HomePage
 
 import android.net.Uri
+import android.support.v7.widget.RecyclerView
 import android.util.Log
+import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
+import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Util.canAddIndicator
+import com.nemesiss.dev.piaprobox.Util.removeIndicator
 
 
 enum class SubmissionWorkType(val StepRulePostfix: String, val UrlPathName: String) {
@@ -83,6 +88,52 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
     )
 
     protected abstract fun ShowLoadMoreIndicatorOnRecyclerView()
+
+    protected inline fun <reified T> ShowLoadMoreIndicatorOnRecyclerView(
+        adapterDataSource: MutableList<T>,
+        adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
+        PendingRefreshAdapterStatus: Boolean = true
+    ): Boolean {
+        // assume all the elements are the same.
+        if (adapterDataSource.isNotEmpty() && canAddIndicator<T>()) {
+            return try {
+                val elem = adapterDataSource[0] as Any
+                val clazz = elem::class.java
+                val URL_Field = clazz.getDeclaredField("URL")
+                val indicator = clazz.newInstance() as T
+                URL_Field.set(indicator, RecyclerViewInnerIndicator.RECYCLER_VIEW_LOAD_MORE_INDICATOR.TAG);
+                adapterDataSource.add(indicator)
+                if (!PendingRefreshAdapterStatus) {
+                    activity?.runOnUiThread { adapter.notifyItemInserted(adapterDataSource.size - 1) }
+                }
+                true
+            } catch (noField: NoSuchFieldException) {
+                false
+            } catch (illegalAccess: IllegalAccessException) {
+                false
+            } catch (instantiationFailed: InstantiationException) {
+                false
+            }
+        }
+        return false
+    }
+
+    protected inline fun <reified T> HideLoadMoreIndicatorOnRecyclerView(
+        adapterDataSource: MutableList<T>,
+        adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
+        PendingRefreshAdapterStatus: Boolean = true
+    ): Boolean {
+        if (canAddIndicator<T>()) {
+            val removedIndex = adapterDataSource.removeIndicator()
+            if (!PendingRefreshAdapterStatus && removedIndex != -1) {
+                activity?.runOnUiThread { adapter.notifyItemRemoved(removedIndex) }
+                return true
+            }
+        }
+        // 告知它已经完成加载了
+        (adapter as? InfinityLoadAdapter)?.loaded()
+        return false
+    }
 
     protected abstract fun HideLoadMoreIndicatorOnRecyclerView(PendingRefreshAdapterStatus: Boolean = true)
 

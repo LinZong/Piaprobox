@@ -42,7 +42,7 @@ fun RecommendItemModelImage.isNoMoreIndicator() =
 fun RecommendItemModelText.isNoMoreIndicator() =
     this.URL == RecyclerViewInnerIndicator.RECYCLER_VIEW_NOTHING_MORE_INDICATOR.TAG
 
-fun RecommendItemModel.fixThumb(imageView: ImageView) : Boolean {
+fun RecommendItemModel.fixThumb(imageView: ImageView): Boolean {
     if (Thumb.matches("^th-.*".toRegex())) {
         imageView.setImageResource(StaticResourcesMap.DefaultThumbMaps[Thumb] ?: R.drawable.thumb_empty)
         return true
@@ -58,22 +58,31 @@ fun RecommendItemModelText.fixThumb(imageView: ImageView): Boolean {
     return false
 }
 
+inline fun <reified T> canAddIndicator(): Boolean {
+    return when (T::class) {
+        RecommendItemModel::class, RecommendItemModelText::class, RecommendItemModelText::class -> {
+            true
+        }
+        else -> {
+            false
+        }
+    }
+}
+
 inline fun <reified T> MutableList<T>.removeIndicator(): Int {
     var removedIndex = -1
-    when (T::class) {
-        RecommendItemModel::class, RecommendItemModelText::class, RecommendItemModelImage::class -> {
-            val URL_Field = T::class.java.getDeclaredField("URL")
-            for (index in indices.reversed()) {
-                if (URL_Field.get(this[index]) == RecyclerViewInnerIndicator.RECYCLER_VIEW_LOAD_MORE_INDICATOR.TAG) {
-                    removeAt(index)
-                    removedIndex = index
-                    break
-                }
-                if (URL_Field.get(this[index]) == RecyclerViewInnerIndicator.RECYCLER_VIEW_NOTHING_MORE_INDICATOR.TAG) {
-                    removeAt(index)
-                    removedIndex = index
-                    break
-                }
+    if (canAddIndicator<T>()) {
+        val URL_Field = T::class.java.getDeclaredField("URL")
+        for (index in indices.reversed()) {
+            if (URL_Field.get(this[index]) == RecyclerViewInnerIndicator.RECYCLER_VIEW_LOAD_MORE_INDICATOR.TAG) {
+                removeAt(index)
+                removedIndex = index
+                break
+            }
+            if (URL_Field.get(this[index]) == RecyclerViewInnerIndicator.RECYCLER_VIEW_NOTHING_MORE_INDICATOR.TAG) {
+                removeAt(index)
+                removedIndex = index
+                break
             }
         }
     }

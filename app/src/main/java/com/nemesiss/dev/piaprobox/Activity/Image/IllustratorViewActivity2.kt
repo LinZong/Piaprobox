@@ -181,7 +181,6 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             ArtistName = content.ArtistName
         }
 
-//        val url = MainRecommendFragment.DefaultTagUrl + content.URL
         val url = HTMLParser.WrapDomain(content.URL)
 
         model.BrowserPageUrl = url

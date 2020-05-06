@@ -13,7 +13,6 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Util.removeIndicator
 import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.music_fragment.*
 import org.jsoup.Jsoup
@@ -141,23 +140,15 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
     override fun ShowLoadMoreIndicatorOnRecyclerView() {
         if (recommendListData is MutableList<RecommendItemModel>) {
             val mutableRecommendList = recommendListData as MutableList<RecommendItemModel>
-            mutableRecommendList.add(RecommendItemModel().apply {
-                URL = RecyclerViewInnerIndicator.RECYCLER_VIEW_LOAD_MORE_INDICATOR.TAG
-            })
-            recommendListAdapter?.notifyItemInserted(mutableRecommendList.size - 1)
+            ShowLoadMoreIndicatorOnRecyclerView(mutableRecommendList,recommendListAdapter!!,false)
         }
     }
 
     override fun HideLoadMoreIndicatorOnRecyclerView(PendingRefreshAdapterStatus: Boolean) {
         if (recommendListData is MutableList<RecommendItemModel>) {
             val mutableRecommendList = recommendListData as MutableList<RecommendItemModel>
-            val removedIndex = mutableRecommendList.removeIndicator()
-            if (!PendingRefreshAdapterStatus && removedIndex > 0) {
-                activity?.runOnUiThread { recommendListAdapter?.notifyItemRemoved(removedIndex) }
-            }
+            HideLoadMoreIndicatorOnRecyclerView(mutableRecommendList, recommendListAdapter!!, PendingRefreshAdapterStatus)
         }
-        // 告知它已经完成加载了.
-        recommendListAdapter?.loaded()
     }
 
     override fun ShowNothingMoreIndicatorOnRecyclerView() {
@@ -171,7 +162,7 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
             recommendListAdapter?.notifyItemInserted(mutableRecommendList.size - 1)
             recommendListAdapter?.loaded()
             recommendListAdapter?.disable()
-            // 保持 "再怎么找也没有啦 >_< 显示在RecyclerView的最下面"
+            // 保持 "这里什么也没有啦  >_< 显示在RecyclerView的最下面"
 //            asyncExecutor.SendTaskMainThreadDelay(Runnable {
 //                val removedIndex = mutableRecommendList.removeIndicator()
 //                if (removedIndex > 0) {
