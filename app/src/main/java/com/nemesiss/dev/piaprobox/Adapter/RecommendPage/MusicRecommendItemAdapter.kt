@@ -10,9 +10,8 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
-import com.nemesiss.dev.piaprobox.Misc.StaticResourcesMap
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Util.fixThumb
+import com.nemesiss.dev.piaprobox.View.Common.fixThumb
 
 class MusicRecommendItemAdapter(
     var items: List<RecommendItemModel>,

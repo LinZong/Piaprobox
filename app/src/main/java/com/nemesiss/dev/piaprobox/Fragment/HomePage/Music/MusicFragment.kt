@@ -1,5 +1,6 @@
 package com.nemesiss.dev.piaprobox.Fragment.HomePage.Music
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -7,8 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
+import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
+import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Adapter.SubmissionWorkCategory.Music.MusicCategoryItemDatabindingAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.BaseSubmissionWorkCategoryFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
@@ -30,7 +34,10 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
     }
 
     override fun OnRecommendItemSelected(index: Int) {
-
+        val item = recommendListData!![index]
+        val intent = Intent(context, MusicControlActivity::class.java)
+        intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, MainRecommendFragment.DefaultTagUrl + item.URL)
+        startActivity(intent)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -82,14 +89,13 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
             HideLoadingIndicator()
         }
     }
-
-
+    
     override fun AppendSubmissionWorkListContent(
         HTMLString: String,
         submissionWorkType: SubmissionWorkType,
         ReachPageLimit: Boolean
     ) {
-        if(ReachPageLimit) {
+        if (ReachPageLimit) {
             ShowNothingMoreIndicatorOnRecyclerView()
             return
         }
@@ -140,14 +146,18 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
     override fun ShowLoadMoreIndicatorOnRecyclerView() {
         if (recommendListData is MutableList<RecommendItemModel>) {
             val mutableRecommendList = recommendListData as MutableList<RecommendItemModel>
-            ShowLoadMoreIndicatorOnRecyclerView(mutableRecommendList,recommendListAdapter!!,false)
+            ShowLoadMoreIndicatorOnRecyclerView(mutableRecommendList, recommendListAdapter!!, false)
         }
     }
 
     override fun HideLoadMoreIndicatorOnRecyclerView(PendingRefreshAdapterStatus: Boolean) {
         if (recommendListData is MutableList<RecommendItemModel>) {
             val mutableRecommendList = recommendListData as MutableList<RecommendItemModel>
-            HideLoadMoreIndicatorOnRecyclerView(mutableRecommendList, recommendListAdapter!!, PendingRefreshAdapterStatus)
+            HideLoadMoreIndicatorOnRecyclerView(
+                mutableRecommendList,
+                recommendListAdapter!!,
+                PendingRefreshAdapterStatus
+            )
         }
     }
 

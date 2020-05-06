@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Activity.Text.TextDetailActivity
-import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.TextRecommendItemAdapter
+import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.TextRecommendItemDatabindingAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.recommend_category_layout.*
@@ -18,7 +18,7 @@ import org.jsoup.Jsoup
 class RecommendTextCategoryFragment : BaseRecommendCategoryFragment()
 {
 
-    private var recommendListAdapter: TextRecommendItemAdapter? = null
+    private var recommendListAdapter: TextRecommendItemDatabindingAdapter? = null
     private var recommendItemLayoutManager: LinearLayoutManager? = null
     private var recommendListData: List<RecommendItemModelText>? = null
 
@@ -54,7 +54,7 @@ class RecommendTextCategoryFragment : BaseRecommendCategoryFragment()
                 Recommend_Frag_Common_RecyclerView.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
-                        TextRecommendItemAdapter(recommendListData!!, context!!, this::OnRecommendItemSelected)
+                        TextRecommendItemDatabindingAdapter(recommendListData!!, context!!, this::OnRecommendItemSelected)
                     Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter
                 } else {
                     Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter

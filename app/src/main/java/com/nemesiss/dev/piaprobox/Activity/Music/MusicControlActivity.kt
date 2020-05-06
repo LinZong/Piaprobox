@@ -9,8 +9,6 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.widget.SeekBar
-import com.nemesiss.dev.piaprobox.Activity.Common.MainActivity
-import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
@@ -18,8 +16,7 @@ import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerServiceControll
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.SimpleMusicPlayer
 import com.nemesiss.dev.piaprobox.Service.Persistence
-import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.Util.whenClicks
+import com.nemesiss.dev.piaprobox.View.Common.whenClicks
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.music_player_layout.*
 

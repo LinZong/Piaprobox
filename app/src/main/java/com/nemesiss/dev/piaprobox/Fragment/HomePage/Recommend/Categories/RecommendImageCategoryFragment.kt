@@ -3,34 +3,27 @@ package com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.SharedElementCallback
 import android.support.v7.widget.GridLayoutManager
-import android.transition.Transition
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.ImageView
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
-import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.ImageRecommendItemAdapter
+import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.ImageRecommendItemDatabindingAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
-import com.nemesiss.dev.piaprobox.Util.BaseTransitionCallback
-import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback
+import com.nemesiss.dev.piaprobox.View.Common.handleSharedElementReenter
 import kotlinx.android.synthetic.main.recommend_category_layout.*
-import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
 import org.jsoup.Jsoup
-import javax.inject.Inject
 
 class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
 
-    private var recommendListAdapter: ImageRecommendItemAdapter? = null
+    private var recommendListAdapter: ImageRecommendItemDatabindingAdapter? = null
     private var recommendItemLayoutManager: GridLayoutManager? = null
     private var recommendListData: List<RecommendItemModelImage>? = null
 
@@ -63,50 +56,15 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
     override fun OnRecommendItemSelected(index: Int) {
 
     }
-    fun onActivityReenter(resultCode: Int, intent: Intent?) {
-        when (resultCode) {
-            // 处理来自IllustratorViewActivity2的Re-enter.
-            IllustratorViewActivity2.REENTER_RESULT_CODE -> {
-                val position = intent?.getIntExtra("CURRENT_INDEX", -1)!!
-                if (position != -1) {
-                    ScrollToPositionIfNotFullyVisible(position, false)
-                }
-                val sharedElementCallback = MediaSharedElementCallback()
-                activity?.setExitSharedElementCallback(sharedElementCallback)
-                activity?.window?.sharedElementExitTransition?.addListener(object : BaseTransitionCallback() {
-                    override fun onTransitionEnd(p0: Transition?) {
-                        removeCallback()
-                    }
 
-                    override fun onTransitionCancel(p0: Transition?) {
-                        removeCallback()
-                    }
-                    private fun removeCallback() {
-                        if (activity != null) {
-                            activity!!.window.sharedElementExitTransition.removeListener(this)
-                            activity!!.setExitSharedElementCallback(object : SharedElementCallback() {})
-                        }
-                    }
-                })
-                activity?.supportPostponeEnterTransition()
-                Recommend_Frag_Common_RecyclerView.viewTreeObserver.addOnPreDrawListener(object :
-                    ViewTreeObserver.OnPreDrawListener {
-                    override fun onPreDraw(): Boolean {
-                        val vh = Recommend_Frag_Common_RecyclerView.findViewHolderForAdapterPosition(position)
-                        if (vh != null && vh is ImageRecommendItemAdapter.ImageRecommendItemViewHolder) {
-                            sharedElementCallback.setSharedElementViews(
-                                arrayOf(resources.getString(R.string.ImageViewTransitionName)),
-                                arrayOf(vh.itemView.SingleImageWorkItemCard_WorkThumb)
-                            )
-                            Recommend_Frag_Common_RecyclerView.viewTreeObserver.removeOnPreDrawListener(this)
-                            activity?.supportStartPostponedEnterTransition()
-                            // 可以清除CallbackListener.
-                        }
-                        return true
-                    }
-                })
+    fun onActivityReenter(resultCode: Int, intent: Intent?) {
+        handleSharedElementReenter(Recommend_Frag_Common_RecyclerView) calcScrollPos@{
+            val position = intent?.getIntExtra("CURRENT_INDEX", -1)!!
+            if (position != -1) {
+                ScrollToPositionIfNotFullyVisible(position, false)
             }
-        }
+            return@calcScrollPos position
+        }(resultCode, intent)
     }
 
     fun ScrollToPositionIfNotFullyVisible(position: Int, smooth: Boolean): Boolean {
@@ -124,9 +82,7 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
 
 
     fun OnRecommendItemSelectedWithSharedImageView(index: Int, SharedImageView: ImageView) {
-
         val notVisible = ScrollToPositionIfNotFullyVisible(index, true)
-
         asyncExecutor.SendTaskMainThreadDelay(
             Runnable {
                 val intent = Intent(context, IllustratorViewActivity2::class.java)
@@ -154,7 +110,7 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
                 Recommend_Frag_Common_RecyclerView.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
-                        ImageRecommendItemAdapter(
+                        ImageRecommendItemDatabindingAdapter(
                             recommendListData!!,
                             context!!,
                             this::OnRecommendItemSelectedWithSharedImageView

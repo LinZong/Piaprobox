@@ -34,7 +34,7 @@ import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.Util.whenClicks
+import com.nemesiss.dev.piaprobox.View.Common.whenClicks
 import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
 import kotlinx.android.synthetic.main.illustrator_view_activity.*
 import org.jsoup.Jsoup

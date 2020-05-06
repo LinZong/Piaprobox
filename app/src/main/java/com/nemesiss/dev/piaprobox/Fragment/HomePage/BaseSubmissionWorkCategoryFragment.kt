@@ -7,8 +7,8 @@ import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Util.canAddIndicator
-import com.nemesiss.dev.piaprobox.Util.removeIndicator
+import com.nemesiss.dev.piaprobox.View.Common.canAddIndicator
+import com.nemesiss.dev.piaprobox.View.Common.removeIndicator
 
 
 enum class SubmissionWorkType(val StepRulePostfix: String, val UrlPathName: String) {

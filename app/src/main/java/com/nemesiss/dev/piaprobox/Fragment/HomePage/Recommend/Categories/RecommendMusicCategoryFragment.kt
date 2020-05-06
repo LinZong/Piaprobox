@@ -40,9 +40,9 @@ class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
     }
 
     override fun OnRecommendItemSelected(index: Int) {
-        val item = recommendListData!!.get(index)
+        val item = recommendListData!![index]
         val URL = DefaultTagUrl + item.URL
-        val intent = Intent(PiaproboxApplication.Self.applicationContext, MusicControlActivity::class.java)
+        val intent = Intent(context, MusicControlActivity::class.java)
         intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, URL)
         startActivity(intent)
     }

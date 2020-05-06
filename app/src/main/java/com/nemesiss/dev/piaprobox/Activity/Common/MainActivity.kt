@@ -9,7 +9,7 @@ import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
-import com.nemesiss.dev.piaprobox.Fragment.HomePage.Illustrator.IllustratorFragment
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Illustrator.IllustrationFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Music.MusicFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
@@ -59,6 +59,7 @@ class MainActivity : PiaproboxBaseActivity() {
         invalidateOptionsMenu()
     }
 
+    // 管理Toolbar上面的播放按钮是不是存在.
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         if ((MusicPlayerService.SERVICE_AVAILABLE.value == true ||
                     AppUtil.IsServiceRunning(this, MusicPlayerService::class.java))
@@ -67,10 +68,8 @@ class MainActivity : PiaproboxBaseActivity() {
             val playerMenu = menu?.add(Menu.NONE, MUSIC_PLAYER_MENU_ID, 2, "Music Player")
             playerMenu?.setIcon(R.drawable.ic_play_circle_outline_white_24dp)
             playerMenu?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-//            Log.d("MainActivity", "onPrepareOptionsMenu 创建播放按钮")
         } else if (MusicPlayerService.SERVICE_AVAILABLE.value != true && menu?.findItem(MUSIC_PLAYER_MENU_ID) != null) {
             menu.removeItem(MUSIC_PLAYER_MENU_ID)
-//            Log.d("MainActivity", "onPrepareOptionsMenu 取消播放按钮")
         }
         return true
     }
@@ -81,7 +80,7 @@ class MainActivity : PiaproboxBaseActivity() {
                 CurrentShowMainFragment.Refresh()
             }
             MUSIC_PLAYER_MENU_ID -> {
-                val intent = Intent(PiaproboxApplication.Self.applicationContext, MusicControlActivity::class.java)
+                val intent = Intent(this, MusicControlActivity::class.java)
                 intent.putExtra(MusicPlayerActivity.CLICK_TOOLBAR_ICON, true)
                 startActivity(intent)
             }
@@ -99,7 +98,7 @@ class MainActivity : PiaproboxBaseActivity() {
         ).zip(
             arrayOf(
                 MusicFragment::class.java,
-                IllustratorFragment::class.java,
+                IllustrationFragment::class.java,
                 TextWorkFragment::class.java,
                 MainRecommendFragment::class.java
             )
@@ -115,6 +114,7 @@ class MainActivity : PiaproboxBaseActivity() {
         return true
     }
 
+    @Synchronized
     private fun LoadMainFragmentFromCache(FragmentID: Int?) {
         MainFragmentIDs
             .single { it.first == FragmentID }
@@ -136,10 +136,23 @@ class MainActivity : PiaproboxBaseActivity() {
         CurrentShowMainFragment = fragment
     }
 
+    // 向对应Fragment转发看图Activity退出时的Intent，辅助完成共享元素回缩的效果.
+
     override fun onActivityReenter(resultCode: Int, data: Intent?) {
         super.onActivityReenter(resultCode, data)
-        ((CurrentShowMainFragment as? MainRecommendFragment)
-            ?.CurrentDisplayFragment() as? RecommendImageCategoryFragment)
-            ?.onActivityReenter(resultCode, data)
+        when (CurrentShowMainFragment) {
+            is MainRecommendFragment -> {
+                val mainFragment = CurrentShowMainFragment as MainRecommendFragment
+                if (mainFragment.CurrentDisplayFragment() is RecommendImageCategoryFragment) {
+                    val recommendImageCategoryFragment =
+                        mainFragment.CurrentDisplayFragment() as RecommendImageCategoryFragment
+                    recommendImageCategoryFragment.onActivityReenter(resultCode, data)
+                }
+            }
+            is IllustrationFragment -> {
+                val illuFragment = CurrentShowMainFragment as IllustrationFragment
+                illuFragment.onActivityReenter(resultCode, data)
+            }
+        }
     }
 }
