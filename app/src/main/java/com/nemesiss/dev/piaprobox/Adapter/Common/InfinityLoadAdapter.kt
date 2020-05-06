@@ -3,6 +3,7 @@ package com.nemesiss.dev.piaprobox.Adapter.Common
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 
 abstract class InfinityLoadAdapter<TViewHolder : RecyclerView.ViewHolder>(
     attachedRecyclerView: RecyclerView,
@@ -26,18 +27,19 @@ abstract class InfinityLoadAdapter<TViewHolder : RecyclerView.ViewHolder>(
                 if (itemCount == -1)
                     return
                 when (attachedLayoutManager) {
+                    is GridLayoutManager -> {
+                        val lastVisibleChildPos = attachedLayoutManager.findLastVisibleItemPosition()
+                        if (lastVisibleChildPos + visibleThreshold >= itemCount) {
+                            Log.d("GridLayoutInfinity","应该加载更多!")
+                            loading = true
+                            attachedRecyclerView.post { ShouldLoadMoreItem() }
+                        }
+                    }
                     is LinearLayoutManager -> {
                         val lastVisibleChildPos = attachedLayoutManager.findLastVisibleItemPosition()
                         if (lastVisibleChildPos + visibleThreshold >= itemCount) {
                             loading = true
-                            ShouldLoadMoreItem()
-                        }
-                    }
-                    is GridLayoutManager -> {
-                        val lastVisibleChildPos = attachedLayoutManager.findLastVisibleItemPosition()
-                        if (lastVisibleChildPos + visibleThreshold >= itemCount) {
-                            loading = true
-                            ShouldLoadMoreItem()
+                            attachedRecyclerView.post { ShouldLoadMoreItem() }
                         }
                     }
                 }

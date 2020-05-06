@@ -135,6 +135,36 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
         return false
     }
 
+
+    protected inline fun <reified T> ShowNothingMoreIndicatorOnRecyclerView(
+        adapterDataSource: MutableList<T>,
+        adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
+    ): Boolean {
+        if (adapterDataSource.isNotEmpty() && canAddIndicator<T>()) {
+            return try {
+                val elem = adapterDataSource[0] as Any
+                val clazz = elem::class.java
+                val URL_Field = clazz.getDeclaredField("URL")
+                val indicator = clazz.newInstance() as T
+                URL_Field.set(indicator, RecyclerViewInnerIndicator.RECYCLER_VIEW_NOTHING_MORE_INDICATOR.TAG);
+                adapterDataSource.add(indicator)
+                adapter.notifyItemInserted(adapterDataSource.size - 1)
+                if (adapter is InfinityLoadAdapter) {
+                    adapter.loaded()
+                    adapter.disable()
+                }
+                true
+            } catch (noField: NoSuchFieldException) {
+                false
+            } catch (illegalAccess: IllegalAccessException) {
+                false
+            } catch (instantiationFailed: InstantiationException) {
+                false
+            }
+        }
+        return false
+    }
+
     protected abstract fun HideLoadMoreIndicatorOnRecyclerView(PendingRefreshAdapterStatus: Boolean = true)
 
     protected abstract fun ShowNothingMoreIndicatorOnRecyclerView()

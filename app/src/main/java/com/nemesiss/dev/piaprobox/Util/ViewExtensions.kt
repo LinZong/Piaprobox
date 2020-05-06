@@ -1,6 +1,11 @@
 package com.nemesiss.dev.piaprobox.Util
 
+import android.content.Context
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
@@ -8,6 +13,9 @@ import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.Misc.StaticResourcesMap
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.View.Common.RecyclerViewLoadingIndicatorViewHolder
+import com.nemesiss.dev.piaprobox.View.Common.RecyclerViewNothingMoreIndicatorViewHolder
+import kotlin.reflect.KClass
 
 
 // 简单的点击事件绑定操作
@@ -60,7 +68,7 @@ fun RecommendItemModelText.fixThumb(imageView: ImageView): Boolean {
 
 inline fun <reified T> canAddIndicator(): Boolean {
     return when (T::class) {
-        RecommendItemModel::class, RecommendItemModelText::class, RecommendItemModelText::class -> {
+        RecommendItemModel::class, RecommendItemModelText::class, RecommendItemModelImage::class -> {
             true
         }
         else -> {
@@ -87,4 +95,24 @@ inline fun <reified T> MutableList<T>.removeIndicator(): Int {
         }
     }
     return removedIndex
+}
+
+
+inline fun <reified T : RecyclerView.ViewHolder> detectWhichViewHolderToCreate(shouldCreateVH: KClass<T>): (ViewGroup, Int) -> RecyclerView.ViewHolder {
+    return { viewGroup: ViewGroup, viewType: Int ->
+        when (viewType) {
+            RecyclerViewInnerIndicator.RECYCLER_VIEW_LOAD_MORE_INDICATOR.FLAG
+            -> RecyclerViewLoadingIndicatorViewHolder.create(
+                viewGroup
+            )
+            RecyclerViewInnerIndicator.RECYCLER_VIEW_NOTHING_MORE_INDICATOR.FLAG
+            -> RecyclerViewNothingMoreIndicatorViewHolder.create(
+                viewGroup
+            )
+            else -> {
+                val createVHMethod = shouldCreateVH.java.getMethod("create", ViewGroup::class.java)
+                createVHMethod.invoke(null, viewGroup) as RecyclerView.ViewHolder
+            }
+        }
+    }
 }

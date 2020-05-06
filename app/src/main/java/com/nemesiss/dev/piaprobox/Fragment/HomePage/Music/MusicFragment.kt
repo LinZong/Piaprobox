@@ -30,6 +30,7 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
     }
 
     override fun OnRecommendItemSelected(index: Int) {
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -59,7 +60,6 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
                     recommendListAdapter =
                         MusicCategoryItemDatabindingAdapter(
                             recommendListData!!,
-                            context!!,
                             this::OnRecommendItemSelected,
                             MusicCategory_RecyclerView
                         ) {

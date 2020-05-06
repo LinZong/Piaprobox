@@ -1,24 +1,18 @@
 package com.nemesiss.dev.piaprobox.Adapter.SubmissionWorkCategory.Music
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
-import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.MusicRecommendItemDatabindingAdapter
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
-import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Util.fixThumb
+import com.nemesiss.dev.piaprobox.Util.detectWhichViewHolderToCreate
 import com.nemesiss.dev.piaprobox.View.Common.RecyclerViewLoadingIndicatorViewHolder
 import com.nemesiss.dev.piaprobox.View.Common.RecyclerViewNothingMoreIndicatorViewHolder
 import com.nemesiss.dev.piaprobox.databinding.SingleRecommendItemBinding
 
 class MusicCategoryItemDatabindingAdapter(
     var items: List<RecommendItemModel>,
-    val context: Context,
     private inline val itemSelected: (Int) -> Unit,
     attachedRecyclerView: RecyclerView,
     ShouldLoadMoreItem: () -> Unit
@@ -46,19 +40,7 @@ class MusicCategoryItemDatabindingAdapter(
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        when (viewType) {
-            RecyclerViewInnerIndicator.RECYCLER_VIEW_LOAD_MORE_INDICATOR.FLAG
-            -> RecyclerViewLoadingIndicatorViewHolder.create(
-                viewGroup
-            )
-            RecyclerViewInnerIndicator.RECYCLER_VIEW_NOTHING_MORE_INDICATOR.FLAG
-            -> RecyclerViewNothingMoreIndicatorViewHolder.create(
-                viewGroup
-            )
-            else -> RecommendItemDatabindingVH.create(
-                viewGroup
-            )
-        }
+        detectWhichViewHolderToCreate(RecommendItemDatabindingVH::class)(viewGroup, viewType)
 
     override fun getItemCount(): Int = items.size
 
