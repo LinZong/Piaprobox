@@ -6,6 +6,8 @@
 
     <include layout="@layout/fragment_header"/>
 
+    <include layout="@layout/category_filter"/>
+
     <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

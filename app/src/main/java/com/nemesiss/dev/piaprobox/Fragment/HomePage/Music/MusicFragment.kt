@@ -12,7 +12,6 @@ import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Adapter.SubmissionWorkCategory.Music.MusicCategoryItemDatabindingAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.BaseSubmissionWorkCategoryFragment
-import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
@@ -26,15 +25,15 @@ import org.jsoup.Jsoup
 
 class MusicFragment : BaseSubmissionWorkCategoryFragment() {
 
+    override val MySubmissionType: SubmissionWorkType = SubmissionWorkType.MUSIC
+
     private var recommendListAdapter: MusicCategoryItemDatabindingAdapter? = null
     private var recommendItemLayoutManager: LinearLayoutManager? = null
     private var recommendListData: List<RecommendItemModel>? = null
 
-    private var CurrentVisitUrl = SubmissionWorkUrlBuilder().type(SubmissionWorkType.MUSIC).buildString()
+    private var CurrentVisitUrl = SubmissionWorkUrlBuilder().type(MySubmissionType).buildString()
     private var CurrentPage = 1
 
-    override fun Refresh() {
-    }
 
     override fun OnRecommendItemSelected(index: Int) {
         val item = recommendListData!![index]
@@ -52,7 +51,7 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        LoadDefaultSubmissionWorkPage(SubmissionWorkType.MUSIC)
+        LoadDefaultSubmissionWorkPage(MySubmissionType)
     }
 
     override fun LoadBannerImage() {
@@ -68,19 +67,19 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
             ) as Array<*>).map { elem -> elem as RecommendItemModel }.toMutableList()
             activity?.runOnUiThread {
                 recommendItemLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                MusicCategory_RecyclerView?.layoutManager = recommendItemLayoutManager
+                Category_RecyclerView?.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
                         MusicCategoryItemDatabindingAdapter(
                             recommendListData!!,
                             this::OnRecommendItemSelected,
-                            MusicCategory_RecyclerView
+                            Category_RecyclerView
                         ) {
                             LoadMoreItem(CurrentVisitUrl, CurrentPage + 1, contentType)
                         }
-                    MusicCategory_RecyclerView?.adapter = recommendListAdapter
+                    Category_RecyclerView?.adapter = recommendListAdapter
                 } else {
-                    MusicCategory_RecyclerView?.adapter = recommendListAdapter
+                    Category_RecyclerView?.adapter = recommendListAdapter
                     recommendListAdapter?.items = recommendListData!!
                     recommendListAdapter?.notifyDataSetChanged()
                 }

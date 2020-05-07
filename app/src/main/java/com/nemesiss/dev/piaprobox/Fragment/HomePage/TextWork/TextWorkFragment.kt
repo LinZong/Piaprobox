@@ -15,15 +15,13 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.fragment_header.*
+import kotlinx.android.synthetic.main.music_fragment.*
 import kotlinx.android.synthetic.main.text_work_fragment.*
 import org.jsoup.Jsoup
 
 class TextWorkFragment : BaseSubmissionWorkCategoryFragment() {
 
-    companion object {
-        @JvmStatic
-        private val MySubmissionType = SubmissionWorkType.TEXT
-    }
+    override val MySubmissionType: SubmissionWorkType = SubmissionWorkType.TEXT
 
     private var recommendListData: List<RecommendItemModelText>? = null
     private var recommendListAdapter: TextCategoryItemDatabindingAdapter? = null
@@ -34,7 +32,7 @@ class TextWorkFragment : BaseSubmissionWorkCategoryFragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.text_work_fragment, container, false)
+        return inflater.inflate(R.layout.music_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -108,19 +106,19 @@ class TextWorkFragment : BaseSubmissionWorkCategoryFragment() {
             ) as Array<*>).map { elem -> elem as RecommendItemModelText }.toMutableList()
             activity?.runOnUiThread {
                 recommendListLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                TextCategory_RecyclerView?.layoutManager = recommendListLayoutManager
+                Category_RecyclerView?.layoutManager = recommendListLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
                         TextCategoryItemDatabindingAdapter(
                             recommendListData!!,
                             this::OnRecommendItemSelected,
-                            TextCategory_RecyclerView
+                            Category_RecyclerView
                         ) {
                             LoadMoreItem(CurrentVisitUrl, CurrentPage + 1, contentType)
                         }
-                    TextCategory_RecyclerView?.adapter = recommendListAdapter
+                    Category_RecyclerView?.adapter = recommendListAdapter
                 } else {
-                    TextCategory_RecyclerView?.adapter = recommendListAdapter
+                    Category_RecyclerView?.adapter = recommendListAdapter
                     recommendListAdapter?.items = recommendListData!!
                     recommendListAdapter?.notifyDataSetChanged()
                 }
@@ -162,9 +160,6 @@ class TextWorkFragment : BaseSubmissionWorkCategoryFragment() {
                 recommendListAdapter!!
             )
         }
-    }
-
-    override fun Refresh() {
     }
 
     override fun OnRecommendItemSelected(index: Int) {

@@ -146,6 +146,7 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
         val rule = htmlParser.Rules.getJSONObject("RecommendTag").getJSONArray("Steps")
         try {
             tagListData = (htmlParser.Parser.GoSteps(root, rule) as Array<*>).map { it as RecommendTagModel }
+
             activity?.runOnUiThread {
                 tagListLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 Recommend_Frag_Common_Tag_RecyclerView?.layoutManager = tagListLayoutManager
@@ -174,6 +175,6 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
     }
 
     open fun ParseSubmissionWorkListContent(HTMLString: String, contentType: SubmissionWorkType) {
-
+        
     }
 }

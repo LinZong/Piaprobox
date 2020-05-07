@@ -24,6 +24,7 @@ class MainActivity : PiaproboxBaseActivity() {
     private val MainFragmentsCollection: HashMap<Int, BaseMainFragment> = HashMap()
     private lateinit var CurrentShowMainFragment: BaseMainFragment
 
+    var DisableRefreshButton = false
 
     override fun onDestroy() {
         MainFragmentsCollection.clear()
@@ -77,7 +78,8 @@ class MainActivity : PiaproboxBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.Main_Toolbar_Reload -> {
-                CurrentShowMainFragment.Refresh()
+                if (!DisableRefreshButton)
+                    CurrentShowMainFragment.Refresh()
             }
             MUSIC_PLAYER_MENU_ID -> {
                 val intent = Intent(this, MusicControlActivity::class.java)

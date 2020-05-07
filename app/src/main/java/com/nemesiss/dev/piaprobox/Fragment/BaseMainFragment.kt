@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
+import com.nemesiss.dev.piaprobox.Activity.Common.MainActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
+import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.View.Common.LoadingIndicatorView
 
 abstract class BaseMainFragment : Fragment() {
@@ -16,7 +19,7 @@ abstract class BaseMainFragment : Fragment() {
 
     }
 
-    protected var loadingIndicatorView : LoadingIndicatorView? = null
+    private var loadingIndicatorView : LoadingIndicatorView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         LoadBannerImage()
@@ -35,16 +38,24 @@ abstract class BaseMainFragment : Fragment() {
 
 
     fun ShowLoadingIndicator() {
+        (activity as? MainActivity)?.DisableRefreshButton = true
         activity?.runOnUiThread {
-            val topView = view as ViewGroup
+            var topView = view as ViewGroup
+            if(topView is LinearLayout) {
+                topView = topView.findViewById(R.id.Category_LoadingIndicatorMaskViewGroupRoot)
+            }
             loadingIndicatorView = LoadingIndicatorView(context)
             topView.addView(loadingIndicatorView)
         }
     }
 
     fun HideLoadingIndicator() {
+        (activity as? MainActivity)?.DisableRefreshButton = false
         activity?.runOnUiThread {
-            val topView = view as ViewGroup
+            var topView = view as ViewGroup
+            if(topView is LinearLayout) {
+                topView = topView.findViewById(R.id.Category_LoadingIndicatorMaskViewGroupRoot)
+            }
             if (loadingIndicatorView != null) {
                 topView.removeView(loadingIndicatorView)
             }

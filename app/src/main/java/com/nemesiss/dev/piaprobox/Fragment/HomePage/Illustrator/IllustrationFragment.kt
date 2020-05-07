@@ -21,14 +21,12 @@ import com.nemesiss.dev.piaprobox.View.Common.GridLayoutManagerWithBottomIndicat
 import com.nemesiss.dev.piaprobox.View.Common.handleSharedElementReenter
 import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.illustrator_main_fragment.*
+import kotlinx.android.synthetic.main.music_fragment.*
 import org.jsoup.Jsoup
 
 class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
 
-    companion object {
-        @JvmStatic
-        private val MySubmissionType = SubmissionWorkType.ILLUSTRATION
-    }
+    override val MySubmissionType: SubmissionWorkType = SubmissionWorkType.ILLUSTRATION
 
     private var recommendListData: List<RecommendItemModelImage>? = null
     private var recommendListAdapter: IllustrationCategoryItemDatabindingAdapter? = null
@@ -36,6 +34,7 @@ class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
 
     private var CurrentVisitUrl = SubmissionWorkUrlBuilder().type(MySubmissionType).buildString()
     private var CurrentPage = 1
+
 
     override fun AppendSubmissionWorkListContent(
         HTMLString: String,
@@ -91,7 +90,7 @@ class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.illustrator_main_fragment, container, false)
+        return inflater.inflate(R.layout.music_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -130,9 +129,6 @@ class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
         }
     }
 
-    override fun Refresh() {
-
-    }
 
     override fun OnRecommendItemSelected(index: Int) {
 
@@ -153,7 +149,7 @@ class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
         val notVisible = view == null || recommendListLayoutManager!!.isViewPartiallyVisible(view, false, true)
         if (notVisible) {
             if (smooth) {
-                IllustratorCategory_RecyclerView.smoothScrollToPosition(position)
+                Category_RecyclerView.smoothScrollToPosition(position)
             } else {
                 recommendListLayoutManager?.scrollToPosition(position)
             }
@@ -191,19 +187,19 @@ class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
                     GridLayoutManagerWithBottomIndicator(context, 2) spanSizeJudge@{ position ->
                         if (recommendListAdapter!!.getItemViewType(position) == 0) 1 else 2
                     }
-                IllustratorCategory_RecyclerView?.layoutManager = recommendListLayoutManager
+                Category_RecyclerView?.layoutManager = recommendListLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
                         IllustrationCategoryItemDatabindingAdapter(
                             recommendListData!!,
                             this::OnRecommendItemSelectedWithSharedImageView,
-                            IllustratorCategory_RecyclerView
+                            Category_RecyclerView
                         ) {
                             LoadMoreItem(CurrentVisitUrl, CurrentPage + 1, contentType)
                         }
-                    IllustratorCategory_RecyclerView?.adapter = recommendListAdapter
+                    Category_RecyclerView?.adapter = recommendListAdapter
                 } else {
-                    IllustratorCategory_RecyclerView?.adapter = recommendListAdapter
+                    Category_RecyclerView?.adapter = recommendListAdapter
                     recommendListAdapter?.items = recommendListData!!
                     recommendListAdapter?.notifyDataSetChanged()
                 }

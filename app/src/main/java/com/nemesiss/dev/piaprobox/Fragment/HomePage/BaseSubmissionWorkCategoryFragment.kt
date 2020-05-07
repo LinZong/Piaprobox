@@ -1,20 +1,38 @@
 package com.nemesiss.dev.piaprobox.Fragment.HomePage
 
 import android.net.Uri
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import com.jaredrummler.materialspinner.MaterialSpinner
+import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
+import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
+import com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
+import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.View.Common.canAddIndicator
 import com.nemesiss.dev.piaprobox.View.Common.removeIndicator
+import kotlinx.android.synthetic.main.category_filter.*
+import kotlinx.android.synthetic.main.recommend_category_layout.*
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
 
 enum class SubmissionWorkType(val StepRulePostfix: String, val UrlPathName: String) {
     MUSIC("MUSIC", "music/"),
     ILLUSTRATION("IMAGE", "illust/"),
-    TEXT("TEXT", "text/");
+    TEXT("TEXT", "text/"),
+    __FILTERMENU("FilterMenu", ""),
+    __FILTERCATEGORY("FilterCategory", "")
+}
+
+enum class FilterType {
+    FilterMenu,
+    FilterCategory
 }
 
 class SubmissionWorkUrlBuilder(fromUrl: String = "https://piapro.jp") {
@@ -50,6 +68,10 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
         private val PageLimit = 30
     }
 
+    private var filterMenu: List<SubmissionWorkFilterModel>? = null
+    private var filterCategory: List<SubmissionWorkFilterModel>? = null
+    protected open val MySubmissionType = SubmissionWorkType.MUSIC
+
     protected fun LoadMoreItem(CurrentVisitUrl: String, NextPage: Int, submissionWorkType: SubmissionWorkType) {
         if (!(1..PageLimit).contains(NextPage)) {
             AppendSubmissionWorkListContent("", submissionWorkType, true)
@@ -75,10 +97,85 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
         LoadFragmentPage(SubmissionWorkUrlBuilder().type(submissionWorkType).buildString(),
             {
                 ParseSubmissionWorkListContent(it, submissionWorkType) // Load all recommend item.
+                ParseFilterOptions(it)
             }, { code, _ ->
                 HideLoadingIndicator()
                 LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
             })
+    }
+
+    private fun ParseFilterOptions(HTMLString: String) {
+        val rootDocument = Jsoup.parse(HTMLString)
+        val filterCategoryRules =
+            htmlParser.Rules.getJSONObject("Submission-" + SubmissionWorkType.__FILTERCATEGORY.StepRulePostfix)
+                .getJSONArray("Steps")
+
+        val filterMenuRules =
+            htmlParser.Rules.getJSONObject("Submission-" + SubmissionWorkType.__FILTERMENU.StepRulePostfix)
+                .getJSONArray("Steps")
+
+        try {
+            filterMenu = (htmlParser.Parser.GoSteps(
+                rootDocument,
+                filterMenuRules
+            ) as Array<*>).map { it as SubmissionWorkFilterModel }
+
+            filterCategory = (htmlParser.Parser.GoSteps(
+                rootDocument,
+                filterCategoryRules
+            ) as Array<*>).map { it as SubmissionWorkFilterModel }
+            val categoryStrItems = filterCategory!!.map { menu -> menu.Name }
+            val menuStrItems = filterMenu!!.map { menu -> menu.Name }
+            activity?.runOnUiThread {
+                // 填充filter选项
+                BaseCategory_FilterCategory.setItems(categoryStrItems)
+                BaseCategory_FilterMenu.setItems(menuStrItems)
+                BaseCategory_FilterCategory.setOnItemSelectedListener(OnFilterItemClickedHandler(FilterType.FilterCategory))
+                BaseCategory_FilterMenu.setOnItemSelectedListener(OnFilterItemClickedHandler(FilterType.FilterMenu))
+            }
+        } catch (e: InvalidStepExecutorException) {
+            LoadFailedTips(-1, "InvalidStepExecutorException: ${e.message}")
+        } catch (e: ClassNotFoundException) {
+            LoadFailedTips(-2, "ClassNotFoundException: ${e.message}")
+        } catch (e: Exception) {
+            LoadFailedTips(-3, "Exception: ${e.message}")
+        } finally {
+
+        }
+    }
+
+    private fun <T> OnFilterItemClickedHandler(whichOne: FilterType): (MaterialSpinner, Int, Long, T) -> Unit {
+        return { view, position, id, item ->
+            val selectedItem = (when (whichOne) {
+                FilterType.FilterMenu -> filterMenu
+                FilterType.FilterCategory -> filterCategory
+            })!![position]
+            ShowLoadingIndicator()
+            DisableFilter()
+            LoadFragmentPage(HTMLParser.WrapDomain(selectedItem.URL),
+                {
+                    EnableFilter()
+                    ParseSubmissionWorkListContent(it, MySubmissionType) // Load all recommend item.
+                }, { code, _ ->
+                    EnableFilter()
+                    HideLoadingIndicator()
+                    LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
+                })
+        }
+    }
+
+    private fun DisableFilter() {
+        activity?.runOnUiThread {
+            BaseCategory_FilterCategory.isEnabled = false
+            BaseCategory_FilterMenu.isEnabled = false
+        }
+    }
+
+    private fun EnableFilter() {
+        activity?.runOnUiThread {
+            BaseCategory_FilterCategory.isEnabled = true
+            BaseCategory_FilterMenu.isEnabled = true
+        }
     }
 
     abstract fun AppendSubmissionWorkListContent(
@@ -168,4 +265,8 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
     protected abstract fun HideLoadMoreIndicatorOnRecyclerView(PendingRefreshAdapterStatus: Boolean = true)
 
     protected abstract fun ShowNothingMoreIndicatorOnRecyclerView()
+
+    override fun Refresh() {
+        LoadDefaultSubmissionWorkPage(MySubmissionType)
+    }
 }
