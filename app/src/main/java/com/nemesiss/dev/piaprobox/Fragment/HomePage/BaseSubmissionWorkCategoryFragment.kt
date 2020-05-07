@@ -2,7 +2,6 @@ package com.nemesiss.dev.piaprobox.Fragment.HomePage
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,10 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinner
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
 import com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
-import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
@@ -21,9 +18,7 @@ import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.View.Common.canAddIndicator
 import com.nemesiss.dev.piaprobox.View.Common.removeIndicator
 import kotlinx.android.synthetic.main.category_filter.*
-import kotlinx.android.synthetic.main.recommend_category_layout.*
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 
 
 enum class SubmissionWorkType(val StepRulePostfix: String, val UrlPathName: String) {

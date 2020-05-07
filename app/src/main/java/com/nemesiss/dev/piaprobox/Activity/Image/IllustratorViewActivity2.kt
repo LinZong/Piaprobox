@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.SparseArray
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
@@ -73,6 +74,14 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
         LoadingItemPageViewModel.clear()
         ItemPages.clear()
         super.onDestroy()
+    }
+
+    private fun ShowLineLoadingIndicator() {
+        Illustrator_LoadingIndicator.visibility = View.VISIBLE
+    }
+
+    private fun HideLineLoadingIndicator() {
+        Illustrator_LoadingIndicator.visibility = View.GONE
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -170,12 +179,9 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     }
 
     private fun LoadRecommendImageDetailData(needFragmentIndex: Int, content: RecommendItemModelImage) {
-
+        ShowLineLoadingIndicator()
         // 第一阶段创建ViewModel， 放到正在Loading的Cache中。
         val model = IllustratorViewFragmentViewModel()
-
-//        不再使用RecommendItemModelImage中带过来的ArtistAvatar, 转去使用详情页的AvatarUrl.
-//        model.ArtistAvatarUrl = HTMLParser.GetAlbumThumb(content.ArtistAvatar)
 
         model.apply {
             ArtistName = content.ArtistName
@@ -236,6 +242,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
                     // 从正在加载的Cache中移除
                     LoadingItemPageViewModel.delete(needFragmentIndex)
                     runOnUiThread {
+                        HideLineLoadingIndicator()
                         ItemPages[needFragmentIndex].ApplyViewModel(model)
                     }
                 }

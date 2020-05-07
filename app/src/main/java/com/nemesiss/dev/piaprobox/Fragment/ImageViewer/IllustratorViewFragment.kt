@@ -215,25 +215,25 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         }
     }
 
-    private fun ShowWorkItemInfo(OriginalWorkInfoText: String, AutoWrapContainer: AutoWrapLayout) {
-        AutoWrapContainer.removeAllViews()
-
-        OriginalWorkInfoText.split(" | ").forEach {
-            val DelimiterPos = it.indexOf('：')
-            // Key: 0-DelimiterPos   Value: DelimiterPos+1-End
-            val text = SpannableString(it)
-            val tagColor = ForegroundColorSpan(resources.getColor(R.color.TagSelectedBackground))
-            if (DelimiterPos > 1) {
-                text.setSpan(tagColor, 0, DelimiterPos, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            val tv = TextView(context!!)
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_PT, 6f)
-            tv.text = text
-            val lp =
-                ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            lp.setMargins(0, 0, 12, 8)
-            tv.layoutParams = lp
-            AutoWrapContainer.addView(tv)
-        }
-    }
+//    private fun ShowWorkItemInfo(OriginalWorkInfoText: String, AutoWrapContainer: AutoWrapLayout) {
+//        AutoWrapContainer.removeAllViews()
+//
+//        OriginalWorkInfoText.split(" | ").forEach {
+//            val DelimiterPos = it.indexOf('：')
+//            // Key: 0-DelimiterPos   Value: DelimiterPos+1-End
+//            val text = SpannableString(it)
+//            val tagColor = ForegroundColorSpan(resources.getColor(R.color.TagSelectedBackground))
+//            if (DelimiterPos > 1) {
+//                text.setSpan(tagColor, 0, DelimiterPos, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+//            }
+//            val tv = TextView(context!!)
+//            tv.setTextSize(TypedValue.COMPLEX_UNIT_PT, 6f)
+//            tv.text = text
+//            val lp =
+//                ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+//            lp.setMargins(0, 0, 12, 8)
+//            tv.layoutParams = lp
+//            AutoWrapContainer.addView(tv)
+//        }
+//    }
 }

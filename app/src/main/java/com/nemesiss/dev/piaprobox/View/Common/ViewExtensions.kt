@@ -20,6 +20,7 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.BaseTransitionCallback
 import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback
 import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
+import java.lang.Integer.min
 import kotlin.reflect.KClass
 
 
@@ -170,5 +171,16 @@ inline fun BaseRecommendCategoryFragment.handleSharedElementReenter(
                 })
             }
         }
+    }
+}
+
+fun commonMeasureDimension(measureSpec: Int, defaultSize: Int): Int {
+    val size = View.MeasureSpec.getSize(measureSpec)
+
+    return when (View.MeasureSpec.getMode(measureSpec)) {
+        View.MeasureSpec.AT_MOST -> defaultSize.coerceAtMost(size)
+        View.MeasureSpec.EXACTLY -> size
+        View.MeasureSpec.UNSPECIFIED -> defaultSize
+        else -> defaultSize
     }
 }
