@@ -107,7 +107,7 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
                 (htmlParser.Parser.GoSteps(root, rule) as Array<*>).map { it as RecommendItemModelImage }
             activity?.runOnUiThread {
                 recommendItemLayoutManager = GridLayoutManager(context, 2)
-                Recommend_Frag_Common_RecyclerView.layoutManager = recommendItemLayoutManager
+                Recommend_Frag_Common_RecyclerView?.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
                         ImageRecommendItemDatabindingAdapter(
@@ -115,9 +115,9 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
                             context!!,
                             this::OnRecommendItemSelectedWithSharedImageView
                         )
-                    Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter
+                    Recommend_Frag_Common_RecyclerView?.adapter = recommendListAdapter
                 } else {
-                    Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter
+                    Recommend_Frag_Common_RecyclerView?.adapter = recommendListAdapter
                     recommendListAdapter?.items = recommendListData!!
                     recommendListAdapter?.notifyDataSetChanged()
                 }

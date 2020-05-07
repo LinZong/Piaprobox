@@ -62,7 +62,7 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
             ) as Array<*>).map { elem -> elem as RecommendItemModel }.toMutableList()
             activity?.runOnUiThread {
                 recommendItemLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                MusicCategory_RecyclerView.layoutManager = recommendItemLayoutManager
+                MusicCategory_RecyclerView?.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
                         MusicCategoryItemDatabindingAdapter(
@@ -70,11 +70,11 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
                             this::OnRecommendItemSelected,
                             MusicCategory_RecyclerView
                         ) {
-                            LoadMoreItem(CurrentVisitUrl, CurrentPage + 1, SubmissionWorkType.MUSIC)
+                            LoadMoreItem(CurrentVisitUrl, CurrentPage + 1, contentType)
                         }
-                    MusicCategory_RecyclerView.adapter = recommendListAdapter
+                    MusicCategory_RecyclerView?.adapter = recommendListAdapter
                 } else {
-                    MusicCategory_RecyclerView.adapter = recommendListAdapter
+                    MusicCategory_RecyclerView?.adapter = recommendListAdapter
                     recommendListAdapter?.items = recommendListData!!
                     recommendListAdapter?.notifyDataSetChanged()
                 }
@@ -89,7 +89,7 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
             HideLoadingIndicator()
         }
     }
-    
+
     override fun AppendSubmissionWorkListContent(
         HTMLString: String,
         submissionWorkType: SubmissionWorkType,
@@ -103,7 +103,7 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
         var indicatorCleared = false
         val Steps = htmlParser
             .Rules
-            .getJSONObject("Submission-" + SubmissionWorkType.MUSIC.StepRulePostfix)
+            .getJSONObject("Submission-" + submissionWorkType.StepRulePostfix)
             .getJSONArray("Steps")
         try {
             val appendixItem = (htmlParser.Parser.GoSteps(

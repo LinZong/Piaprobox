@@ -15,8 +15,7 @@ import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.recommend_category_layout.*
 import org.jsoup.Jsoup
 
-class RecommendTextCategoryFragment : BaseRecommendCategoryFragment()
-{
+class RecommendTextCategoryFragment : BaseRecommendCategoryFragment() {
 
     private var recommendListAdapter: TextRecommendItemDatabindingAdapter? = null
     private var recommendItemLayoutManager: LinearLayoutManager? = null
@@ -32,6 +31,7 @@ class RecommendTextCategoryFragment : BaseRecommendCategoryFragment()
         super.onViewCreated(view, savedInstanceState)
         LoadDefaultRecommendPage(RecommendListType.TEXT)
     }
+
     override fun Refresh() {
         LoadRecommendList(CurrentLoadTagPageURL, CurrentCategoryFragmentType)
     }
@@ -51,13 +51,17 @@ class RecommendTextCategoryFragment : BaseRecommendCategoryFragment()
 
             activity?.runOnUiThread {
                 recommendItemLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                Recommend_Frag_Common_RecyclerView.layoutManager = recommendItemLayoutManager
+                Recommend_Frag_Common_RecyclerView?.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
-                        TextRecommendItemDatabindingAdapter(recommendListData!!, context!!, this::OnRecommendItemSelected)
-                    Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter
+                        TextRecommendItemDatabindingAdapter(
+                            recommendListData!!,
+                            context!!,
+                            this::OnRecommendItemSelected
+                        )
+                    Recommend_Frag_Common_RecyclerView?.adapter = recommendListAdapter
                 } else {
-                    Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter
+                    Recommend_Frag_Common_RecyclerView?.adapter = recommendListAdapter
                     recommendListAdapter?.items = recommendListData!!
                     recommendListAdapter?.notifyDataSetChanged()
                 }

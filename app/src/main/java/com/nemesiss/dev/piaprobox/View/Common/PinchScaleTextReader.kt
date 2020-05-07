@@ -59,7 +59,7 @@ class PinchScaleTextReader : ScrollView, ScaleGestureDetector.OnScaleGestureList
 
     override fun onScale(detector: ScaleGestureDetector?): Boolean {
         val factor = detector?.scaleFactor ?: 1f
-        TextReader_Content.setTextSize(TypedValue.COMPLEX_UNIT_PX, binding.root.TextReader_Content.textSize * factor)
+        TextReader_Content.setTextSize(TypedValue.COMPLEX_UNIT_PX, TextReader_Content.textSize * factor)
         return true
     }
 }

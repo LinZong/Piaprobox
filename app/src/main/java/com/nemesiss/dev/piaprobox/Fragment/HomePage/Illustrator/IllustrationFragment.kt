@@ -21,7 +21,6 @@ import com.nemesiss.dev.piaprobox.View.Common.GridLayoutManagerWithBottomIndicat
 import com.nemesiss.dev.piaprobox.View.Common.handleSharedElementReenter
 import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.illustrator_main_fragment.*
-import kotlinx.android.synthetic.main.recommend_category_layout.*
 import org.jsoup.Jsoup
 
 class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
@@ -192,7 +191,7 @@ class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
                     GridLayoutManagerWithBottomIndicator(context, 2) spanSizeJudge@{ position ->
                         if (recommendListAdapter!!.getItemViewType(position) == 0) 1 else 2
                     }
-                IllustratorCategory_RecyclerView.layoutManager = recommendListLayoutManager
+                IllustratorCategory_RecyclerView?.layoutManager = recommendListLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
                         IllustrationCategoryItemDatabindingAdapter(
@@ -202,9 +201,9 @@ class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
                         ) {
                             LoadMoreItem(CurrentVisitUrl, CurrentPage + 1, contentType)
                         }
-                    IllustratorCategory_RecyclerView.adapter = recommendListAdapter
+                    IllustratorCategory_RecyclerView?.adapter = recommendListAdapter
                 } else {
-                    IllustratorCategory_RecyclerView.adapter = recommendListAdapter
+                    IllustratorCategory_RecyclerView?.adapter = recommendListAdapter
                     recommendListAdapter?.items = recommendListData!!
                     recommendListAdapter?.notifyDataSetChanged()
                 }

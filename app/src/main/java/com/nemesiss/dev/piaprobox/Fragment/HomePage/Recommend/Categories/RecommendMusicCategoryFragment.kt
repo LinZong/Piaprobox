@@ -56,13 +56,13 @@ class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
 
             activity?.runOnUiThread {
                 recommendItemLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                Recommend_Frag_Common_RecyclerView.layoutManager = recommendItemLayoutManager
+                Recommend_Frag_Common_RecyclerView?.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
                         MusicRecommendItemAdapter(recommendListData!!, context!!, this::OnRecommendItemSelected)
-                    Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter
+                    Recommend_Frag_Common_RecyclerView?.adapter = recommendListAdapter
                 } else {
-                    Recommend_Frag_Common_RecyclerView.adapter = recommendListAdapter
+                    Recommend_Frag_Common_RecyclerView?.adapter = recommendListAdapter
                     recommendListAdapter?.items = recommendListData!!
                     recommendListAdapter?.notifyDataSetChanged()
                 }
