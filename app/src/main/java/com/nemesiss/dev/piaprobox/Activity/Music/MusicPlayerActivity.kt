@@ -17,10 +17,12 @@ import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
 import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo
+import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.MusicLyricAdapter
 import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.RelatedMusicListAdapter
+import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
@@ -46,9 +48,12 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     protected var relatedMusicListData: List<RelatedMusicInfo>? = null
     private var relatedMusicListAdapter: RelatedMusicListAdapter? = null
     private var relatedMusicListLayoutManager: LinearLayoutManager? = null
+
     protected var lyricListData: List<String>? = null
     private var lyricListAdapter: MusicLyricAdapter? = null
     private var lyricListLayoutManager: LinearLayoutManager? = null
+
+    protected var CurrentPlayItemIndex: Int = -1
 
     protected var CurrentMusicPlayInfo: MusicPlayInfo? = null
     protected var CurrentMusicContentInfo: MusicContentInfo? = null
@@ -80,6 +85,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         } else {
             // 从RecommendItem点击过来
             val MusicContentUrl = intent.getStringExtra(MUSIC_CONTENT_URL) ?: ""
+            CurrentPlayItemIndex = intent.getIntExtra(CLICK_ITEM_INDEX, -1)
             val ClickToolbarIcon = intent.getBooleanExtra(CLICK_TOOLBAR_ICON, false)
 
             val Cond1 = (ClickToolbarIcon || MusicContentUrl == LAST_LOAD_CONTENT_URL)
@@ -102,6 +108,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         CurrentMusicPlayInfo = activityStatus.currentPlayMusicInfo
         CurrentMusicContentInfo = activityStatus.currentPlayMusicContentInfo
         MusicPlayer_Toolbar.title = activityStatus.currentPlayMusicContentInfo.Title
+        CurrentPlayItemIndex = activityStatus.currentPlayItemIndex
 
         if (LAST_MUSIC_BITMAP != null) {
             MusicPlayer_ThumbBackground.setImageDrawable(LAST_MUSIC_BITMAP)
@@ -117,6 +124,12 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             Toast.makeText(this, resources.getString(R.string.MusicContentUrlEmpty), Toast.LENGTH_SHORT).show()
             return
         }
+
+        if (PLAY_LISTS != null && CurrentPlayItemIndex != -1) {
+            val item = PLAY_LISTS!![CurrentPlayItemIndex]
+            // 直接在这里更新.
+            MusicPlayer_Toolbar.title = item.ItemName
+        }
 //        重置播放变量:
 //        CurrentMusicPlayInfo = null
 
@@ -127,11 +140,11 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             .visit(Url)
             .goAsync({ response ->
                 response.handle<String>({
-                        ParseMusicContentInfo(it, ShouldUpdateRelatedMusicList)
-                    }, { code, _ ->
-                        HideLoadingIndicator(MusicPlayer_ContentContainer)
-                        LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
-                    })
+                    ParseMusicContentInfo(it, ShouldUpdateRelatedMusicList)
+                }, { code, _ ->
+                    HideLoadingIndicator(MusicPlayer_ContentContainer)
+                    LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
+                })
             }, { e ->
                 runOnUiThread {
                     HideLoadingIndicator(MusicPlayer_ContentContainer)
@@ -281,10 +294,17 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     private fun RelatedItemSelected(index: Int) {
         val item = relatedMusicListData!![index]
+        PLAY_LISTS = relatedMusicListData!!.map { related ->
+            RecommendItemModel().apply {
+                ArtistName = related.Artist
+                Thumb = related.Thumb
+                ItemName = related.Title
+                URL = related.URL
+            }
+        }
+        CurrentPlayItemIndex = index
         LoadMusicContentInfo(item.URL, false)
     }
-
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.player_toolbar_menu, menu)
         return true
@@ -319,6 +339,24 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             .show()
     }
 
+    protected fun NextMusic() {
+        if (PLAY_LISTS != null && CurrentPlayItemIndex != -1 && CurrentPlayItemIndex + 1 < PLAY_LISTS!!.size) {
+            val nextItem = PLAY_LISTS!![CurrentPlayItemIndex + 1]
+            MusicPlayer_Toolbar.title = nextItem.ItemName
+            LoadMusicContentInfo(HTMLParser.WrapDomain(nextItem.URL), false)
+            CurrentPlayItemIndex++
+        }
+    }
+
+    protected fun PrevMusic() {
+        if (PLAY_LISTS != null && CurrentPlayItemIndex != -1 && CurrentPlayItemIndex - 1 >= 0) {
+            val nextItem = PLAY_LISTS!![CurrentPlayItemIndex - 1]
+            MusicPlayer_Toolbar.title = nextItem.ItemName
+            LoadMusicContentInfo(HTMLParser.WrapDomain(nextItem.URL), false)
+            CurrentPlayItemIndex--
+        }
+    }
+
     companion object {
         @JvmStatic
         val MUSIC_CONTENT_URL = "MUSIC_CONTENT_URL"
@@ -326,6 +364,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         @JvmStatic
         val CLICK_TOOLBAR_ICON = "CLICK_TOOLBAR_ICON"
 
+        @JvmStatic
+        val CLICK_ITEM_INDEX = "CLICKED_ITEM_INDEX"
 
         @JvmStatic
         val PERSIST_STATUS_INTENT_KEY = "ActivityLastStatus"
@@ -338,5 +378,15 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
         @JvmStatic
         var LAST_LOAD_CONTENT_URL = ""
+
+        @JvmStatic
+        var PLAY_LISTS: List<RecommendItemModel>? = null
+
+        @JvmStatic
+        fun CleanStaticResources() {
+            LAST_MUSIC_PLAYER_ACTIVITY_STATUS = null
+            LAST_MUSIC_BITMAP = null
+            PLAY_LISTS = null
+        }
     }
 }

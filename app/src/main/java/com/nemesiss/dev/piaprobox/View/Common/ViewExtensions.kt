@@ -103,7 +103,8 @@ inline fun <reified T> MutableList<T>.removeIndicator(): Int {
 }
 
 
-inline fun <reified T : RecyclerView.ViewHolder> detectWhichViewHolderToCreate(shouldCreateVH: KClass<T>): (ViewGroup, Int) -> RecyclerView.ViewHolder {
+inline fun <reified T : RecyclerView.ViewHolder> detectWhichViewHolderToCreate(shouldCreateVH: KClass<T>)
+        : (ViewGroup, Int) -> RecyclerView.ViewHolder {
     return { viewGroup: ViewGroup, viewType: Int ->
         when (viewType) {
             RecyclerViewInnerIndicator.RECYCLER_VIEW_LOAD_MORE_INDICATOR.FLAG
@@ -127,7 +128,7 @@ inline fun BaseRecommendCategoryFragment.handleSharedElementReenter(
     crossinline rollToCorrectPos: () -> Int
 ): (Int, Intent?) -> Unit {
 
-    return { resultCode, intent ->
+    return { resultCode, _ ->
         when (resultCode) {
             // 处理来自IllustratorViewActivity2的Re-enter.
             IllustratorViewActivity2.REENTER_RESULT_CODE -> {

@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor: AsyncExecutor) {
     var URL: String = ""
-    var cookies : ArrayList<Pair<String,String>> = ArrayList()
+    var cookies: ArrayList<Pair<String, String>> = ArrayList()
 
     fun visit(url: String): Fetch {
         URL = url
@@ -29,8 +29,9 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor:
         return httpClient.newCall(Request.Builder().url(URL).headers(hds).get().build())
             .execute()
     }
-    fun cookie(name : String, value : String) : Fetch {
-        cookies.add(Pair(name,value))
+
+    fun cookie(name: String, value: String): Fetch {
+        cookies.add(Pair(name, value))
         return this
     }
 
@@ -44,7 +45,8 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor:
         asyncExecutor.SendTask {
             try {
                 resolve(
-                    httpClient.newCall(Request.Builder().url(URL).headers(hds).get().build())
+                    httpClient
+                        .newCall(Request.Builder().url(URL).headers(hds).get().build())
                         .execute()
                 )
             } catch (ex: Exception) {

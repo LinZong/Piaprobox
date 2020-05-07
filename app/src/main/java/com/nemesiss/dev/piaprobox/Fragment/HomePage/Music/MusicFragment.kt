@@ -17,6 +17,9 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.HTMLParser
+import com.nemesiss.dev.piaprobox.View.Common.isLoadMoreIndicator
+import com.nemesiss.dev.piaprobox.View.Common.isNoMoreIndicator
 import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.music_fragment.*
 import org.jsoup.Jsoup
@@ -36,7 +39,10 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
     override fun OnRecommendItemSelected(index: Int) {
         val item = recommendListData!![index]
         val intent = Intent(context, MusicControlActivity::class.java)
-        intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, MainRecommendFragment.DefaultTagUrl + item.URL)
+        intent.putExtra(MusicPlayerActivity.CLICK_ITEM_INDEX, index)
+        intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, HTMLParser.WrapDomain(item.URL))
+        MusicPlayerActivity.PLAY_LISTS =
+            recommendListData!!.filter { model -> !(model.isLoadMoreIndicator() || model.isNoMoreIndicator()) }
         startActivity(intent)
     }
 

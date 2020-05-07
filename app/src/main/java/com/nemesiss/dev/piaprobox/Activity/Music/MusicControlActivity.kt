@@ -104,7 +104,9 @@ class MusicControlActivity : MusicPlayerActivity() {
         listOf(
             MusicPlayer_Control_Play,
             MusicPlayer_Control_MoreInfo,
-            MusicPlayer_Control_Repeat
+            MusicPlayer_Control_Repeat,
+            MusicPlayer_Control_Next,
+            MusicPlayer_Control_Previous
         )
             .whenClicks({
                 if (MusicPlayerService.SERVICE_AVAILABLE.value == true) {
@@ -129,6 +131,10 @@ class MusicControlActivity : MusicPlayerActivity() {
                 startActivity(intent)
             }, {
                 IS_ENABLE_LOOPING = !IS_ENABLE_LOOPING
+            }, {
+                NextMusic()
+            }, {
+                PrevMusic()
             })
         InitSeekbarController()
     }
@@ -194,7 +200,8 @@ class MusicControlActivity : MusicPlayerActivity() {
                 CurrentMusicTotalDuration,
                 MusicPlayer_Seekbar.progress,
                 MusicPlayer_Seekbar.secondaryProgress,
-                IS_ENABLE_LOOPING
+                IS_ENABLE_LOOPING,
+                CurrentPlayItemIndex
             )
             if (AlsoUpdateActivityIntent)
                 PlayerService?.UpdateWakeupMusicPlayerActivityIntent(ActivityStatusModel)

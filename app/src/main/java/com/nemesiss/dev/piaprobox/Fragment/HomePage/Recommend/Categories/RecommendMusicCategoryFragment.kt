@@ -43,7 +43,9 @@ class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
         val item = recommendListData!![index]
         val URL = DefaultTagUrl + item.URL
         val intent = Intent(context, MusicControlActivity::class.java)
+        intent.putExtra(MusicPlayerActivity.CLICK_ITEM_INDEX, index)
         intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, URL)
+        MusicPlayerActivity.PLAY_LISTS = recommendListData!!
         startActivity(intent)
     }
 

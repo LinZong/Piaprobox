@@ -24,26 +24,25 @@ class HTMLParser @Inject constructor(val context: Context) {
         val MAIN_DOMAIN = "https://piapro.jp"
 
         @JvmStatic
-        fun ProvideRuleJsonFileHandle() : File {
+        fun ProvideRuleJsonFileHandle(): File {
             val cachePath = AppUtil.GetAppCachePath()
             return File(cachePath).resolve("ContentParserRule.json")
         }
 
         @JvmStatic
         fun GetAlbumThumb(ValueFromParser: String): String {
-            return if(ValueFromParser.startsWith("http") || ValueFromParser.startsWith("https")) {
+            return if (ValueFromParser.startsWith("http") || ValueFromParser.startsWith("https")) {
                 ValueFromParser
-            }
-            else if (ValueFromParser.contains("cdn")) {
+            } else if (ValueFromParser.contains("cdn")) {
                 "http:${ValueFromParser}"
             } else {
-                MainRecommendFragment.DefaultTagUrl + ValueFromParser
+                WrapDomain(ValueFromParser)
             }
         }
 
         @JvmStatic
-        fun WrapDomain(urlForWrap : String) : String {
-            return if(urlForWrap.startsWith("http")) {
+        fun WrapDomain(urlForWrap: String): String {
+            return if (urlForWrap.startsWith("http")) {
                 urlForWrap
             } else {
                 MAIN_DOMAIN + urlForWrap
@@ -51,16 +50,16 @@ class HTMLParser @Inject constructor(val context: Context) {
         }
     }
 
-    var Rules : JSONObject private set
+    var Rules: JSONObject private set
 
-    val version : RuleVersion
+    val version: RuleVersion
 
-    val Parser : ContentParserImpl
+    val Parser: ContentParserImpl
 
     init {
-        val configText : String
+        val configText: String
         val cachedRuleFileHandle = ProvideRuleJsonFileHandle()
-        configText = if(cachedRuleFileHandle.exists()) {
+        configText = if (cachedRuleFileHandle.exists()) {
             cachedRuleFileHandle.readText()
         } else {
             BufferedReader(InputStreamReader(context.assets.open("ContentParserRule.json"))).readText()

@@ -3,12 +3,9 @@ package com.nemesiss.dev.piaprobox.Service.MusicPlayer
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.support.v4.app.NotificationCompat
 
 import android.widget.RemoteViews
 import com.nemesiss.dev.piaprobox.Activity.Common.MainActivity
-import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
@@ -95,9 +92,12 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
 
         // 判断如果此时App退出了，才重启MainActivity.
 
-        val beginMaiNActivityIntent = Intent(context,MainActivity::class.java)
-        beginMaiNActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        val intents = arrayListOf(beginMaiNActivityIntent,activityIntent)
+        val beginMainActivityIntent = Intent(context, MainActivity::class.java)
+        beginMainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        if (!AppUtil.IsActivityAlivInTaskStack(context, MainActivity::class.java)) {
+            beginMainActivityIntent.flags = beginMainActivityIntent.flags or Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        val intents = arrayListOf(beginMainActivityIntent, activityIntent)
         activityIntent.action = Intent.ACTION_MAIN
         activityIntent.addCategory(Intent.CATEGORY_LAUNCHER)
 

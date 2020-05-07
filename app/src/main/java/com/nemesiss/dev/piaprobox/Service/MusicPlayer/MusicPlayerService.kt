@@ -37,7 +37,10 @@ class MusicPlayerService : Service() {
     override fun onCreate() {
         super.onCreate()
         musicPlayerNotificationManager =
-            MusicPlayerNotificationManager(PiaproboxApplication.Self.applicationContext, Intent(this, MusicControlActivity::class.java))
+            MusicPlayerNotificationManager(
+                PiaproboxApplication.Self.applicationContext,
+                Intent(this, MusicControlActivity::class.java)
+            )
     }
 
     var InnerPlayer: SimpleMusicPlayer? = null
@@ -194,7 +197,7 @@ class MusicPlayerService : Service() {
         super.onStartCommand(intent, flags, startId)
         Log.d("MusicPlayerService", "即将onStartCommand, 对象HashCode: ${this.hashCode()}")
 //        if (IS_BINDED && !SERVICE_AVAILABLE.value!!) {
-            SERVICE_AVAILABLE.onNext(true)
+        SERVICE_AVAILABLE.onNext(true)
 //        }
         when (intent?.action) {
             "DESTORY" -> {
@@ -203,7 +206,7 @@ class MusicPlayerService : Service() {
             }
             "PLAY" -> {
                 if (WillPlayMusicURLFromActivity.isNotEmpty()) {
-                    ServiceController.PrepareAsync(WillPlayMusicURLFromActivity,PlayingMusicContentInfo!!)
+                    ServiceController.PrepareAsync(WillPlayMusicURLFromActivity, PlayingMusicContentInfo!!)
                 }
                 ServiceController.Play()
             }
@@ -230,6 +233,7 @@ class MusicPlayerService : Service() {
         stopForeground(true)
         IS_FOREGROUND = false
         musicPlayerNotificationManager.ClearNotification()
+        MusicPlayerActivity.CleanStaticResources()
         Log.d("MusicPlayerService", "MusicPlayerService GracefullyShutdown")
     }
 
@@ -253,7 +257,7 @@ interface MusicPlayerServiceController {
     fun Play()
     fun Pause()
     fun Stop()
-    fun SeekTo(progress : Int)
+    fun SeekTo(progress: Int)
     fun SetElapsedTimeListener(listener: (Int) -> Unit)
     fun SetBufferingListener(listener: (Int) -> Unit)
     fun PlayerStatusValue(): MusicStatus
