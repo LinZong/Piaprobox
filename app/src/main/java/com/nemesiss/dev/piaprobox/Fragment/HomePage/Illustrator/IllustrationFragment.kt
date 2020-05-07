@@ -20,8 +20,7 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.View.Common.GridLayoutManagerWithBottomIndicator
 import com.nemesiss.dev.piaprobox.View.Common.handleSharedElementReenter
 import kotlinx.android.synthetic.main.fragment_header.*
-import kotlinx.android.synthetic.main.illustrator_main_fragment.*
-import kotlinx.android.synthetic.main.music_fragment.*
+import kotlinx.android.synthetic.main.category_fragment.*
 import org.jsoup.Jsoup
 
 class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
@@ -89,10 +88,6 @@ class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.music_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         LoadDefaultSubmissionWorkPage(MySubmissionType)
@@ -135,7 +130,7 @@ class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {
     }
 
     fun onActivityReenter(resultCode: Int, intent: Intent?) {
-        handleSharedElementReenter(IllustratorCategory_RecyclerView) calcScrollPos@{
+        handleSharedElementReenter(Category_RecyclerView) calcScrollPos@{
             val position = intent?.getIntExtra("CURRENT_INDEX", -1)!!
             if (position != -1) {
                 ScrollToPositionIfNotFullyVisible(position, false)

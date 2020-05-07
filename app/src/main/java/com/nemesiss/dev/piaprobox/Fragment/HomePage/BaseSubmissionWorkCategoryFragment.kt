@@ -1,9 +1,13 @@
 package com.nemesiss.dev.piaprobox.Fragment.HomePage
 
 import android.net.Uri
+import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinner
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
@@ -71,6 +75,11 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
     private var filterMenu: List<SubmissionWorkFilterModel>? = null
     private var filterCategory: List<SubmissionWorkFilterModel>? = null
     protected open val MySubmissionType = SubmissionWorkType.MUSIC
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.category_fragment, container, false)
+    }
 
     protected fun LoadMoreItem(CurrentVisitUrl: String, NextPage: Int, submissionWorkType: SubmissionWorkType) {
         if (!(1..PageLimit).contains(NextPage)) {

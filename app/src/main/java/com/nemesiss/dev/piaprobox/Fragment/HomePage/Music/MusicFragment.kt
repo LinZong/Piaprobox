@@ -20,7 +20,7 @@ import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.View.Common.isLoadMoreIndicator
 import com.nemesiss.dev.piaprobox.View.Common.isNoMoreIndicator
 import kotlinx.android.synthetic.main.fragment_header.*
-import kotlinx.android.synthetic.main.music_fragment.*
+import kotlinx.android.synthetic.main.category_fragment.*
 import org.jsoup.Jsoup
 
 class MusicFragment : BaseSubmissionWorkCategoryFragment() {
@@ -45,9 +45,6 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
         startActivity(intent)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.music_fragment, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -15,8 +15,7 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.fragment_header.*
-import kotlinx.android.synthetic.main.music_fragment.*
-import kotlinx.android.synthetic.main.text_work_fragment.*
+import kotlinx.android.synthetic.main.category_fragment.*
 import org.jsoup.Jsoup
 
 class TextWorkFragment : BaseSubmissionWorkCategoryFragment() {
@@ -31,9 +30,6 @@ class TextWorkFragment : BaseSubmissionWorkCategoryFragment() {
     private var CurrentPage = 1
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.music_fragment, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
