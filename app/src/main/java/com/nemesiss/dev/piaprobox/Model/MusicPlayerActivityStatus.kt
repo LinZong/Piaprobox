@@ -2,6 +2,7 @@ package com.nemesiss.dev.piaprobox.Model
 
 import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo
+import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
 import java.io.Serializable
 
@@ -14,5 +15,6 @@ data class MusicPlayerActivityStatus(
     val currentPlayMusicElapsedDuration: Int,
     val currentBufferDuration: Int,
     val openSingleLooping: Boolean,
-    val currentPlayItemIndex: Int
+    val currentPlayItemIndex: Int,
+    val playLists: List<RecommendItemModel>
 ) : Serializable

@@ -187,7 +187,7 @@ class MusicControlActivity : MusicPlayerActivity() {
         relatedMusicListData != null &&
                 lyricListData != null &&
                 CurrentMusicContentInfo != null &&
-                CurrentMusicPlayInfo != null
+                CurrentMusicPlayInfo != null && PLAY_LISTS != null
 
     fun PersistMusicPlayerActivityStatus(playerStatus: MusicStatus, AlsoUpdateActivityIntent: Boolean = true) {
 
@@ -201,7 +201,8 @@ class MusicControlActivity : MusicPlayerActivity() {
                 MusicPlayer_Seekbar.progress,
                 MusicPlayer_Seekbar.secondaryProgress,
                 IS_ENABLE_LOOPING,
-                CurrentPlayItemIndex
+                CurrentPlayItemIndex,
+                PLAY_LISTS!!
             )
             if (AlsoUpdateActivityIntent)
                 PlayerService?.UpdateWakeupMusicPlayerActivityIntent(ActivityStatusModel)

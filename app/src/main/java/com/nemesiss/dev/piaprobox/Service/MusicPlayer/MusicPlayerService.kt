@@ -216,6 +216,12 @@ class MusicPlayerService : Service() {
             "STOP" -> {
                 ServiceController.Stop()
             }
+            "NEXT" -> {
+
+            }
+            "PREV" -> {
+
+            }
             "UPDATE_INFO" -> {
                 PlayingMusicContentInfo = intent.getSerializableExtra("UpdateMusicContentInfo") as MusicContentInfo?
                 if (PlayingMusicContentInfo != null) {

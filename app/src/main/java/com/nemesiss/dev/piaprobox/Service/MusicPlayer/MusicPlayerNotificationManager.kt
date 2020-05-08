@@ -46,19 +46,29 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
         BigNotiView.setTextViewText(R.id.MusicPlayer_Noti_SongName, model.SongName)
         BigNotiView.setTextViewText(R.id.MusicPlayer_Noti_SongArtist, model.ArtistName)
 
-        val CloseServiceIntent = Intent(context, MusicPlayerService::class.java)
-        CloseServiceIntent.action = "DESTORY"
+        val CloseServiceIntent = Intent(context, MusicPlayerService::class.java).apply {
+            action = "DESTORY"
+        }
 
         val CloseServicePendingIntent = PendingIntent.getService(context, 55, CloseServiceIntent, 0)
 
 
         val PauseIntent = Intent(context, MusicPlayerService::class.java)
-        PauseIntent.action = "PAUSE"
+            .apply { action = "PAUSE" }
+
         val PausePendingIntent = PendingIntent.getService(context, 55, PauseIntent, 0)
 
+//        val NextIntent = Intent(context, MusicPlayerService::class.java)
+//            .apply { action = "NEXT" }
+//
+//        val NextPendingIntent = PendingIntent.getService(context, 55, NextIntent, 0)
+//
+//        val PrevIntent = Intent(context, MusicPlayerService::class.java)
+//            .apply { action = "PREV" }
+//        val PrevPendingIntent = PendingIntent.getService(context, 55, PrevIntent, 0)
 
         val PlayIntent = Intent(context, MusicPlayerService::class.java)
-        PlayIntent.action = "PLAY"
+            .apply { action = "PLAY" }
 
         val PlayPendingIntent = PendingIntent.getService(context, 55, PlayIntent, 0)
 
@@ -79,37 +89,62 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
         BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop, CloseServicePendingIntent)
         NormalNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop_Normal, CloseServicePendingIntent)
 
+
+
+
+
         CheckAndBuildChannel()
-//        val stackBuilder = TaskStackBuilder.create(context)
-//
-//        stackBuilder.addParentStack(MusicControlActivity::class.java)
-//        stackBuilder.addNextIntent(activityIntent)
-//
-//        val OpenMusicPlayerActivityIntent: PendingIntent = stackBuilder.getPendingIntent(
-//            0,
-//            PendingIntent.FLAG_UPDATE_CURRENT
-//        )
 
-        // 判断如果此时App退出了，才重启MainActivity.
 
-        val beginMainActivityIntent = Intent(context, MainActivity::class.java)
-        beginMainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        if (!AppUtil.IsActivityAlivInTaskStack(context, MainActivity::class.java)) {
-            beginMainActivityIntent.flags = beginMainActivityIntent.flags or Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        val intents = arrayListOf(beginMainActivityIntent, activityIntent)
+
         activityIntent.action = Intent.ACTION_MAIN
         activityIntent.addCategory(Intent.CATEGORY_LAUNCHER)
 
-        val OpenMusicPlayerActivityIntent =
-            PendingIntent.getActivities(context, 0, intents.toTypedArray(), PendingIntent.FLAG_UPDATE_CURRENT)
+        val nextIntent = activityIntent.clone() as Intent
+        val prevIntent = activityIntent.clone() as Intent
+
+        nextIntent.action = "NEXT"
+        prevIntent.action = "PREV"
+
+        val ClickNotificationToOpenMusicPlayerIntents = arrayListOf(activityIntent)
+        val NextMusicIntents = arrayListOf(nextIntent)
+        val PrevMusicIntents = arrayListOf(prevIntent)
+
+
+        // 判断如果此时App退出了，才重启MainActivity.
+
+//        if (!AppUtil.IsActivityAlivInTaskStack(context, MainActivity::class.java)) {
+            val beginMainActivityIntent = Intent(context, MainActivity::class.java)
+            beginMainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            beginMainActivityIntent.flags = beginMainActivityIntent.flags or Intent.FLAG_ACTIVITY_NEW_TASK
+
+            ClickNotificationToOpenMusicPlayerIntents.add(0,beginMainActivityIntent)
+            NextMusicIntents.add(0,beginMainActivityIntent)
+            PrevMusicIntents.add(0,beginMainActivityIntent)
+//        }
+
+
+        val OpenMusicPlayerActivityPendingContentIntent =
+            PendingIntent.getActivities(context, 0, ClickNotificationToOpenMusicPlayerIntents.toTypedArray(), PendingIntent.FLAG_UPDATE_CURRENT)
+
+
+        val NextMusicPlayerActivityPendingContentIntent =
+            PendingIntent.getActivities(context, 0, NextMusicIntents.toTypedArray(), PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val PrevMusicPlayerActivityPendingContentIntent =
+            PendingIntent.getActivities(context, 0, PrevMusicIntents.toTypedArray(), PendingIntent.FLAG_UPDATE_CURRENT)
+
+
+        BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Next, NextMusicPlayerActivityPendingContentIntent)
+        BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Previous, PrevMusicPlayerActivityPendingContentIntent)
+
         val notification = GetDefualtNotificationBuilder()
-            .setContentIntent(OpenMusicPlayerActivityIntent)
+            .setContentIntent(OpenMusicPlayerActivityPendingContentIntent)
             .build()
 
         notification.contentView = NormalNotiView
         notification.bigContentView = BigNotiView
-        notification.flags = (notification.flags).or(Notification.FLAG_ONGOING_EVENT)
+        notification.flags = notification.flags or Notification.FLAG_ONGOING_EVENT
         notification.`when` = System.currentTimeMillis()
         if (!butDontSend)
             notificationManager.notify(NotificationID, notification)

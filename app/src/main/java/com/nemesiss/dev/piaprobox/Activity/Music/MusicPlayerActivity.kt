@@ -62,6 +62,11 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     private val RECOVER_STATUS_RESOURCE_IS_OK: Boolean
         get() = LAST_MUSIC_PLAYER_ACTIVITY_STATUS != null
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        HandleSwitchMusicIntent(intent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_player_layout)
@@ -73,6 +78,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             .inject(this)
 
         ShowToolbarBackIcon(MusicPlayer_Toolbar)
+        // 关闭RecyclerView的嵌套滚动
         ViewCompat.setNestedScrollingEnabled(MusicPlayer_Lyric_RecyclerView, false)
         MusicPlayer_Lyric_RecyclerView.isNestedScrollingEnabled = false
 
@@ -99,6 +105,17 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
                 LoadMusicContentInfo(MusicContentUrl, true)
             }
         }
+        HandleSwitchMusicIntent(intent)
+    }
+
+    private fun HandleSwitchMusicIntent(intent: Intent?) {
+        if (intent?.action == "NEXT") {
+            Log.d("MusicPlayer", "感知到下一曲Intent")
+            NextMusic()
+        } else if (intent?.action == "PREV") {
+            Log.d("MusicPlayer", "感知到上一曲Intent")
+            PrevMusic()
+        }
     }
 
     private fun RecoverActivityStatusFromPersistObject(activityStatus: MusicPlayerActivityStatus) {
@@ -109,6 +126,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         CurrentMusicContentInfo = activityStatus.currentPlayMusicContentInfo
         MusicPlayer_Toolbar.title = activityStatus.currentPlayMusicContentInfo.Title
         CurrentPlayItemIndex = activityStatus.currentPlayItemIndex
+        PLAY_LISTS = activityStatus.playLists
 
         if (LAST_MUSIC_BITMAP != null) {
             MusicPlayer_ThumbBackground.setImageDrawable(LAST_MUSIC_BITMAP)
@@ -239,7 +257,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         intent.putExtra("UpdateMusicContentInfo", CurrentMusicContentInfo)
         intent.putExtra("WillPlayMusicURL", playInfo.URL)
         val ExtendedThis = (this as? MusicControlActivity)
-        ExtendedThis?.PersistMusicPlayerActivityStatus(MusicStatus.STOP, false)
+        ExtendedThis?.PersistMusicPlayerActivityStatus(MusicStatus.STOP, true)
 
         startService(intent)
         HideLoadingIndicator(MusicPlayer_ContentContainer)
@@ -305,6 +323,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         CurrentPlayItemIndex = index
         LoadMusicContentInfo(item.URL, false)
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.player_toolbar_menu, menu)
         return true
