@@ -4,7 +4,7 @@ A simple third-party Android client for [piapro](https://piapro.jp).
 
 Bring you more close to VOCALOID work submission news and deepen your love to VOCALOID characters!
 
-[Download](https://github.com/LinZong/Piaprobox/releases/tag/1.0)
+[Download](https://github.com/LinZong/Piaprobox/releases)
 
 Some screenshots below:
 
