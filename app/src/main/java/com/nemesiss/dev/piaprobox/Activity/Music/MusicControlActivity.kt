@@ -27,6 +27,7 @@ class MusicControlActivity : MusicPlayerActivity() {
     private var NEW_MUSIC_LOADED = false
     private var IS_SEEKING = false
     private var IS_ENABLE_LOOPING = false
+        @Synchronized
         set(value) {
             PlayerServiceController?.Loop(value)
             Persistence.SetMusicPlayerLoopStatus(value)
@@ -50,6 +51,11 @@ class MusicControlActivity : MusicPlayerActivity() {
         InitView()
         LoadUserPreferenceSetup()
         PrepareActivityStatus()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        LoadUserPreferenceSetup()
     }
 
     private fun LoadUserPreferenceSetup() {
