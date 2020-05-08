@@ -4,7 +4,6 @@
     <item android:icon="@drawable/ic_home_white_36dp"
           android:title="@string/Drawer_Nav_Recommand"
           android:id="@+id/Main_Drawer_Nav_Recommand"/>
-
     <item android:icon="@drawable/nav_icon_music_big"
           android:title="@string/Drawer_Nav_Music_Text"
           android:id="@+id/Main_Drawer_Nav_Music"/>

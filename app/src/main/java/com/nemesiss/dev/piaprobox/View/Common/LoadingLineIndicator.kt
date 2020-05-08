@@ -2,31 +2,16 @@ package com.nemesiss.dev.piaprobox.View.Common
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.os.Handler
 import android.os.Message
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import com.nemesiss.dev.piaprobox.Misc.CryptonCharacterColorDefinition
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 
-fun getColorSteps(R: Int, G: Int, B: Int): FloatArray {
-    val rgbRank = listOf(0, 1, 2)
-        .zip(listOf(R, G, B))
-        .sortedByDescending { (_, color) -> color }
-
-    val colorSteps = FloatArray(3)
-    colorSteps[rgbRank[0].first] = (255 - rgbRank[0].second).toFloat() / 255
-    colorSteps[rgbRank[1].first] = (255 - rgbRank[1].second).toFloat() / 255
-    colorSteps[rgbRank[2].first] = (255 - rgbRank[2].second).toFloat() / 255
-    return colorSteps
-}
-
-fun getColorSteps(colorInt: Int): FloatArray {
-    return getColorSteps(Color.red(colorInt), Color.green(colorInt), Color.blue(colorInt))
-}
 
 class LoadingLineIndicator : View {
     private val defaultWidth = AppUtil.Dp2Px(resources, 150)
@@ -34,18 +19,23 @@ class LoadingLineIndicator : View {
     private val oneRunDuration = 600
     private var mWidth: Int = defaultWidth
     private var mHeight: Int = defaultHeight
+
     private var mProgressWidth = 0.2 * mWidth
-    private var colorChangeStep = 255f / oneRunDuration
     private var widthChangeStep = (0.8 * mWidth) / oneRunDuration
-    private val initColor = resources.getColor(R.color.PiaproColor)
-    private var currColor = initColor
-    private val colorRGBStep = getColorSteps(initColor)
+
+
+    private var currColorAlpha = 255
+    private val alphaChangeStep = 255f / oneRunDuration
+    private var characterIndex = 0
+    private val initColor = CryptonCharacterColorDefinition.values()[characterIndex].ColorInt
+
 
     @Volatile
     private var mVisibility = VISIBLE
         set(value) {
             field = value
             if (field == VISIBLE) {
+                resetDrawingOptions()
                 invalidateHandler.removeMessages(1)
                 invalidateHandler.sendEmptyMessageDelayed(1, REFRESH_RATE.toLong())
             }
@@ -57,6 +47,8 @@ class LoadingLineIndicator : View {
     val paint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
         isAntiAlias = true
+        color = initColor
+        alpha = currColorAlpha
     }
 
     private val invalidateHandler = Handler(this::handleInvalidateViewMsg)
@@ -64,6 +56,7 @@ class LoadingLineIndicator : View {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -107,7 +100,6 @@ class LoadingLineIndicator : View {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        paint.color = currColor
         canvas?.drawLine(
             (mWidth - mProgressWidth).toFloat() / 2,
             0f,
@@ -120,20 +112,23 @@ class LoadingLineIndicator : View {
 
     private fun updateWidthAndColorByStep() {
 
-        val NextR = (Color.red(currColor) + colorRGBStep[0] * colorChangeStep * REFRESH_RATE).toInt().coerceAtMost(255)
-        val NextG =
-            (Color.green(currColor) + colorRGBStep[1] * colorChangeStep * REFRESH_RATE).toInt().coerceAtMost(255)
-        val NextB = (Color.blue(currColor) + colorRGBStep[2] * colorChangeStep * REFRESH_RATE).toInt().coerceAtMost(255)
-
-
-        currColor = Color.rgb(NextR, NextG, NextB)
+        currColorAlpha -= (alphaChangeStep * REFRESH_RATE).toInt().coerceAtLeast(0)
         mProgressWidth += (widthChangeStep * REFRESH_RATE)
 
         // 重设到初始状态.
         if (mProgressWidth > mWidth) {
-            mProgressWidth = 0.2 * mWidth
-            currColor = initColor
+            // next character color
+            characterIndex = (characterIndex + 1) % CryptonCharacterColorDefinition.values().size
+            paint.color = CryptonCharacterColorDefinition.values()[characterIndex].ColorInt
+            resetDrawingOptions()
         }
-        Log.d("LoadingLineIndicator", "下一组颜色: $NextR  $NextG  $NextB, 下一组长度: $mProgressWidth")
+        paint.alpha = currColorAlpha
+    }
+
+    @Synchronized
+    private fun resetDrawingOptions() {
+        mProgressWidth = 0.2 * mWidth
+        currColorAlpha = 255
+        paint.alpha = currColorAlpha
     }
 }

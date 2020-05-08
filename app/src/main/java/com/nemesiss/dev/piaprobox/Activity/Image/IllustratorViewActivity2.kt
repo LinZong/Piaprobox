@@ -108,8 +108,10 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             DaggerErrorHandlerFactory.builder().errorHandlerModules(ErrorHandlerModules(this)).build().handler()
 
         val ClickedIndex = intent.getIntExtra(CLICKED_ITEM_INDEX, 0)
-        // 把Fragment加载进来
+
+        // 暂停共享元素动画播放
         supportPostponeEnterTransition()
+        // 把Fragment加载进来
         InitFragmentPager(ClickedIndex)
     }
 
@@ -129,7 +131,6 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
         }
         Illustrator2_Item_Pager.addOnPageChangeListener(object : BaseOnPageChangeListener() {
             override fun onPageSelected(p0: Int) {
-                Log.d("Illustrator2", "清除上一个可见性")
                 val imageView =
                     ItemPages[CURRENT_SHOW_IMAGE_INDEX].view?.findViewById<ImageView>(R.id.Illustrator2_View_ItemImageView)
                 imageView?.transitionName = null

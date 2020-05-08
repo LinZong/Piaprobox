@@ -71,9 +71,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
             glideAnimation: GlideAnimation<in GlideDrawable>?
         ) {
             IS_CURRENT_BIG_SIZE_IMAGE_LOADED = true
-            if (Illustrator2_View_ItemImageView != null) {
-                Illustrator2_View_ItemImageView.setImageDrawable(resource)
-            }
+            Illustrator2_View_ItemImageView?.setImageDrawable(resource)
         }
     }
 
@@ -96,7 +94,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         if (USER_CAN_VISITED && Illustrator2_View_ItemImageView != null) {
             Illustrator2_View_ItemImageView.transitionName = resources.getString(R.string.ImageViewTransitionName)
         } else if (!USER_CAN_VISITED && Illustrator2_View_ItemImageView != null) {
-            // 不可见的第一时间取消transitioName
+            // 不可见的第一时间取消transitionName
             Illustrator2_View_ItemImageView.transitionName = null
         }
     }
@@ -132,7 +130,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
                 ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
                     root.Illustrator2_View_ItemImageView.viewTreeObserver.removeOnPreDrawListener(this)
-                    activity?.supportStartPostponedEnterTransition()
+                    activity?.supportStartPostponedEnterTransition() // 需要进行共享元素过渡的下一个ImageView已准备好，恢复过渡
                     return true
                 }
             })
