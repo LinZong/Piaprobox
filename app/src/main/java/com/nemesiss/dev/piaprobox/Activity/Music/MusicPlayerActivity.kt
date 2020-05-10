@@ -227,18 +227,21 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     }
 
     private fun GlideLoadThumbToImageView(url: String) {
-        Glide.with(this)
-            .load(url)
-            .priority(Priority.HIGH)
-            .into(object : SimpleTarget<GlideDrawable>() {
-                override fun onResourceReady(
-                    resource: GlideDrawable?,
-                    glideAnimation: GlideAnimation<in GlideDrawable>?
-                ) {
-                    LAST_MUSIC_BITMAP = resource
-                    MusicPlayer_ThumbBackground.setImageDrawable(resource)
-                }
-            })
+        try {
+            Glide.with(this)
+                .load(url)
+                .priority(Priority.HIGH)
+                .into(object : SimpleTarget<GlideDrawable>() {
+                    override fun onResourceReady(
+                        resource: GlideDrawable?,
+                        glideAnimation: GlideAnimation<in GlideDrawable>?
+                    ) {
+                        LAST_MUSIC_BITMAP = resource
+                        MusicPlayer_ThumbBackground.setImageDrawable(resource)
+                    }
+                })
+        } catch (e: Exception) {
+        }
     }
 
     private fun ParseMusicPlayInfo(HTMLString: String) {
