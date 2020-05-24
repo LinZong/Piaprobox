@@ -17,6 +17,17 @@ def scanAllResourcesFolder(String absolutePath) {
     return output
 }
 
+
+android.applicationVariants.all { variant ->
+    tasks.named("generate${variant.name.capitalize()}Resources").configure { mergeResourceTask ->
+        mergeResourceTask.outputs.upToDateWhen { false }
+    }
+    tasks.named("merge${variant.name.capitalize()}Resources").configure { mergeResourceTask ->
+        mergeResourceTask.outputs.upToDateWhen { false }
+    }
+}
+
+
 android {
     signingConfigs {
         NemesissSignature {
@@ -54,30 +65,6 @@ android {
         debug {
             signingConfig signingConfigs.NemesissSignature
         }
-    }
-    def listSubFile = {
-        def splitFolderRoots = ['src/main/res/layout',
-                                'src/main/res/drawable',
-                                'src/main/res/drawable-mdpi',
-                                'src/main/res/drawable-hdpi',
-                                'src/main/res/drawable-xhdpi',
-                                'src/main/res/drawable-xxhdpi',
-                                'src/main/res/drawable-xxxhdpi',
-        ]
-        def folders = []
-        splitFolderRoots.each {
-            resourceFolder ->
-                def files = file(resourceFolder).listFiles()
-                files.each {
-                    item -> folders.add(item.absolutePath)
-                }
-                folders.add(file(resourceFolder).parentFile.absolutePath)
-        }
-        println("Final result: ->")
-        folders.each {
-            path -> println("  " + path)
-        }
-        return folders
     }
     sourceSets {
         main {
