@@ -3,6 +3,7 @@ package com.nemesiss.dev.piaprobox.Activity.Common
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
@@ -58,6 +59,11 @@ class MainActivity : PiaproboxBaseActivity() {
     override fun onResume() {
         super.onResume()
         invalidateOptionsMenu()
+    }
+
+    override fun onBackPressed() {
+        Log.d("MainActivity","退到主界面.")
+        moveTaskToBack(false)
     }
 
     // 管理Toolbar上面的播放按钮是不是存在.

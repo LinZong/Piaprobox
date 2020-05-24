@@ -2,6 +2,21 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+
+
+def resourceEntry = 'src/main/res/'
+
+def scanAllResourcesFolder(String absolutePath) {
+    def output = [file(absolutePath)]
+    def files = file(absolutePath).listFiles()
+    files.findAll { it -> it.isDirectory() }.each {
+        directory ->
+            println("Entering directory > " + directory.absolutePath)
+            output.addAll(scanAllResourcesFolder(directory.absolutePath))
+    }
+    return output
+}
+
 android {
     signingConfigs {
         NemesissSignature {
@@ -28,8 +43,6 @@ android {
     }
     lintOptions {
         checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
         abortOnError false
     }
     buildTypes {
@@ -60,12 +73,18 @@ android {
                 }
                 folders.add(file(resourceFolder).parentFile.absolutePath)
         }
+        println("Final result: ->")
+        folders.each {
+            path -> println("  " + path)
+        }
         return folders
     }
-
     sourceSets {
         main {
-            res.srcDirs = listSubFile()
+            res {
+                println("Trying to resolve resources layers...")
+                srcDirs = scanAllResourcesFolder(resourceEntry)
+            }
         }
     }
     compileOptions {

@@ -31,27 +31,27 @@
         </android.support.design.widget.AppBarLayout>
 
 
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <LinearLayout
+            <include
+                    layout="@layout/common_artist_layout"
+                    app:artistName="@{model.ArtistName}"
+                    app:artistAvatarUrl="@{model.ArtistAvatarUrl}"
+                    app:createDetailRaw="@{model.CreateDetailRaw}"/>
+
+            <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/DividerColor"/>
 
-                <include
-                        layout="@layout/common_artist_layout"
-                        app:artistName="@{model.ArtistName}"
-                        app:artistAvatarUrl="@{model.ArtistAvatarUrl}"
-                        app:createDetailRaw="@{model.CreateDetailRaw}"/>
-
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_margin="8dp"
-                        android:background="@color/DividerColor"/>
-
-                <include layout="@layout/text_reader_layout"
-                         app:text="@{model.Text}"/>
-            </LinearLayout>
+            <include
+                    layout="@layout/text_reader_layout"
+                    app:text="@{model.Text}"/>
+        </LinearLayout>
 
     </LinearLayout>
 </layout>
