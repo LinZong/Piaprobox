@@ -24,6 +24,15 @@ import java.io.File
 
 class AppUtil {
     companion object {
+
+        @JvmStatic
+        fun IsActivityDestroyed(activity: Activity?): Boolean {
+            if (activity == null || activity.isFinishing || activity.isDestroyed) {
+                return true
+            }
+            return false
+        }
+
         @JvmStatic
         fun HideNavigationBar(activity: Activity) {
             if (Build.VERSION.SDK_INT < 19) {
@@ -70,13 +79,13 @@ class AppUtil {
         }
 
         @JvmStatic
-        fun IsServiceRunning(context: Context, serviceClazz : Class<*>): Boolean {
+        fun IsServiceRunning(context: Context, serviceClazz: Class<*>): Boolean {
             val activityManager =
                 context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             val serviceInfos = activityManager.getRunningServices(20)
             if (serviceInfos != null) {
-                for(serv in serviceInfos) {
-                    if(serv.service.className == serviceClazz.name) {
+                for (serv in serviceInfos) {
+                    if (serv.service.className == serviceClazz.name) {
                         return true
                     }
                 }
@@ -85,15 +94,15 @@ class AppUtil {
         }
 
         @JvmStatic
-        fun IsActivityAlivInTaskStack(context: Context, clazz: Class<*>) : Boolean {
+        fun IsActivityAlivInTaskStack(context: Context, clazz: Class<*>): Boolean {
             val intent = Intent(context, clazz)
             val componentName = intent.resolveActivity(context.packageManager)
             var flag = false
-            if(componentName != null) {
+            if (componentName != null) {
                 val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                 val taskLists = activityManager.getRunningTasks(20)
-                for(task in taskLists) {
-                    if(task.baseActivity == componentName) {
+                for (task in taskLists) {
+                    if (task.baseActivity == componentName) {
                         flag = true
                         break
                     }
@@ -104,19 +113,24 @@ class AppUtil {
 
 
         @JvmStatic
-        fun NotifyGalleryUpdate(context: Context, file : File) {
-            context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.absolutePath)))
+        fun NotifyGalleryUpdate(context: Context, file: File) {
+            context.sendBroadcast(
+                Intent(
+                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                    Uri.parse("file://" + file.absolutePath)
+                )
+            )
         }
 
         @JvmStatic
-        fun OpenBrowser(context: Context, Url : String, headers : List<Pair<String, String>>? = null) {
+        fun OpenBrowser(context: Context, Url: String, headers: List<Pair<String, String>>? = null) {
             val intent = Intent()
             intent.action = "android.intent.action.VIEW"
             intent.data = Uri.parse(Url)
-            if(headers!=null) {
+            if (headers != null) {
                 val headerBundle = Bundle()
                 headers.forEach {
-                    headerBundle.putString(it.first,it.second)
+                    headerBundle.putString(it.first, it.second)
                 }
                 intent.putExtra(Browser.EXTRA_HEADERS, headerBundle)
             }
@@ -153,11 +167,17 @@ class PermissionUtil {
                 .Builder(context)
                 .setTitle(Title)
                 .setMessage(Message)
-                .setPositiveButton("Try again") { _,_ -> OkHandler() }
-                .setNegativeButton("Cancel") {_,_ -> RejectHandler() }
+                .setPositiveButton("Try again") { _, _ -> OkHandler() }
+                .setNegativeButton("Cancel") { _, _ -> RejectHandler() }
                 .show()
         }
     }
 }
 
 fun AssetManager.AsPath(FileName: String) = "file:///android_asset/$FileName"
+
+inline fun Activity.runWhenAlive(crossinline execute: () -> Unit) {
+    if (!AppUtil.IsActivityDestroyed(this)) {
+        execute()
+    }
+}

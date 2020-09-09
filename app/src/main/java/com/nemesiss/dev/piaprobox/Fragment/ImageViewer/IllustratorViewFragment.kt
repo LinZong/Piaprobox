@@ -4,15 +4,10 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -26,7 +21,7 @@ import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.RelatedImageListAdap
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
+import com.nemesiss.dev.piaprobox.Util.runWhenAlive
 import com.nemesiss.dev.piaprobox.databinding.IllustratorViewFragmentBinding
 import kotlinx.android.synthetic.main.illustrator_view_fragment.*
 import kotlinx.android.synthetic.main.illustrator_view_fragment.view.*
@@ -78,20 +73,18 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     private var relatedImageListAdapter: RelatedImageListAdapter? = null
     private var relatedImagGridLayoutManager: GridLayoutManager = GridLayoutManager(context, 3)
 
-    override fun onStop() {
-        Glide.with(context).onStop()
-        super.onStop()
-    }
     override fun onDestroy() {
-        Glide.with(context).onDestroy()
         VIEW_CREATED = false
         DATA_LOADED = false
         CurrentViewModel = null
+        Glide.clear(LoadOriginalWorkDrawableToImageView)
         super.onDestroy()
     }
 
     override fun onDestroyView() {
+        VIEW_CREATED = false
         Illustrator2_View_ItemImageView.transitionName = null
+        Glide.clear(LoadOriginalWorkDrawableToImageView)
         super.onDestroyView()
     }
 
@@ -193,9 +186,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     // Activity调用，喂数据给Fragment
     fun ApplyViewModel(model: IllustratorViewFragmentViewModel) {
         if (CURRENT_CAN_APPLY_VIEWMODEL) {
-
             binding.root.Illustrator2_ScrollView.scrollTo(0, 0)
-
             CurrentViewModel = model
             binding.model = CurrentViewModel
 
@@ -203,9 +194,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
                 .load(model.ItemImageUrl)
                 .priority(Priority.IMMEDIATE)
                 .into(LoadOriginalWorkDrawableToImageView)
-
             DATA_LOADED = true
-
             // Load Related Items.
             if (relatedImageListAdapter == null) {
                 relatedImageListAdapter = RelatedImageListAdapter(model.RelatedItems, this::OnRelatedItemSelected)

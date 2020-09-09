@@ -30,6 +30,7 @@ import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.Util.BaseOnPageChangeListener
+import com.nemesiss.dev.piaprobox.Util.runWhenAlive
 import kotlinx.android.synthetic.main.illustrator_view_activity2.*
 import org.jsoup.Jsoup
 import java.io.File
@@ -71,7 +72,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     override fun onDestroy() {
         Illustrator2_Item_Pager.removeAllViews()
         ItemPageViewModelCache.clear()
-        LoadingItemPageViewModel.clear()
+//        LoadingItemPageViewModel.clear()
         ItemPages.clear()
         super.onDestroy()
     }
@@ -217,40 +218,42 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     private fun ParseImageItemDetailData(needFragmentIndex: Int, HTMLString: String) {
 
         // 从Cache中提取Model，继续填充信息
-        val model = LoadingItemPageViewModel.get(needFragmentIndex)
+        val model = LoadingItemPageViewModel[needFragmentIndex]
 
         val root = Jsoup.parse(HTMLString)
         val StepsImageContent = htmlParser.Rules.getJSONObject("ImageContent").getJSONArray("Steps")
         val StepsRelatedImage = htmlParser.Rules.getJSONObject("RelatedImage").getJSONArray("Steps")
 
-        try {
-            val ImageContents = htmlParser.Parser.GoSteps(root, StepsImageContent) as ImageContentInfo
-            val relatedItems =
-                (htmlParser.Parser.GoSteps(root, StepsRelatedImage) as Array<*>).map { it as RelatedImageInfo }
+        runWhenAlive {
+            try {
+                val ImageContents = htmlParser.Parser.GoSteps(root, StepsImageContent) as ImageContentInfo
+                val relatedItems =
+                    (htmlParser.Parser.GoSteps(root, StepsRelatedImage) as Array<*>).map { it as RelatedImageInfo }
 
-            model.apply {
-                ArtistAvatarUrl = HTMLParser.GetAlbumThumb(ImageContents.ArtistAvatar)
-                Title = ImageContents.Title
-                CreateDescription = ImageContents.CreateDescription.replace("<br>".toRegex(), "\n")
-                CreateDetailRaw = ImageContents.CreateDetail
-                ItemImageUrl = HTMLParser.GetAlbumThumb(ImageContents.URL)
-                RelatedItems = relatedItems
-            }
-            synchronized(ItemPages) {
-                if (ItemPages.isNotEmpty()) {
-                    // 放到加载完的Cache中
-                    ItemPageViewModelCache.put(needFragmentIndex, model)
-                    // 从正在加载的Cache中移除
-                    LoadingItemPageViewModel.delete(needFragmentIndex)
-                    runOnUiThread {
-                        HideLineLoadingIndicator()
-                        ItemPages[needFragmentIndex].ApplyViewModel(model)
+                model.apply {
+                    ArtistAvatarUrl = HTMLParser.GetAlbumThumb(ImageContents.ArtistAvatar)
+                    Title = ImageContents.Title
+                    CreateDescription = ImageContents.CreateDescription.replace("<br>".toRegex(), "\n")
+                    CreateDetailRaw = ImageContents.CreateDetail
+                    ItemImageUrl = HTMLParser.GetAlbumThumb(ImageContents.URL)
+                    RelatedItems = relatedItems
+                }
+                synchronized(ItemPages) {
+                    if (ItemPages.isNotEmpty()) {
+                        // 放到加载完的Cache中
+                        ItemPageViewModelCache.put(needFragmentIndex, model)
+                        // 从正在加载的Cache中移除
+                        LoadingItemPageViewModel.delete(needFragmentIndex)
+                        runOnUiThread {
+                            HideLineLoadingIndicator()
+                            ItemPages[needFragmentIndex].ApplyViewModel(model)
+                        }
                     }
                 }
-            }
 
-        } catch (e: Exception) {
-            errorHandler.Handle(e)
+            } catch (e: Exception) {
+                errorHandler.Handle(e)
+            }
         }
     }
 
