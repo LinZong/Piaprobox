@@ -59,7 +59,6 @@ open class PiaproboxBaseActivity : AppCompatActivity() {
                 "$message ($code)",
                 Toast.LENGTH_SHORT
             ).show()
-
         }
     }
 

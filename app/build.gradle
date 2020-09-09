@@ -29,14 +29,6 @@ android.applicationVariants.all { variant ->
 
 
 android {
-    signingConfigs {
-        NemesissSignature {
-            keyAlias 'Nemesiss'
-            keyPassword 'lznb008828'
-            storeFile file('D:/BuildSignature/Nemesiss.jks')
-            storePassword 'lznb008828'
-        }
-    }
 
     dataBinding {
         enabled = true
@@ -60,10 +52,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.NemesissSignature
-        }
-        debug {
-            signingConfig signingConfigs.NemesissSignature
         }
     }
     sourceSets {
