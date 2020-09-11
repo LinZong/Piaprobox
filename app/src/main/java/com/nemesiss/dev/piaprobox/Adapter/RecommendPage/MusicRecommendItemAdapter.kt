@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
+import com.bumptech.glide.request.RequestOptions
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.View.Common.fixThumb
@@ -47,8 +48,10 @@ class MusicRecommendItemAdapter(
         if (!current.fixThumb(vh.Thumb)) {
             Glide.with(context)
                 .load(current.Thumb)
-                .priority(Priority.HIGH)
-                .error(R.drawable.thumb_miku)
+//                .priority(Priority.HIGH)
+                .apply(RequestOptions().apply {
+                    fallback(R.drawable.thumb_miku)
+                })
                 .into(vh.Thumb)
         }
     }

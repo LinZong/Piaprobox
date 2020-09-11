@@ -48,7 +48,7 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
 
         Glide.with(this)
             .load(AvatarURL)
-            .priority(Priority.HIGH)
+//            .priority(Priority.HIGH)
             .into(MusicDetail_ArtistAvatar)
 
         MusicDetail_Artist.text = Artist

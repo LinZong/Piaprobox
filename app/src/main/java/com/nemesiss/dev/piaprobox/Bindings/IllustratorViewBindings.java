@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.RequestOptions;
 import com.nemesiss.dev.piaprobox.Misc.StaticResourcesMap;
 import com.nemesiss.dev.piaprobox.R;
 import com.nemesiss.dev.piaprobox.Service.HTMLParser;
@@ -31,7 +32,7 @@ public class IllustratorViewBindings {
         if (null != url && !TextUtils.isEmpty(url) && !fixThumbReference(imageView, url)) {
             Glide.with(imageView.getContext())
                     .load(url)
-                    .priority(Priority.HIGH)
+                    .apply(RequestOptions.priorityOf(Priority.HIGH))
                     .into(imageView);
         }
     }
@@ -41,7 +42,8 @@ public class IllustratorViewBindings {
         if (null != url && !TextUtils.isEmpty(url) && !fixThumbReference(imageView, url)) {
             Glide.with(imageView.getContext())
                     .load(HTMLParser.GetAlbumThumb(url))
-                    .priority(Priority.HIGH)
+                    .apply(RequestOptions.priorityOf(Priority.IMMEDIATE))
+                    .apply(RequestOptions.fitCenterTransform())
                     .into(imageView);
         }
     }

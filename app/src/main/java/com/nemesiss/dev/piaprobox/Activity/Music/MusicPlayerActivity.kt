@@ -2,6 +2,7 @@ package com.nemesiss.dev.piaprobox.Activity.Music
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -11,10 +12,10 @@ import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
-import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
@@ -22,7 +23,6 @@ import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.MusicLyricAdapter
 import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.RelatedMusicListAdapter
-import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
@@ -61,6 +61,28 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     private val RECOVER_STATUS_RESOURCE_IS_OK: Boolean
         get() = LAST_MUSIC_PLAYER_ACTIVITY_STATUS != null
+
+    private val MUSIC_ALBUM_LOAD_LISTENER = object : RequestListener<Drawable> {
+        override fun onLoadFailed(
+            e: GlideException?,
+            model: Any?,
+            target: Target<Drawable>?,
+            isFirstResource: Boolean
+        ): Boolean {
+            return true
+        }
+
+        override fun onResourceReady(
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean
+        ): Boolean {
+            LAST_MUSIC_BITMAP = resource
+            return false
+        }
+    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -230,16 +252,19 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         try {
             Glide.with(this)
                 .load(url)
-                .priority(Priority.HIGH)
-                .into(object : SimpleTarget<GlideDrawable>() {
-                    override fun onResourceReady(
-                        resource: GlideDrawable?,
-                        glideAnimation: GlideAnimation<in GlideDrawable>?
-                    ) {
-                        LAST_MUSIC_BITMAP = resource
-                        MusicPlayer_ThumbBackground.setImageDrawable(resource)
-                    }
-                })
+//                .priority(Priority.HIGH)
+                .addListener(MUSIC_ALBUM_LOAD_LISTENER)
+                .into(MusicPlayer_ThumbBackground)
+
+//            object : SimpleTarget<GlideDrawable>() {
+//                override fun onResourceReady(
+//                    resource: GlideDrawable?,
+//                    glideAnimation: GlideAnimation<in GlideDrawable>?
+//                ) {
+//                    LAST_MUSIC_BITMAP = resource
+//                    MusicPlayer_ThumbBackground.setImageDrawable(resource)
+//                }
+//            }
         } catch (e: Exception) {
         }
     }
@@ -396,7 +421,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         var LAST_MUSIC_PLAYER_ACTIVITY_STATUS: MusicPlayerActivityStatus? = null
 
         @JvmStatic
-        private var LAST_MUSIC_BITMAP: GlideDrawable? = null
+        private var LAST_MUSIC_BITMAP: Drawable? = null
 
         @JvmStatic
         var LAST_LOAD_CONTENT_URL = ""

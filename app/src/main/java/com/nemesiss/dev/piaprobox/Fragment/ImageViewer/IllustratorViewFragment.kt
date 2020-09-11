@@ -2,6 +2,7 @@ package com.nemesiss.dev.piaprobox.Fragment.ImageViewer
 
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
@@ -10,18 +11,20 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
-import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
+import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity.Companion.PRE_SHOWN_IMAGE
 import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.RelatedImageListAdapter
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.Util.runWhenAlive
 import com.nemesiss.dev.piaprobox.databinding.IllustratorViewFragmentBinding
 import kotlinx.android.synthetic.main.illustrator_view_fragment.*
 import kotlinx.android.synthetic.main.illustrator_view_fragment.view.*
@@ -60,13 +63,26 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     private var FETCH_DRAWABLE = false
 
     // Custom image load handler.
-    private val LoadOriginalWorkDrawableToImageView = object : SimpleTarget<GlideDrawable>() {
+    private val LoadOriginalWorkDrawableToImageViewListener = object : RequestListener<Drawable> {
+        override fun onLoadFailed(
+            e: GlideException?,
+            model: Any?,
+            target: Target<Drawable>?,
+            isFirstResource: Boolean
+        ): Boolean {
+            IS_CURRENT_BIG_SIZE_IMAGE_LOADED = false
+            return true
+        }
+
         override fun onResourceReady(
-            resource: GlideDrawable?,
-            glideAnimation: GlideAnimation<in GlideDrawable>?
-        ) {
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean
+        ): Boolean {
             IS_CURRENT_BIG_SIZE_IMAGE_LOADED = true
-            Illustrator2_View_ItemImageView?.setImageDrawable(resource)
+            return false
         }
     }
 
@@ -77,14 +93,14 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         VIEW_CREATED = false
         DATA_LOADED = false
         CurrentViewModel = null
-        Glide.clear(LoadOriginalWorkDrawableToImageView)
+//        Glide.clear(LoadOriginalWorkDrawableToImageView)
         super.onDestroy()
     }
 
     override fun onDestroyView() {
         VIEW_CREATED = false
         Illustrator2_View_ItemImageView.transitionName = null
-        Glide.clear(LoadOriginalWorkDrawableToImageView)
+//        Glide.clear(LoadOriginalWorkDrawableToImageView)
         super.onDestroyView()
     }
 
@@ -114,8 +130,8 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FRAG_INDEX = arguments?.getInt(CLICKED_ITEM_INDEX, 0)!!
-        FETCH_DRAWABLE = arguments?.getBoolean(SHOULD_FETCH_DRAWABLE, false)!!
+        FRAG_INDEX = arguments?.getInt(CLICKED_ITEM_INDEX) ?: 0
+        FETCH_DRAWABLE = arguments?.getBoolean(SHOULD_FETCH_DRAWABLE) ?: false
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -145,7 +161,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         super.onViewCreated(view, savedInstanceState)
         VIEW_CREATED = true
         if (FETCH_DRAWABLE) {
-            Illustrator2_View_ItemImageView.setImageDrawable(IllustratorImageProviderActivity.PRE_SHOWN_IMAGE)
+            Illustrator2_View_ItemImageView.setImageDrawable(PRE_SHOWN_IMAGE)
         }
         BindButtons()
     }
@@ -192,8 +208,12 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
             Glide.with(context!!)
                 .load(model.ItemImageUrl)
-                .priority(Priority.IMMEDIATE)
-                .into(LoadOriginalWorkDrawableToImageView)
+                .apply(RequestOptions() .apply {
+                    placeholder(Illustrator2_View_ItemImageView.drawable)
+                })
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .addListener(LoadOriginalWorkDrawableToImageViewListener)
+                .into(Illustrator2_View_ItemImageView)
             DATA_LOADED = true
             // Load Related Items.
             if (relatedImageListAdapter == null) {

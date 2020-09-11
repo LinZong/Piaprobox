@@ -32,8 +32,8 @@ class RelatedMusicListAdapter(var items : List<RelatedMusicInfo>, val itemSelect
         Glide
             .with(PiaproboxApplication.Self.applicationContext)
             .load(GetAlbumThumb(item.Thumb))
-            .priority(Priority.HIGH)
-            .bitmapTransform(RoundedCornersTransformation(PiaproboxApplication.Self.applicationContext,20,0, RoundedCornersTransformation.CornerType.ALL))
+//            .priority(Priority.HIGH)
+//            .bitmapTransform(RoundedCornersTransformation(PiaproboxApplication.Self.applicationContext,20,0, RoundedCornersTransformation.CornerType.ALL))
             .into(vh.itemView.MusicPlayer_RelatedMusic_Item_Thumb)
         vh.itemView.setOnClickListener { itemSelected(index) }
         vh.itemView.MusicPlayer_RelatedMusic_Item_Title.text = item.Title

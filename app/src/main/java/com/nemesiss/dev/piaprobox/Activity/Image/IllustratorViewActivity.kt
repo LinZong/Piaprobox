@@ -11,16 +11,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
-import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
-import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
@@ -34,8 +35,8 @@ import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.View.Common.whenClicks
 import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
+import com.nemesiss.dev.piaprobox.View.Common.whenClicks
 import kotlinx.android.synthetic.main.illustrator_view_activity.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -92,13 +93,29 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
 
     // 监听器
 
-    private val LoadOriginalWorkDrawableToImageView = object : SimpleTarget<GlideDrawable>() {
+    private val LoadOriginalWorkDrawableToImageViewListener = object : RequestListener<Drawable> {
+        override fun onLoadFailed(
+            e: GlideException?,
+            model: Any?,
+            target: Target<Drawable>?,
+            isFirstResource: Boolean
+        ): Boolean {
+            IS_CURRENT_BIG_SIZE_IMAGE_LOADED = false
+            return true
+        }
         override fun onResourceReady(
-            resource: GlideDrawable?,
-            glideAnimation: GlideAnimation<in GlideDrawable>?
-        ) {
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean
+        ): Boolean {
+            if (isFirstResource) {
+                return false // thumbnail was not shown, do as usual
+            }
             IS_CURRENT_BIG_SIZE_IMAGE_LOADED = true
             Illustrator_View_ItemImageView.setImageDrawable(resource)
+            return true
         }
     }
 
@@ -269,13 +286,12 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
             CurrentImageContentInfo = DetailContent
 
             val albUrl = HTMLParser.GetAlbumThumb(DetailContent.URL)
+            Glide.with(this)
+                .load(albUrl)
+                .listener(LoadOriginalWorkDrawableToImageViewListener)
+                .preload()
+
             runOnUiThread {
-                Glide.with(this)
-                    .load(albUrl)
-                    .priority(Priority.HIGH)
-                    .dontAnimate()
-                    .dontTransform()
-                    .into(LoadOriginalWorkDrawableToImageView)
                 Illustrator_View_ItemDetail.text = DetailContent.CreateDescription.replace("<br>".toRegex(), "\n")
                 Illustrator_View_ItemName.text = DetailContent.Title
                 ShowWorkItemInfo(DetailContent.CreateDetail, Illustrator_View_ItemInfoContainer)
