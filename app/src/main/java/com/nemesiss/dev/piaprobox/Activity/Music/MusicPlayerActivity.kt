@@ -11,7 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
-import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -30,6 +30,7 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
 import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
+import com.nemesiss.dev.piaprobox.Service.GlideApp
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
@@ -250,21 +251,11 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     private fun GlideLoadThumbToImageView(url: String) {
         try {
-            Glide.with(this)
+            GlideApp.with(this)
                 .load(url)
-//                .priority(Priority.HIGH)
+                .priority(Priority.HIGH)
                 .addListener(MUSIC_ALBUM_LOAD_LISTENER)
                 .into(MusicPlayer_ThumbBackground)
-
-//            object : SimpleTarget<GlideDrawable>() {
-//                override fun onResourceReady(
-//                    resource: GlideDrawable?,
-//                    glideAnimation: GlideAnimation<in GlideDrawable>?
-//                ) {
-//                    LAST_MUSIC_BITMAP = resource
-//                    MusicPlayer_ThumbBackground.setImageDrawable(resource)
-//                }
-//            }
         } catch (e: Exception) {
         }
     }
@@ -284,18 +275,18 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         intent.action = "UPDATE_INFO"
         intent.putExtra("UpdateMusicContentInfo", CurrentMusicContentInfo)
         intent.putExtra("WillPlayMusicURL", playInfo.URL)
-        val ExtendedThis = (this as? MusicControlActivity)
-        ExtendedThis?.PersistMusicPlayerActivityStatus(MusicStatus.STOP, true)
+
+        (this as? MusicControlActivity)?.PersistMusicPlayerActivityStatus(MusicStatus.STOP, true)
 
         startService(intent)
         HideLoadingIndicator(MusicPlayer_ContentContainer)
     }
 
     private fun ParseLyrics(LyricStr: String) {
-        if (LyricStr.isEmpty()) {
-            lyricListData = MusicLyricAdapter.BuildNoLyricList()
+        lyricListData = if (LyricStr.isEmpty()) {
+            MusicLyricAdapter.BuildNoLyricList()
         } else {
-            lyricListData = LyricStr.split(" ")
+            LyricStr.split(" ")
         }
         ActivateLyricRecyclerViewAdapter()
     }

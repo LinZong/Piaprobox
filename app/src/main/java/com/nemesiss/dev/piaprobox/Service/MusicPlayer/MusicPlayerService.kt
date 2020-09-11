@@ -57,7 +57,6 @@ class MusicPlayerService : Service() {
         override fun PrepareAsync(URL: String, musicContent: MusicContentInfo) {
             PlayingMusicContentInfo = musicContent
             WillPlayMusicURLFromActivity = "" // Clear pending prepare.
-//            UpdateNotification(MusicStatus.STOP, musicContent)
             InnerPlayer!!.LoadMusic(URL)
         }
 
@@ -200,7 +199,7 @@ class MusicPlayerService : Service() {
         SERVICE_AVAILABLE.onNext(true)
 //        }
         when (intent?.action) {
-            "DESTORY" -> {
+            "DESTROY" -> {
                 Log.d("MusicPlayerService", "即将停止, 对象HashCode: ${this.hashCode()}")
                 GracefullyShutdown()
             }

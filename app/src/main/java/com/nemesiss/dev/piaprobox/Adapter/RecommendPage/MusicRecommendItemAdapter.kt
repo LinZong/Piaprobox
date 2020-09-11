@@ -12,6 +12,7 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.GlideApp
 import com.nemesiss.dev.piaprobox.View.Common.fixThumb
 
 class MusicRecommendItemAdapter(
@@ -46,12 +47,10 @@ class MusicRecommendItemAdapter(
         vh.UploadTime.text = "${current.UploadDate} ${current.UploadTime}"
 
         if (!current.fixThumb(vh.Thumb)) {
-            Glide.with(context)
+            GlideApp
+                .with(context)
                 .load(current.Thumb)
-//                .priority(Priority.HIGH)
-                .apply(RequestOptions().apply {
-                    fallback(R.drawable.thumb_miku)
-                })
+                .fallback(R.drawable.thumb_miku)
                 .into(vh.Thumb)
         }
     }

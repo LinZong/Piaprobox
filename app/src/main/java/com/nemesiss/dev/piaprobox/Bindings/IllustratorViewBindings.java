@@ -43,7 +43,6 @@ public class IllustratorViewBindings {
             Glide.with(imageView.getContext())
                     .load(HTMLParser.GetAlbumThumb(url))
                     .apply(RequestOptions.priorityOf(Priority.IMMEDIATE))
-                    .apply(RequestOptions.fitCenterTransform())
                     .into(imageView);
         }
     }

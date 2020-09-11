@@ -82,6 +82,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
             isFirstResource: Boolean
         ): Boolean {
             IS_CURRENT_BIG_SIZE_IMAGE_LOADED = true
+            Illustrator2_View_ItemImageView.setImageDrawable( resource )
             return false
         }
     }
@@ -208,12 +209,8 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
             Glide.with(context!!)
                 .load(model.ItemImageUrl)
-                .apply(RequestOptions() .apply {
-                    placeholder(Illustrator2_View_ItemImageView.drawable)
-                })
-                .transition(DrawableTransitionOptions.withCrossFade())
                 .addListener(LoadOriginalWorkDrawableToImageViewListener)
-                .into(Illustrator2_View_ItemImageView)
+                .preload()
             DATA_LOADED = true
             // Load Related Items.
             if (relatedImageListAdapter == null) {

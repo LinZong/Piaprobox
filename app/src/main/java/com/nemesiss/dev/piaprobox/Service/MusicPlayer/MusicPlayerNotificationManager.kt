@@ -46,49 +46,36 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
         BigNotiView.setTextViewText(R.id.MusicPlayer_Noti_SongName, model.SongName)
         BigNotiView.setTextViewText(R.id.MusicPlayer_Noti_SongArtist, model.ArtistName)
 
-        val CloseServiceIntent = Intent(context, MusicPlayerService::class.java).apply {
-            action = "DESTORY"
+
+        val IntentMaps = arrayOf("DESTROY", "PAUSE", "PLAY").associate { actionText ->
+            Pair(
+                actionText,
+                PendingIntent.getService(
+                    context,
+                    55,
+                    Intent(context, MusicPlayerService::class.java).apply { action = actionText },
+                    0
+                )
+            )
         }
-
-        val CloseServicePendingIntent = PendingIntent.getService(context, 55, CloseServiceIntent, 0)
-
-
-        val PauseIntent = Intent(context, MusicPlayerService::class.java)
-            .apply { action = "PAUSE" }
-
-        val PausePendingIntent = PendingIntent.getService(context, 55, PauseIntent, 0)
-
-//        val NextIntent = Intent(context, MusicPlayerService::class.java)
-//            .apply { action = "NEXT" }
-//
-//        val NextPendingIntent = PendingIntent.getService(context, 55, NextIntent, 0)
-//
-//        val PrevIntent = Intent(context, MusicPlayerService::class.java)
-//            .apply { action = "PREV" }
-//        val PrevPendingIntent = PendingIntent.getService(context, 55, PrevIntent, 0)
-
-        val PlayIntent = Intent(context, MusicPlayerService::class.java)
-            .apply { action = "PLAY" }
-
-        val PlayPendingIntent = PendingIntent.getService(context, 55, PlayIntent, 0)
 
         when (model.CurrStatus) {
             MusicStatus.PLAY -> {
                 BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_pause_red_600_24dp)
-                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, PausePendingIntent)
+                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, IntentMaps["PAUSE"])
             }
             MusicStatus.PAUSE -> {
                 BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_play_arrow_red_600_24dp)
-                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, PlayPendingIntent)
+                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, IntentMaps["PLAY"])
             }
             MusicStatus.STOP -> {
                 BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_play_arrow_red_600_24dp)
-                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, PlayPendingIntent)
+                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, IntentMaps["PLAY"])
             }
         }
-        BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop, CloseServicePendingIntent)
-        NormalNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop_Normal, CloseServicePendingIntent)
 
+        BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop, IntentMaps["DESTROY"])
+        NormalNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop_Normal, IntentMaps["DESTROY"])
 
 
 

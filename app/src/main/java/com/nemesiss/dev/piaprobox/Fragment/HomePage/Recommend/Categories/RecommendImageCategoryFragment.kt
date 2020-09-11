@@ -30,16 +30,6 @@ class RecommendImageCategoryFragment : BaseRecommendCategoryFragment() {
     override var CurrentCategoryFragmentType: RecommendListType = RecommendListType.IMAGE
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        DaggerAsyncExecutorFactory
-            .builder()
-            .hTMLParserModules(HTMLParserModules(context!!))
-            .build()
-            .inject(this)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.recommend_category_layout, container, false)
     }

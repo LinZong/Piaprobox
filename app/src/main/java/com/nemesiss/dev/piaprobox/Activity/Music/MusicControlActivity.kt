@@ -268,7 +268,8 @@ class MusicControlActivity : MusicPlayerActivity() {
                 }
         )
         SubscribedRelations.add(
-            PlayerServiceController?.PlayerStatus()
+            PlayerServiceController
+                ?.PlayerStatus()
                 ?.subscribe { status ->
                     when (status) {
                         MusicStatus.PLAY -> {
