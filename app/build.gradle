@@ -12,7 +12,7 @@ def scanAllResourcesFolder(String absolutePath) {
     files.findAll { it -> it.isDirectory() }.each {
         directory ->
             println("Entering directory > " + directory.absolutePath)
-            output.addAll(scanAllResourcesFolder(directory.absolutePath))
+            output += scanAllResourcesFolder(directory.absolutePath)
     }
     return output
 }
