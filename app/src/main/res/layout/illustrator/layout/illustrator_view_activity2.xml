@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
+             android:id="@+id/Illustrator2_FrameLayout_ViewRoot"
              android:layout_height="match_parent">
     <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
@@ -8,10 +9,9 @@
             android:id="@+id/Illustrator2_Item_Pager"/>
 
 
-    <com.nemesiss.dev.piaprobox.View.Common.LoadingLineIndicator
-            android:layout_width="match_parent"
-            android:layout_height="12dp"
-            android:id="@+id/Illustrator_LoadingIndicator"
-            android:visibility="gone"/>
+<!--    <com.nemesiss.dev.piaprobox.View.Common.LoadingLineIndicator-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="12dp"-->
+<!--            android:id="@+id/Illustrator_LoadingIndicator"/>-->
 
 </FrameLayout>

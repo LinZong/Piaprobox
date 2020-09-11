@@ -37,6 +37,8 @@ class LoadingLineIndicator : View {
                 resetDrawingOptions()
                 invalidateHandler.removeMessages(1)
                 invalidateHandler.sendEmptyMessageDelayed(1, REFRESH_RATE.toLong())
+            } else {
+                removeDrawingLineActions()
             }
         }
 
@@ -73,12 +75,9 @@ class LoadingLineIndicator : View {
     }
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
-        mVisibility = visibility
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        invalidateHandler.sendEmptyMessageDelayed(1, REFRESH_RATE.toLong())
+        if (changedView == this) {
+            mVisibility = visibility
+        }
     }
 
     private fun handleInvalidateViewMsg(message: Message): Boolean {
@@ -99,14 +98,16 @@ class LoadingLineIndicator : View {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawLine(
-            (mWidth - mProgressWidth).toFloat() / 2,
-            0f,
-            (mWidth + mProgressWidth).toFloat() / 2,
-            0f,
-            paint
-        )
-        updateWidthAndColorByStep()
+        if(mVisibility == VISIBLE) {
+            canvas?.drawLine(
+                (mWidth - mProgressWidth).toFloat() / 2,
+                0f,
+                (mWidth + mProgressWidth).toFloat() / 2,
+                0f,
+                paint
+            )
+            updateWidthAndColorByStep()
+        }
     }
 
     private fun updateWidthAndColorByStep() {
@@ -129,5 +130,10 @@ class LoadingLineIndicator : View {
         mProgressWidth = 0.2 * mWidth
         currColorAlpha = 255
         paint.alpha = currColorAlpha
+    }
+
+    private fun removeDrawingLineActions() {
+        invalidateHandler.removeMessages(1)
+        invalidate()
     }
 }

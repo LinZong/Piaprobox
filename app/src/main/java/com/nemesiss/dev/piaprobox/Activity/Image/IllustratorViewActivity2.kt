@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.SparseArray
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
@@ -31,6 +32,7 @@ import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.Util.BaseOnPageChangeListener
 import com.nemesiss.dev.piaprobox.Util.runWhenAlive
+import com.nemesiss.dev.piaprobox.View.Common.LoadingLineIndicator
 import kotlinx.android.synthetic.main.illustrator_view_activity2.*
 import org.jsoup.Jsoup
 import java.io.File
@@ -69,20 +71,29 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
 
     private var CURRENT_SHOW_IMAGE_INDEX = 0
 
+    private var LoadingLineIndicatorInstance : LoadingLineIndicator? = null
+
     override fun onDestroy() {
         Illustrator2_Item_Pager.removeAllViews()
         ItemPageViewModelCache.clear()
-//        LoadingItemPageViewModel.clear()
         ItemPages.clear()
         super.onDestroy()
     }
 
     private fun ShowLineLoadingIndicator() {
-        Illustrator_LoadingIndicator.visibility = View.VISIBLE
+        if(LoadingLineIndicatorInstance == null) {
+            LoadingLineIndicatorInstance = LoadingLineIndicator(this).apply {
+                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppUtil.Dp2Px(resources, 12))
+            }
+            Illustrator2_FrameLayout_ViewRoot.addView(LoadingLineIndicatorInstance)
+        }
     }
 
     private fun HideLineLoadingIndicator() {
-        Illustrator_LoadingIndicator.visibility = View.GONE
+        if(LoadingLineIndicatorInstance != null) {
+            Illustrator2_FrameLayout_ViewRoot.removeView(LoadingLineIndicatorInstance)
+            LoadingLineIndicatorInstance = null
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,7 +157,9 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     override fun AskForViewModel(fragmentIndex: Int, self: IllustratorViewFragment) {
         val model = ItemPageViewModelCache.get(fragmentIndex, null)
         if (model != null) {
-            self.ApplyViewModel(model)
+            self.ApplyViewModel(model) {
+                HideLineLoadingIndicator()
+            }
         } else if (CAN_VIEW_ITEM_LIST != null) {
             // Load model from network.
             LoadRecommendImageDetailData(fragmentIndex, CAN_VIEW_ITEM_LIST!![fragmentIndex])
@@ -245,8 +258,9 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
                         // 从正在加载的Cache中移除
                         LoadingItemPageViewModel.delete(needFragmentIndex)
                         runOnUiThread {
-                            HideLineLoadingIndicator()
-                            ItemPages[needFragmentIndex].ApplyViewModel(model)
+                            ItemPages[needFragmentIndex].ApplyViewModel(model) {
+                                HideLineLoadingIndicator()
+                            }
                         }
                     }
                 }

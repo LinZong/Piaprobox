@@ -184,7 +184,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     }
 
     // Activity调用，喂数据给Fragment
-    fun ApplyViewModel(model: IllustratorViewFragmentViewModel) {
+    fun ApplyViewModel(model: IllustratorViewFragmentViewModel, then: (() -> Unit) = {}) {
         if (CURRENT_CAN_APPLY_VIEWMODEL) {
             binding.root.Illustrator2_ScrollView.scrollTo(0, 0)
             CurrentViewModel = model
@@ -205,5 +205,6 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
                 relatedImageListAdapter?.notifyDataSetChanged()
             }
         }
+        then.invoke()
     }
 }

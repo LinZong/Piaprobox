@@ -33,6 +33,4 @@ class Persistence {
             return SharedPref.getBoolean(MUSIC_PLAYER_LOOP_STATUS,false)
         }
     }
-
-
 }
