@@ -81,18 +81,16 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     }
 
     private fun ShowLineLoadingIndicator() {
-        if(LoadingLineIndicatorInstance == null) {
-            LoadingLineIndicatorInstance = LoadingLineIndicator(this).apply {
-                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppUtil.Dp2Px(resources, 12))
-            }
-            Illustrator2_FrameLayout_ViewRoot.addView(LoadingLineIndicatorInstance)
+        LoadingLineIndicatorInstance = LoadingLineIndicatorInstance ?: LoadingLineIndicator(this).apply {
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppUtil.Dp2Px(resources, 12))
+            Illustrator2_FrameLayout_ViewRoot.addView(this)
         }
     }
 
     private fun HideLineLoadingIndicator() {
-        if(LoadingLineIndicatorInstance != null) {
-            Illustrator2_FrameLayout_ViewRoot.removeView(LoadingLineIndicatorInstance)
-            LoadingLineIndicatorInstance = null
+        LoadingLineIndicatorInstance = LoadingLineIndicatorInstance?.let { me ->
+            Illustrator2_FrameLayout_ViewRoot.removeView(me)
+            null
         }
     }
 
