@@ -5,12 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.single_related_music_item.view.*
 
 class RelatedMusicListAdapter(var items : List<RelatedMusicInfo>, val itemSelected : (Int)->Unit) : RecyclerView.Adapter<RelatedMusicListAdapter.RelatedMusicListViewHolder>() {
@@ -32,8 +30,6 @@ class RelatedMusicListAdapter(var items : List<RelatedMusicInfo>, val itemSelect
         Glide
             .with(PiaproboxApplication.Self.applicationContext)
             .load(GetAlbumThumb(item.Thumb))
-//            .priority(Priority.HIGH)
-//            .bitmapTransform(RoundedCornersTransformation(PiaproboxApplication.Self.applicationContext,20,0, RoundedCornersTransformation.CornerType.ALL))
             .into(vh.itemView.MusicPlayer_RelatedMusic_Item_Thumb)
         vh.itemView.setOnClickListener { itemSelected(index) }
         vh.itemView.MusicPlayer_RelatedMusic_Item_Title.text = item.Title

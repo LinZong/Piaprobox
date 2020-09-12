@@ -224,13 +224,6 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             )
     }
 
-    override fun onActivityReenter(resultCode: Int, data: Intent?) {
-        when(resultCode) {
-            IllustratorViewFragment.PREVIEW_IMAGE_RES_CODE -> {
-                ItemPages[CURRENT_SHOW_IMAGE_INDEX].HandlePreviewImageActivityReenter()
-            }
-        }
-    }
 
     private fun ParseImageItemDetailData(needFragmentIndex: Int, HTMLString: String) {
 

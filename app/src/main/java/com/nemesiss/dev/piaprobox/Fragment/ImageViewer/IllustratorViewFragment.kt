@@ -26,13 +26,18 @@ import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity.Companion.PRE_SHOWN_IMAGE
 import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.RelatedImageListAdapter
+import com.nemesiss.dev.piaprobox.Model.Events.SharedElementBackEvent
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback
+import com.nemesiss.dev.piaprobox.View.Common.whenClicks
 import com.nemesiss.dev.piaprobox.databinding.IllustratorViewFragmentBinding
 import kotlinx.android.synthetic.main.illustrator_view_fragment.*
 import kotlinx.android.synthetic.main.illustrator_view_fragment.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.lang.Exception
 
 class IllustratorViewFragment : BaseIllustratorViewFragment() {
@@ -113,6 +118,16 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         VIEW_CREATED = false
         Illustrator2_View_ItemImageView.transitionName = null
         super.onDestroyView()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
     }
 
     private fun UpdateTransitionNameBasedOnUserVisible() {
@@ -196,8 +211,12 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         }
     }
 
-    fun HandlePreviewImageActivityReenter() {
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun HandleDragAndCloseAlphaChanged(event: SharedElementBackEvent) {
+        if(event.sender == "PreviewActivity") {
+            Illustrator2_View_ItemImageView.alpha = 1f
+        }
     }
 
     private fun HandleDownloadImage() {
@@ -209,14 +228,21 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     }
 
     private fun BindButtons() {
-        Illustrator2_View_BackButton.setOnClickListener { (activity as? IllustratorImageProviderActivity)?.HandleClose() }
-        Illustrator2_View_DownloadImage.setOnClickListener { HandleDownloadImage() }
-        Illustrator2_View_ItemImageView.setOnClickListener { HandleEnterPinchImagePreview() }
-        Illustrator2_View_OpenBrowser.setOnClickListener {
-            if (CurrentViewModel != null) {
-                AppUtil.OpenBrowser(context!!, CurrentViewModel!!.BrowserPageUrl)
+        arrayListOf(
+            Illustrator2_View_BackButton,
+            Illustrator2_View_DownloadImage,
+            Illustrator2_View_ItemImageView,
+            Illustrator2_View_OpenBrowser
+        ).whenClicks(
+            { (activity as? IllustratorImageProviderActivity)?.HandleClose() },
+            { HandleDownloadImage() },
+            { HandleEnterPinchImagePreview() },
+            {
+                if (CurrentViewModel != null) {
+                    AppUtil.OpenBrowser(context!!, CurrentViewModel!!.BrowserPageUrl)
+                }
             }
-        }
+        )
     }
 
     // Activity调用，喂数据给Fragment

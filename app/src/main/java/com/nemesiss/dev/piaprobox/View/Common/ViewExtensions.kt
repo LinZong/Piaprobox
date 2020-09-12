@@ -14,15 +14,18 @@ import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
+import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.ImageRecommendItemDatabindingAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.Misc.StaticResourcesMap
+import com.nemesiss.dev.piaprobox.Model.Events.SharedElementBackEvent
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.BaseTransitionCallback
 import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback
 import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
+import org.greenrobot.eventbus.EventBus
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.reflect.KClass
@@ -221,7 +224,6 @@ fun PiaproboxBaseActivity.wrapDragAndCloseTouchHandler(imageView: PinchImageView
 
         backgroundView.background.alpha = 255
 
-
         // 要求只有不缩放，并且是向下方划的时候才触发
         imageView.addOnTouchListener handleMoveClose@{ _, event ->
 
@@ -240,6 +242,7 @@ fun PiaproboxBaseActivity.wrapDragAndCloseTouchHandler(imageView: PinchImageView
                     if(isMovingVertical(distanceY)) {
                         if(!imageView.isDisablePinchGesture) {
                             imageView.isDisablePinchGesture = true
+                            EventBus.getDefault().post(SharedElementBackEvent("PreviewActivity"))
                         }
                         val hypo = hypot(0f, distanceY).toDouble()
                         backgroundView.background.alpha = calculateAlpha(hypo, maxHypo)
