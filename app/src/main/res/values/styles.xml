@@ -18,13 +18,16 @@
     </style>
 
 
-    <style name="ShareImageViewContentStyle" parent="AppTheme">
-        <item name="android:windowIsTranslucent">true</item>
+    <style name="SharedContentStyle" parent="AppTheme">
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="PreviewImageTranslucentBar" parent="AppTheme">
+    <style name="ShareImageViewContentStyle" parent="AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -82,5 +85,6 @@
     <style name="ImageButtonWithRipple">
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
+
 
 </resources>

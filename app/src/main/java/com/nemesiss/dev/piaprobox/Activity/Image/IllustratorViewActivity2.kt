@@ -2,9 +2,7 @@ package com.nemesiss.dev.piaprobox.Activity.Image
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.SparseArray
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
@@ -140,11 +138,11 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             }
         }
         Illustrator2_Item_Pager.addOnPageChangeListener(object : BaseOnPageChangeListener() {
-            override fun onPageSelected(p0: Int) {
+            override fun onPageSelected(page: Int) {
                 val imageView =
                     ItemPages[CURRENT_SHOW_IMAGE_INDEX].view?.findViewById<ImageView>(R.id.Illustrator2_View_ItemImageView)
                 imageView?.transitionName = null
-                CURRENT_SHOW_IMAGE_INDEX = p0
+                CURRENT_SHOW_IMAGE_INDEX = page
             }
         })
         Illustrator2_Item_Pager.adapter = IllustratorViewPageFragmentAdapter(ItemPages, supportFragmentManager)
@@ -204,7 +202,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
 
         model.BrowserPageUrl = url
         LoadingItemPageViewModel.put(needFragmentIndex, model)
-
+        
         DaggerFetchFactory
             .create()
             .fetcher()
@@ -224,6 +222,14 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
                     runOnUiThread { LoadFailedTips(-4, e.message ?: "") }
                 }
             )
+    }
+
+    override fun onActivityReenter(resultCode: Int, data: Intent?) {
+        when(resultCode) {
+            IllustratorViewFragment.PREVIEW_IMAGE_RES_CODE -> {
+                ItemPages[CURRENT_SHOW_IMAGE_INDEX].HandlePreviewImageActivityReenter()
+            }
+        }
     }
 
     private fun ParseImageItemDetailData(needFragmentIndex: Int, HTMLString: String) {
@@ -262,7 +268,6 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
                         }
                     }
                 }
-
             } catch (e: Exception) {
                 errorHandler.Handle(e)
             }

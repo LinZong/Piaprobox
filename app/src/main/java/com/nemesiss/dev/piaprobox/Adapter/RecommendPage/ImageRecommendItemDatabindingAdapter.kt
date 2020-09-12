@@ -23,7 +23,7 @@ class ImageRecommendItemDatabindingAdapter(
                 val binding = SingleRecommendImageItemBinding
                     .inflate(
                         LayoutInflater.from(viewGroup.context),
-                        viewGroup, false
+                        viewGroup,false
                     )
                 return ImageRecommendItemViewHolder(binding)
             }

@@ -15,6 +15,9 @@ package com.nemesiss.dev.piaprobox.Util;/*
  */
 
 
+import android.graphics.Matrix;
+import android.graphics.RectF;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.view.ViewCompat;
@@ -44,6 +47,13 @@ public class MediaSharedElementCallback extends SharedElementCallback {
 
         mSharedElementViewNames.addAll(Arrays.asList(sharedElementViewNames));
         mSharedElementViews.addAll(Arrays.asList(sharedElementViews));
+    }
+
+    @Override
+    public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix, RectF screenBounds) {
+        // 解决闪屏
+        sharedElement.setAlpha(1f);
+        return super.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix, screenBounds);
     }
 
     @Override

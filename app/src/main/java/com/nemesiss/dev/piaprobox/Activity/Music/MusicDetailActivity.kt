@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
+import com.nemesiss.dev.piaprobox.Bindings.IllustratorViewBindings
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Util.AppUtil
@@ -46,10 +47,11 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
 
     private fun ShowArtistInfo(AvatarURL: String, Artist: String) {
 
-        Glide.with(this)
-            .load(AvatarURL)
-//            .priority(Priority.HIGH)
-            .into(MusicDetail_ArtistAvatar)
+//        Glide.with(this)
+//            .load(AvatarURL)
+//            .into(MusicDetail_ArtistAvatar)
+
+        IllustratorViewBindings.loadImageArtistAvatar(MusicDetail_ArtistAvatar,AvatarURL)
 
         MusicDetail_Artist.text = Artist
     }

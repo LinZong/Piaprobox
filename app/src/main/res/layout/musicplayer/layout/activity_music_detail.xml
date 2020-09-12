@@ -31,7 +31,7 @@
             <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:layout_margin="8dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView android:layout_width="84dp"
+                <ImageView android:layout_width="84dp"
                                                               android:layout_height="84dp"
                                                               android:id="@+id/MusicDetail_ArtistAvatar"/>
 

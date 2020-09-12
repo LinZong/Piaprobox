@@ -20,8 +20,7 @@ import java.util.Queue;
  *
  * @author clifford
  */
-public class PinchImageView extends android.support.v7.widget.AppCompatImageView
-{
+public class PinchImageView extends android.support.v7.widget.AppCompatImageView {
 
 
     ////////////////////////////////配置参数////////////////////////////////
@@ -59,21 +58,18 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
     private OnLongClickListener mOnLongClickListener;
 
     @Override
-    public void setOnClickListener(OnClickListener l)
-    {
+    public void setOnClickListener(OnClickListener l) {
         //默认的click会在任何点击情况下都会触发，所以搞成自己的
         mOnClickListener = l;
     }
 
     @Override
-    public void setOnLongClickListener(OnLongClickListener l)
-    {
+    public void setOnLongClickListener(OnLongClickListener l) {
         //默认的long click会在任何长按情况下都会触发，所以搞成自己的
         mOnLongClickListener = l;
     }
 
-    public void addOnTouchListener(OnTouchListener touch)
-    {
+    public void addOnTouchListener(OnTouchListener touch) {
         touchListeners.add(touch);
     }
 
@@ -126,6 +122,12 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      */
     private int mPinchMode = PINCH_MODE_FREE;
 
+
+    /**
+     * 关闭双指缩放手势响应
+     */
+    private boolean disablePinchGesture = false;
+
     /**
      * 获取外部变换矩阵.
      * <p>
@@ -135,16 +137,21 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @param matrix 用于填充结果的对象
      * @return 如果传了matrix参数则将matrix填充后返回, 否则new一个填充返回
      */
-    public Matrix getOuterMatrix(Matrix matrix)
-    {
-        if (matrix == null)
-        {
+    public Matrix getOuterMatrix(Matrix matrix) {
+        if (matrix == null) {
             matrix = new Matrix(mOuterMatrix);
-        } else
-        {
+        } else {
             matrix.set(mOuterMatrix);
         }
         return matrix;
+    }
+
+    public boolean isDisablePinchGesture() {
+        return disablePinchGesture;
+    }
+
+    public void setDisablePinchGesture(boolean disablePinchGesture) {
+        this.disablePinchGesture = disablePinchGesture;
     }
 
     /**
@@ -156,17 +163,13 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @param matrix 用于填充结果的对象
      * @return 如果传了matrix参数则将matrix填充后返回, 否则new一个填充返回
      */
-    public Matrix getInnerMatrix(Matrix matrix)
-    {
-        if (matrix == null)
-        {
+    public Matrix getInnerMatrix(Matrix matrix) {
+        if (matrix == null) {
             matrix = new Matrix();
-        } else
-        {
+        } else {
             matrix.reset();
         }
-        if (isReady())
-        {
+        if (isReady()) {
             //原图大小
             RectF tempSrc = MathUtils.rectFTake(0, 0, getDrawable().getIntrinsicWidth(), getDrawable().getIntrinsicHeight());
             //控件大小
@@ -191,8 +194,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @see #getOuterMatrix(Matrix)
      * @see #getInnerMatrix(Matrix)
      */
-    public Matrix getCurrentImageMatrix(Matrix matrix)
-    {
+    public Matrix getCurrentImageMatrix(Matrix matrix) {
         //获取内部变换矩阵
         matrix = getInnerMatrix(matrix);
         //乘上外部变换矩阵
@@ -209,20 +211,15 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @return 如果传了rectF参数则将rectF填充后返回, 否则new一个填充返回
      * @see #getCurrentImageMatrix(Matrix)
      */
-    public RectF getImageBound(RectF rectF)
-    {
-        if (rectF == null)
-        {
+    public RectF getImageBound(RectF rectF) {
+        if (rectF == null) {
             rectF = new RectF();
-        } else
-        {
+        } else {
             rectF.setEmpty();
         }
-        if (!isReady())
-        {
+        if (!isReady()) {
             return rectF;
-        } else
-        {
+        } else {
             //申请一个空matrix
             Matrix matrix = MathUtils.matrixTake();
             //获取当前总变换矩阵
@@ -241,13 +238,10 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      *
      * @return 返回当前的mask对象副本, 如果当前没有设置mask则返回null
      */
-    public RectF getMask()
-    {
-        if (mMask != null)
-        {
+    public RectF getMask() {
+        if (mMask != null) {
             return new RectF(mMask);
-        } else
-        {
+        } else {
             return null;
         }
     }
@@ -259,8 +253,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @see #PINCH_MODE_SCROLL
      * @see #PINCH_MODE_SCALE
      */
-    public int getPinchMode()
-    {
+    public int getPinchMode() {
         return mPinchMode;
     }
 
@@ -271,26 +264,20 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @return
      */
     @Override
-    public boolean canScrollHorizontally(int direction)
-    {
-        if (mPinchMode == PinchImageView.PINCH_MODE_SCALE)
-        {
+    public boolean canScrollHorizontally(int direction) {
+        if (mPinchMode == PinchImageView.PINCH_MODE_SCALE) {
             return true;
         }
         RectF bound = getImageBound(null);
-        if (bound == null)
-        {
+        if (bound == null) {
             return false;
         }
-        if (bound.isEmpty())
-        {
+        if (bound.isEmpty()) {
             return false;
         }
-        if (direction > 0)
-        {
+        if (direction > 0) {
             return bound.right > getWidth();
-        } else
-        {
+        } else {
             return bound.left < 0;
         }
     }
@@ -302,26 +289,20 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @return
      */
     @Override
-    public boolean canScrollVertically(int direction)
-    {
-        if (mPinchMode == PinchImageView.PINCH_MODE_SCALE)
-        {
+    public boolean canScrollVertically(int direction) {
+        if (mPinchMode == PinchImageView.PINCH_MODE_SCALE) {
             return true;
         }
         RectF bound = getImageBound(null);
-        if (bound == null)
-        {
+        if (bound == null) {
             return false;
         }
-        if (bound.isEmpty())
-        {
+        if (bound.isEmpty()) {
             return false;
         }
-        if (direction > 0)
-        {
+        if (direction > 0) {
             return bound.bottom > getHeight();
-        } else
-        {
+        } else {
             return bound.top < 0;
         }
     }
@@ -339,10 +320,8 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @param duration  动画持续时间
      * @see #getOuterMatrix(Matrix)
      */
-    public void outerMatrixTo(Matrix endMatrix, long duration)
-    {
-        if (endMatrix == null)
-        {
+    public void outerMatrixTo(Matrix endMatrix, long duration) {
+        if (endMatrix == null) {
             return;
         }
         //将手势设置为PINCH_MODE_FREE将停止后续手势的触发
@@ -350,13 +329,11 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         //停止所有正在进行的动画
         cancelAllAnimator();
         //如果时间不合法立即执行结果
-        if (duration <= 0)
-        {
+        if (duration <= 0) {
             mOuterMatrix.set(endMatrix);
             dispatchOuterMatrixChanged();
             invalidate();
-        } else
-        {
+        } else {
             //创建矩阵变化动画
             mScaleAnimator = new ScaleAnimator(mOuterMatrix, endMatrix, duration);
             mScaleAnimator.start();
@@ -374,29 +351,23 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @param duration 动画持续时间
      * @see #getMask()
      */
-    public void zoomMaskTo(RectF mask, long duration)
-    {
-        if (mask == null)
-        {
+    public void zoomMaskTo(RectF mask, long duration) {
+        if (mask == null) {
             return;
         }
         //停止mask动画
-        if (mMaskAnimator != null)
-        {
+        if (mMaskAnimator != null) {
             mMaskAnimator.cancel();
             mMaskAnimator = null;
         }
         //如果duration为0或者之前没有设置过mask,不执行动画,立即设置
-        if (duration <= 0 || mMask == null)
-        {
-            if (mMask == null)
-            {
+        if (duration <= 0 || mMask == null) {
+            if (mMask == null) {
                 mMask = new RectF();
             }
             mMask.set(mask);
             invalidate();
-        } else
-        {
+        } else {
             //执行mask动画
             mMaskAnimator = new MaskAnimator(mMask, mask, duration);
             mMaskAnimator.start();
@@ -409,8 +380,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * 重置位置到fit center状态,清空mask,停止所有手势,停止所有动画.
      * 但不清空drawable,以及事件绑定相关数据.
      */
-    public void reset()
-    {
+    public void reset() {
         //重置位置到fit
         mOuterMatrix.reset();
         dispatchOuterMatrixChanged();
@@ -422,8 +392,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         mScaleCenter.set(0, 0);
         mScaleBase = 0;
         //停止所有动画
-        if (mMaskAnimator != null)
-        {
+        if (mMaskAnimator != null) {
             mMaskAnimator.cancel();
             mMaskAnimator = null;
         }
@@ -438,8 +407,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
     /**
      * 外部矩阵变化事件通知监听器
      */
-    public interface OuterMatrixChangedListener
-    {
+    public interface OuterMatrixChangedListener {
 
         /**
          * 外部矩阵变化回调
@@ -486,31 +454,23 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      *
      * @param listener
      */
-    public void addOuterMatrixChangedListener(OuterMatrixChangedListener listener)
-    {
-        if (listener == null)
-        {
+    public void addOuterMatrixChangedListener(OuterMatrixChangedListener listener) {
+        if (listener == null) {
             return;
         }
         //如果监听列表没有被修改锁定直接将监听添加到监听列表
-        if (mDispatchOuterMatrixChangedLock == 0)
-        {
-            if (mOuterMatrixChangedListeners == null)
-            {
+        if (mDispatchOuterMatrixChangedLock == 0) {
+            if (mOuterMatrixChangedListeners == null) {
                 mOuterMatrixChangedListeners = new ArrayList<OuterMatrixChangedListener>();
             }
             mOuterMatrixChangedListeners.add(listener);
-        } else
-        {
+        } else {
             //如果监听列表修改被锁定,那么尝试在监听列表副本上添加
             //监听列表副本将会在锁定被解除时替换到监听列表里
-            if (mOuterMatrixChangedListenersCopy == null)
-            {
-                if (mOuterMatrixChangedListeners != null)
-                {
+            if (mOuterMatrixChangedListenersCopy == null) {
+                if (mOuterMatrixChangedListeners != null) {
                     mOuterMatrixChangedListenersCopy = new ArrayList<OuterMatrixChangedListener>(mOuterMatrixChangedListeners);
-                } else
-                {
+                } else {
                     mOuterMatrixChangedListenersCopy = new ArrayList<OuterMatrixChangedListener>();
                 }
             }
@@ -523,32 +483,24 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      *
      * @param listener
      */
-    public void removeOuterMatrixChangedListener(OuterMatrixChangedListener listener)
-    {
-        if (listener == null)
-        {
+    public void removeOuterMatrixChangedListener(OuterMatrixChangedListener listener) {
+        if (listener == null) {
             return;
         }
         //如果监听列表没有被修改锁定直接在监听列表数据结构上修改
-        if (mDispatchOuterMatrixChangedLock == 0)
-        {
-            if (mOuterMatrixChangedListeners != null)
-            {
+        if (mDispatchOuterMatrixChangedLock == 0) {
+            if (mOuterMatrixChangedListeners != null) {
                 mOuterMatrixChangedListeners.remove(listener);
             }
-        } else
-        {
+        } else {
             //如果监听列表被修改锁定,那么就在其副本上修改
             //其副本将会在锁定解除时替换回监听列表
-            if (mOuterMatrixChangedListenersCopy == null)
-            {
-                if (mOuterMatrixChangedListeners != null)
-                {
+            if (mOuterMatrixChangedListenersCopy == null) {
+                if (mOuterMatrixChangedListeners != null) {
                     mOuterMatrixChangedListenersCopy = new ArrayList<OuterMatrixChangedListener>(mOuterMatrixChangedListeners);
                 }
             }
-            if (mOuterMatrixChangedListenersCopy != null)
-            {
+            if (mOuterMatrixChangedListenersCopy != null) {
                 mOuterMatrixChangedListenersCopy.remove(listener);
             }
         }
@@ -561,10 +513,8 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      *
      * @see #mOuterMatrix
      */
-    private void dispatchOuterMatrixChanged()
-    {
-        if (mOuterMatrixChangedListeners == null)
-        {
+    private void dispatchOuterMatrixChanged() {
+        if (mOuterMatrixChangedListeners == null) {
             return;
         }
         //增加锁
@@ -572,18 +522,15 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         //使用boolean无法判断递归结束
         mDispatchOuterMatrixChangedLock++;
         //在列表循环过程中不允许修改列表,否则将引发崩溃
-        for (OuterMatrixChangedListener listener : mOuterMatrixChangedListeners)
-        {
+        for (OuterMatrixChangedListener listener : mOuterMatrixChangedListeners) {
             listener.onOuterMatrixChanged(this);
         }
         //减锁
         mDispatchOuterMatrixChangedLock--;
         //如果是递归的情况,mDispatchOuterMatrixChangedLock可能大于1,只有减到0才能算列表的锁定解除
-        if (mDispatchOuterMatrixChangedLock == 0)
-        {
+        if (mDispatchOuterMatrixChangedLock == 0) {
             //如果期间有修改列表,那么副本将不为null
-            if (mOuterMatrixChangedListenersCopy != null)
-            {
+            if (mOuterMatrixChangedListenersCopy != null) {
                 //将副本替换掉正式的列表
                 mOuterMatrixChangedListeners = mOuterMatrixChangedListenersCopy;
                 //清空副本
@@ -607,8 +554,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @see #scaleEnd()
      * @see #doubleTap(float, float)
      */
-    protected float getMaxScale()
-    {
+    protected float getMaxScale() {
         return MAX_SCALE;
     }
 
@@ -624,18 +570,15 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @see #doubleTap(float, float)
      * @see #getMaxScale()
      */
-    protected float calculateNextScale(float innerScale, float outerScale)
-    {
+    protected float calculateNextScale(float innerScale, float outerScale) {
         float currentScale = innerScale * outerScale;
         float currentHeight = getDrawable().getIntrinsicHeight();
         float ComponentHeight = getHeight();
         //float currentHeight = currentImageBound.bottom - currentImageBound.top;
         float maxScale = ComponentHeight / currentHeight;
-        if (currentScale < maxScale)
-        {
+        if (currentScale < maxScale) {
             return maxScale;
-        } else
-        {
+        } else {
             return innerScale;
         }
     }
@@ -643,58 +586,49 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
 
     ////////////////////////////////初始化////////////////////////////////
 
-    public PinchImageView(Context context)
-    {
+    public PinchImageView(Context context) {
         super(context);
         initView();
     }
 
-    public PinchImageView(Context context, AttributeSet attrs)
-    {
+    public PinchImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
-    public PinchImageView(Context context, AttributeSet attrs, int defStyle)
-    {
+    public PinchImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView();
     }
 
-    private void initView()
-    {
+    private void initView() {
         //强制设置图片scaleType为matrix
         super.setScaleType(ScaleType.MATRIX);
     }
 
     //不允许设置scaleType，只能用内部设置的matrix
     @Override
-    public void setScaleType(ScaleType scaleType)
-    {
+    public void setScaleType(ScaleType scaleType) {
     }
 
 
     ////////////////////////////////绘制////////////////////////////////
 
     @Override
-    protected void onDraw(Canvas canvas)
-    {
+    protected void onDraw(Canvas canvas) {
         //在绘制前设置变换矩阵
-        if (isReady())
-        {
+        if (isReady()) {
             Matrix matrix = MathUtils.matrixTake();
             setImageMatrix(getCurrentImageMatrix(matrix));
             MathUtils.matrixGiven(matrix);
         }
         //对图像做遮罩处理
-        if (mMask != null)
-        {
+        if (mMask != null) {
             canvas.save();
             canvas.clipRect(mMask);
             super.onDraw(canvas);
             canvas.restore();
-        } else
-        {
+        } else {
             super.onDraw(canvas);
         }
     }
@@ -709,8 +643,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      *
      * @return 是否能执行手势相关计算
      */
-    private boolean isReady()
-    {
+    private boolean isReady() {
         return getDrawable() != null && getDrawable().getIntrinsicWidth() > 0 && getDrawable().getIntrinsicHeight() > 0
                 && getWidth() > 0 && getHeight() > 0;
     }
@@ -732,8 +665,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * <p>
      * 将mask从一个rect动画到另外一个rect
      */
-    private class MaskAnimator extends ValueAnimator implements ValueAnimator.AnimatorUpdateListener
-    {
+    private class MaskAnimator extends ValueAnimator implements ValueAnimator.AnimatorUpdateListener {
 
         /**
          * 开始mask
@@ -757,8 +689,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param end      动画终点状态
          * @param duration 动画持续时间
          */
-        public MaskAnimator(RectF start, RectF end, long duration)
-        {
+        public MaskAnimator(RectF start, RectF end, long duration) {
             super();
             setFloatValues(0, 1f);
             setDuration(duration);
@@ -775,18 +706,15 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         }
 
         @Override
-        public void onAnimationUpdate(ValueAnimator animation)
-        {
+        public void onAnimationUpdate(ValueAnimator animation) {
             //获取动画进度,0-1范围
             float value = (Float) animation.getAnimatedValue();
             //根据进度对起点终点之间做插值
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 mResult[i] = mStart[i] + (mEnd[i] - mStart[i]) * value;
             }
             //期间mask有可能被置空了,所以判断一下
-            if (mMask == null)
-            {
+            if (mMask == null) {
                 mMask = new RectF();
             }
             //设置新的mask并绘制
@@ -861,43 +789,38 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * <p>
      * 在onTouchEvent末尾被执行.
      */
-    private GestureDetector mGestureDetector = new GestureDetector(PinchImageView.this.getContext(), new GestureDetector.SimpleOnGestureListener()
-    {
+    private GestureDetector mGestureDetector = new GestureDetector(PinchImageView.this.getContext(), new GestureDetector.SimpleOnGestureListener() {
 
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
-        {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             //只有在单指模式结束之后才允许执行fling
-            if (mPinchMode == PINCH_MODE_FREE && !(mScaleAnimator != null && mScaleAnimator.isRunning()))
-            {
+            if (mPinchMode == PINCH_MODE_FREE && !(mScaleAnimator != null && mScaleAnimator.isRunning())) {
                 fling(velocityX, velocityY);
             }
             return true;
         }
 
-        public void onLongPress(MotionEvent e)
-        {
+        @Override
+        public void onLongPress(MotionEvent e) {
             //触发长按
-            if (mOnLongClickListener != null)
-            {
+            if (mOnLongClickListener != null) {
                 mOnLongClickListener.onLongClick(PinchImageView.this);
             }
         }
 
-        public boolean onDoubleTap(MotionEvent e)
-        {
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
             //当手指快速第二次按下触发,此时必须是单指模式才允许执行doubleTap
-            if (mPinchMode == PINCH_MODE_SCROLL && !(mScaleAnimator != null && mScaleAnimator.isRunning()))
-            {
+            if (mPinchMode == PINCH_MODE_SCROLL && !(mScaleAnimator != null && mScaleAnimator.isRunning())) {
                 doubleTap(e.getX(), e.getY());
             }
             return true;
         }
 
-        public boolean onSingleTapConfirmed(MotionEvent e)
-        {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
             //触发点击
-            if (mOnClickListener != null)
-            {
+            if (mOnClickListener != null) {
                 mOnClickListener.onClick(PinchImageView.this);
             }
             return true;
@@ -905,50 +828,44 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
     });
 
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
+    public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
 
-        for(OnTouchListener l : touchListeners){
-            l.onTouch(this,event);
+        for (OnTouchListener l : touchListeners) {
+            l.onTouch(this, event);
+        }
+
+        if (disablePinchGesture) {
+            return true;
         }
 
         int action = event.getAction() & MotionEvent.ACTION_MASK;
         //最后一个点抬起或者取消，结束所有模式
-        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL)
-        {
+        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
             //如果之前是缩放模式,还需要触发一下缩放结束动画
-            if (mPinchMode == PINCH_MODE_SCALE)
-            {
+            if (mPinchMode == PINCH_MODE_SCALE) {
                 scaleEnd();
             }
             mPinchMode = PINCH_MODE_FREE;
-        } else if (action == MotionEvent.ACTION_POINTER_UP)
-        {
+        } else if (action == MotionEvent.ACTION_POINTER_UP) {
             //多个手指情况下抬起一个手指,此时需要是缩放模式才触发
-            if (mPinchMode == PINCH_MODE_SCALE)
-            {
+            if (mPinchMode == PINCH_MODE_SCALE) {
                 //抬起的点如果大于2，那么缩放模式还有效，但是有可能初始点变了，重新测量初始点
-                if (event.getPointerCount() > 2)
-                {
+                if (event.getPointerCount() > 2) {
                     //如果还没结束缩放模式，但是第一个点抬起了，那么让第二个点和第三个点作为缩放控制点
-                    if (event.getAction() >> 8 == 0)
-                    {
+                    if (event.getAction() >> 8 == 0) {
                         saveScaleContext(event.getX(1), event.getY(1), event.getX(2), event.getY(2));
                         //如果还没结束缩放模式，但是第二个点抬起了，那么让第一个点和第三个点作为缩放控制点
-                    } else if (event.getAction() >> 8 == 1)
-                    {
+                    } else if (event.getAction() >> 8 == 1) {
                         saveScaleContext(event.getX(0), event.getY(0), event.getX(2), event.getY(2));
                     }
                 }
                 //如果抬起的点等于2,那么此时只剩下一个点,也不允许进入单指模式,因为此时可能图片没有在正确的位置上
             }
             //第一个点按下，开启滚动模式，记录开始滚动的点
-        } else if (action == MotionEvent.ACTION_DOWN)
-        {
+        } else if (action == MotionEvent.ACTION_DOWN) {
             //在矩阵动画过程中不允许启动滚动模式
-            if (!(mScaleAnimator != null && mScaleAnimator.isRunning()))
-            {
+            if (!(mScaleAnimator != null && mScaleAnimator.isRunning())) {
                 //停止所有动画
                 cancelAllAnimator();
                 //切换到滚动模式
@@ -957,28 +874,23 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
                 mLastMovePoint.set(event.getX(), event.getY());
             }
             //非第一个点按下，关闭滚动模式，开启缩放模式，记录缩放模式的一些初始数据
-        } else if (action == MotionEvent.ACTION_POINTER_DOWN)
-        {
+        } else if (action == MotionEvent.ACTION_POINTER_DOWN) {
             //停止所有动画
             cancelAllAnimator();
             //切换到缩放模式
             mPinchMode = PINCH_MODE_SCALE;
             //保存缩放的两个手指
             saveScaleContext(event.getX(0), event.getY(0), event.getX(1), event.getY(1));
-        } else if (action == MotionEvent.ACTION_MOVE)
-        {
-            if (!(mScaleAnimator != null && mScaleAnimator.isRunning()))
-            {
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            if (!(mScaleAnimator != null && mScaleAnimator.isRunning())) {
                 //在滚动模式下移动
-                if (mPinchMode == PINCH_MODE_SCROLL)
-                {
+                if (mPinchMode == PINCH_MODE_SCROLL) {
                     //每次移动产生一个差值累积到图片位置上
                     scrollBy(event.getX() - mLastMovePoint.x, event.getY() - mLastMovePoint.y);
                     //记录新的移动点
                     mLastMovePoint.set(event.getX(), event.getY());
                     //在缩放模式下移动
-                } else if (mPinchMode == PINCH_MODE_SCALE && event.getPointerCount() > 1)
-                {
+                } else if (mPinchMode == PINCH_MODE_SCALE && event.getPointerCount() > 1) {
                     //两个缩放点间的距离
                     float distance = MathUtils.getDistance(event.getX(0), event.getY(0), event.getX(1), event.getY(1));
                     //保存缩放点中点
@@ -1003,10 +915,8 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @param yDiff 移动距离
      * @return 是否改变了位置
      */
-    private boolean scrollBy(float xDiff, float yDiff)
-    {
-        if (!isReady())
-        {
+    private boolean scrollBy(float xDiff, float yDiff) {
+        if (!isReady()) {
             return false;
         }
         //原图方框
@@ -1016,54 +926,40 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         float displayWidth = getWidth();
         float displayHeight = getHeight();
         //如果当前图片宽度小于控件宽度，则不能移动
-        if (bound.right - bound.left < displayWidth)
-        {
+        if (bound.right - bound.left < displayWidth) {
             xDiff = 0;
             //如果图片左边在移动后超出控件左边
-        } else if (bound.left + xDiff > 0)
-        {
+        } else if (bound.left + xDiff > 0) {
             //如果在移动之前是没超出的，计算应该移动的距离
-            if (bound.left < 0)
-            {
+            if (bound.left < 0) {
                 xDiff = -bound.left;
                 //否则无法移动
-            } else
-            {
+            } else {
                 xDiff = 0;
             }
             //如果图片右边在移动后超出控件右边
-        } else if (bound.right + xDiff < displayWidth)
-        {
+        } else if (bound.right + xDiff < displayWidth) {
             //如果在移动之前是没超出的，计算应该移动的距离
-            if (bound.right > displayWidth)
-            {
+            if (bound.right > displayWidth) {
                 xDiff = displayWidth - bound.right;
                 //否则无法移动
-            } else
-            {
+            } else {
                 xDiff = 0;
             }
         }
         //以下同理
-        if (bound.bottom - bound.top < displayHeight)
-        {
+        if (bound.bottom - bound.top < displayHeight) {
             yDiff = 0;
-        } else if (bound.top + yDiff > 0)
-        {
-            if (bound.top < 0)
-            {
+        } else if (bound.top + yDiff > 0) {
+            if (bound.top < 0) {
                 yDiff = -bound.top;
-            } else
-            {
+            } else {
                 yDiff = 0;
             }
-        } else if (bound.bottom + yDiff < displayHeight)
-        {
-            if (bound.bottom > displayHeight)
-            {
+        } else if (bound.bottom + yDiff < displayHeight) {
+            if (bound.bottom > displayHeight) {
                 yDiff = displayHeight - bound.bottom;
-            } else
-            {
+            } else {
                 yDiff = 0;
             }
         }
@@ -1074,11 +970,9 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         //触发重绘
         invalidate();
         //检查是否有变化
-        if (xDiff != 0 || yDiff != 0)
-        {
+        if (xDiff != 0 || yDiff != 0) {
             return true;
-        } else
-        {
+        } else {
             return false;
         }
     }
@@ -1094,8 +988,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @param x2 缩放第二个手指
      * @param y2 缩放第二个手指
      */
-    private void saveScaleContext(float x1, float y1, float x2, float y2)
-    {
+    private void saveScaleContext(float x1, float y1, float x2, float y2) {
         //记录基础缩放值,其中图片缩放比例按照x方向来计算
         //理论上图片应该是等比的,x和y方向比例相同
         //但是有可能外部设定了不规范的值.
@@ -1119,10 +1012,8 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @see #mScaleCenter
      * @see #mScaleBase
      */
-    private void scale(PointF scaleCenter, float scaleBase, float distance, PointF lineCenter)
-    {
-        if (!isReady())
-        {
+    private void scale(PointF scaleCenter, float scaleBase, float distance, PointF lineCenter) {
+        if (!isReady()) {
             return;
         }
         //计算图片从fit center状态到目标状态的缩放比例
@@ -1152,10 +1043,8 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @see #calculateNextScale(float, float)
      * @see #getMaxScale()
      */
-    private void doubleTap(float x, float y)
-    {
-        if (!isReady())
-        {
+    private void doubleTap(float x, float y) {
+        if (!isReady()) {
             return;
         }
         //获取第一层变换矩阵
@@ -1173,12 +1062,10 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         //接下来要放大的大小
         float nextScale = calculateNextScale(innerScale, outerScale);
         //如果接下来放大大于最大值或者小于fit center值，则取边界
-        if (nextScale > maxScale)
-        {
+        if (nextScale > maxScale) {
             nextScale = maxScale;
         }
-        if (nextScale < innerScale)
-        {
+        if (nextScale < innerScale) {
             nextScale = innerScale;
         }
         //开始计算缩放动画的结果矩阵
@@ -1195,24 +1082,18 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         //修正位置
         float postX = 0;
         float postY = 0;
-        if (testBound.right - testBound.left < displayWidth)
-        {
+        if (testBound.right - testBound.left < displayWidth) {
             postX = displayWidth / 2f - (testBound.right + testBound.left) / 2f;
-        } else if (testBound.left > 0)
-        {
+        } else if (testBound.left > 0) {
             postX = -testBound.left;
-        } else if (testBound.right < displayWidth)
-        {
+        } else if (testBound.right < displayWidth) {
             postX = displayWidth - testBound.right;
         }
-        if (testBound.bottom - testBound.top < displayHeight)
-        {
+        if (testBound.bottom - testBound.top < displayHeight) {
             postY = displayHeight / 2f - (testBound.bottom + testBound.top) / 2f;
-        } else if (testBound.top > 0)
-        {
+        } else if (testBound.top > 0) {
             postY = -testBound.top;
-        } else if (testBound.bottom < displayHeight)
-        {
+        } else if (testBound.bottom < displayHeight) {
             postY = displayHeight - testBound.bottom;
         }
         //应用修正位置
@@ -1235,10 +1116,8 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * 如果图片超过边界,找到最近的位置动画恢复.
      * 如果图片缩放尺寸超过最大值或者最小值,找到最近的值动画恢复.
      */
-    private void scaleEnd()
-    {
-        if (!isReady())
-        {
+    private void scaleEnd() {
+        if (!isReady()) {
             return;
         }
         //是否修正了位置
@@ -1261,18 +1140,15 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         float postX = 0;
         float postY = 0;
         //如果整体缩放比例大于最大比例，进行缩放修正
-        if (currentScale > maxScale)
-        {
+        if (currentScale > maxScale) {
             scalePost = maxScale / currentScale;
         }
         //如果缩放修正后整体导致第二层缩放小于1（就是图片比fit center状态还小），重新修正缩放
-        if (outerScale * scalePost < 1f)
-        {
+        if (outerScale * scalePost < 1f) {
             scalePost = 1f / outerScale;
         }
         //如果缩放修正不为1，说明进行了修正
-        if (scalePost != 1f)
-        {
+        if (scalePost != 1f) {
             change = true;
         }
         //尝试根据缩放点进行缩放修正
@@ -1282,34 +1158,26 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         //获取缩放修正后的图片方框
         testMatrix.mapRect(testBound);
         //检测缩放修正后位置有无超出，如果超出进行位置修正
-        if (testBound.right - testBound.left < displayWidth)
-        {
+        if (testBound.right - testBound.left < displayWidth) {
             postX = displayWidth / 2f - (testBound.right + testBound.left) / 2f;
-        } else if (testBound.left > 0)
-        {
+        } else if (testBound.left > 0) {
             postX = -testBound.left;
-        } else if (testBound.right < displayWidth)
-        {
+        } else if (testBound.right < displayWidth) {
             postX = displayWidth - testBound.right;
         }
-        if (testBound.bottom - testBound.top < displayHeight)
-        {
+        if (testBound.bottom - testBound.top < displayHeight) {
             postY = displayHeight / 2f - (testBound.bottom + testBound.top) / 2f;
-        } else if (testBound.top > 0)
-        {
+        } else if (testBound.top > 0) {
             postY = -testBound.top;
-        } else if (testBound.bottom < displayHeight)
-        {
+        } else if (testBound.bottom < displayHeight) {
             postY = displayHeight - testBound.bottom;
         }
         //如果位置修正不为0，说明进行了修正
-        if (postX != 0 || postY != 0)
-        {
+        if (postX != 0 || postY != 0) {
             change = true;
         }
         //只有有执行修正才执行动画
-        if (change)
-        {
+        if (change) {
             //计算结束矩阵
             Matrix animEnd = MathUtils.matrixTake(mOuterMatrix);
             animEnd.postScale(scalePost, scalePost, mLastMovePoint.x, mLastMovePoint.y);
@@ -1339,10 +1207,8 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * @param vx x方向速度
      * @param vy y方向速度
      */
-    private void fling(float vx, float vy)
-    {
-        if (!isReady())
-        {
+    private void fling(float vx, float vy) {
+        if (!isReady()) {
             return;
         }
         //清理当前可能正在执行的动画
@@ -1356,15 +1222,12 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
     /**
      * 停止所有手势动画
      */
-    private void cancelAllAnimator()
-    {
-        if (mScaleAnimator != null)
-        {
+    private void cancelAllAnimator() {
+        if (mScaleAnimator != null) {
             mScaleAnimator.cancel();
             mScaleAnimator = null;
         }
-        if (mFlingAnimator != null)
-        {
+        if (mFlingAnimator != null) {
             mFlingAnimator.cancel();
             mFlingAnimator = null;
         }
@@ -1376,8 +1239,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * 速度逐渐衰减,每帧速度衰减为原来的FLING_DAMPING_FACTOR,当速度衰减到小于1时停止.
      * 当图片不能移动时,动画停止.
      */
-    private class FlingAnimator extends ValueAnimator implements ValueAnimator.AnimatorUpdateListener
-    {
+    private class FlingAnimator extends ValueAnimator implements ValueAnimator.AnimatorUpdateListener {
 
         /**
          * 速度向量
@@ -1392,8 +1254,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param vectorX 速度向量
          * @param vectorY 速度向量
          */
-        public FlingAnimator(float vectorX, float vectorY)
-        {
+        public FlingAnimator(float vectorX, float vectorY) {
             super();
             setFloatValues(0, 1f);
             setDuration(1000000);
@@ -1402,16 +1263,14 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         }
 
         @Override
-        public void onAnimationUpdate(ValueAnimator animation)
-        {
+        public void onAnimationUpdate(ValueAnimator animation) {
             //移动图像并给出结果
             boolean result = scrollBy(mVector[0], mVector[1]);
             //衰减速度
             mVector[0] *= FLING_DAMPING_FACTOR;
             mVector[1] *= FLING_DAMPING_FACTOR;
             //速度太小或者不能移动了就结束
-            if (!result || MathUtils.getDistance(0, 0, mVector[0], mVector[1]) < 1f)
-            {
+            if (!result || MathUtils.getDistance(0, 0, mVector[0], mVector[1]) < 1f) {
                 animation.cancel();
             }
         }
@@ -1422,8 +1281,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      * <p>
      * 在给定时间内从一个矩阵的变化逐渐动画到另一个矩阵的变化
      */
-    private class ScaleAnimator extends ValueAnimator implements ValueAnimator.AnimatorUpdateListener
-    {
+    private class ScaleAnimator extends ValueAnimator implements ValueAnimator.AnimatorUpdateListener {
 
         /**
          * 开始矩阵
@@ -1448,8 +1306,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param start 开始矩阵
          * @param end   结束矩阵
          */
-        public ScaleAnimator(Matrix start, Matrix end)
-        {
+        public ScaleAnimator(Matrix start, Matrix end) {
             this(start, end, SCALE_ANIMATOR_DURATION);
         }
 
@@ -1462,8 +1319,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param end      结束矩阵
          * @param duration 动画时间
          */
-        public ScaleAnimator(Matrix start, Matrix end, long duration)
-        {
+        public ScaleAnimator(Matrix start, Matrix end, long duration) {
             super();
             setFloatValues(0, 1f);
             setDuration(duration);
@@ -1473,13 +1329,11 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         }
 
         @Override
-        public void onAnimationUpdate(ValueAnimator animation)
-        {
+        public void onAnimationUpdate(ValueAnimator animation) {
             //获取动画进度
             float value = (Float) animation.getAnimatedValue();
             //根据动画进度计算矩阵中间插值
-            for (int i = 0; i < 9; i++)
-            {
+            for (int i = 0; i < 9; i++) {
                 mResult[i] = mStart[i] + (mEnd[i] - mStart[i]) * value;
             }
             //设置矩阵并重绘
@@ -1501,8 +1355,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      *
      * @param <T> 对象池容纳的对象类型
      */
-    private static abstract class ObjectsPool<T>
-    {
+    private static abstract class ObjectsPool<T> {
 
         /**
          * 对象池的最大容量
@@ -1519,8 +1372,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          *
          * @param size 对象池最大容量
          */
-        public ObjectsPool(int size)
-        {
+        public ObjectsPool(int size) {
             mSize = size;
             mQueue = new LinkedList<T>();
         }
@@ -1536,14 +1388,11 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @return 可用的对象
          * @see #given(Object)
          */
-        public T take()
-        {
+        public T take() {
             //如果池内为空就创建一个
-            if (mQueue.size() == 0)
-            {
+            if (mQueue.size() == 0) {
                 return newInstance();
-            } else
-            {
+            } else {
                 //对象池里有就从顶端拿出来一个返回
                 return resetInstance(mQueue.poll());
             }
@@ -1557,11 +1406,9 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param obj 归还的对象
          * @see #take()
          */
-        public void given(T obj)
-        {
+        public void given(T obj) {
             //如果对象池还有空位子就归还对象
-            if (obj != null && mQueue.size() < mSize)
-            {
+            if (obj != null && mQueue.size() < mSize) {
                 mQueue.offer(obj);
             }
         }
@@ -1587,23 +1434,19 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
     /**
      * 矩阵对象池
      */
-    private static class MatrixPool extends ObjectsPool<Matrix>
-    {
+    private static class MatrixPool extends ObjectsPool<Matrix> {
 
-        public MatrixPool(int size)
-        {
+        public MatrixPool(int size) {
             super(size);
         }
 
         @Override
-        protected Matrix newInstance()
-        {
+        protected Matrix newInstance() {
             return new Matrix();
         }
 
         @Override
-        protected Matrix resetInstance(Matrix obj)
-        {
+        protected Matrix resetInstance(Matrix obj) {
             obj.reset();
             return obj;
         }
@@ -1612,23 +1455,19 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
     /**
      * 矩形对象池
      */
-    private static class RectFPool extends ObjectsPool<RectF>
-    {
+    private static class RectFPool extends ObjectsPool<RectF> {
 
-        public RectFPool(int size)
-        {
+        public RectFPool(int size) {
             super(size);
         }
 
         @Override
-        protected RectF newInstance()
-        {
+        protected RectF newInstance() {
             return new RectF();
         }
 
         @Override
-        protected RectF resetInstance(RectF obj)
-        {
+        protected RectF resetInstance(RectF obj) {
             obj.setEmpty();
             return obj;
         }
@@ -1640,8 +1479,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
     /**
      * 数学计算工具类
      */
-    public static class MathUtils
-    {
+    public static class MathUtils {
 
         /**
          * 矩阵对象池
@@ -1651,19 +1489,16 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         /**
          * 获取矩阵对象
          */
-        public static Matrix matrixTake()
-        {
+        public static Matrix matrixTake() {
             return mMatrixPool.take();
         }
 
         /**
          * 获取某个矩阵的copy
          */
-        public static Matrix matrixTake(Matrix matrix)
-        {
+        public static Matrix matrixTake(Matrix matrix) {
             Matrix result = mMatrixPool.take();
-            if (matrix != null)
-            {
+            if (matrix != null) {
                 result.set(matrix);
             }
             return result;
@@ -1672,8 +1507,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         /**
          * 归还矩阵对象
          */
-        public static void matrixGiven(Matrix matrix)
-        {
+        public static void matrixGiven(Matrix matrix) {
             mMatrixPool.given(matrix);
         }
 
@@ -1685,16 +1519,14 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         /**
          * 获取矩形对象
          */
-        public static RectF rectFTake()
-        {
+        public static RectF rectFTake() {
             return mRectFPool.take();
         }
 
         /**
          * 按照指定值获取矩形对象
          */
-        public static RectF rectFTake(float left, float top, float right, float bottom)
-        {
+        public static RectF rectFTake(float left, float top, float right, float bottom) {
             RectF result = mRectFPool.take();
             result.set(left, top, right, bottom);
             return result;
@@ -1703,11 +1535,9 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         /**
          * 获取某个矩形的副本
          */
-        public static RectF rectFTake(RectF rectF)
-        {
+        public static RectF rectFTake(RectF rectF) {
             RectF result = mRectFPool.take();
-            if (rectF != null)
-            {
+            if (rectF != null) {
                 result.set(rectF);
             }
             return result;
@@ -1716,8 +1546,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
         /**
          * 归还矩形对象
          */
-        public static void rectFGiven(RectF rectF)
-        {
+        public static void rectFGiven(RectF rectF) {
             mRectFPool.given(rectF);
         }
 
@@ -1730,8 +1559,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param y2 点2
          * @return 距离
          */
-        public static float getDistance(float x1, float y1, float x2, float y2)
-        {
+        public static float getDistance(float x1, float y1, float x2, float y2) {
             float x = x1 - x2;
             float y = y1 - y2;
             return (float) Math.sqrt(x * x + y * y);
@@ -1746,8 +1574,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param y2 点2
          * @return float[]{x, y}
          */
-        public static float[] getCenterPoint(float x1, float y1, float x2, float y2)
-        {
+        public static float[] getCenterPoint(float x1, float y1, float x2, float y2) {
             return new float[]{(x1 + x2) / 2f, (y1 + y2) / 2f};
         }
 
@@ -1757,15 +1584,12 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param matrix 要计算的矩阵
          * @return float[]{scaleX, scaleY}
          */
-        public static float[] getMatrixScale(Matrix matrix)
-        {
-            if (matrix != null)
-            {
+        public static float[] getMatrixScale(Matrix matrix) {
+            if (matrix != null) {
                 float[] value = new float[9];
                 matrix.getValues(value);
                 return new float[]{value[0], value[4]};
-            } else
-            {
+            } else {
                 return new float[2];
             }
         }
@@ -1780,10 +1604,8 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param matrix
          * @return unknownPoint
          */
-        public static float[] inverseMatrixPoint(float[] point, Matrix matrix)
-        {
-            if (point != null && matrix != null)
-            {
+        public static float[] inverseMatrixPoint(float[] point, Matrix matrix) {
+            if (point != null && matrix != null) {
                 float[] dst = new float[2];
                 //计算matrix的逆矩阵
                 Matrix inverse = matrixTake();
@@ -1793,8 +1615,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
                 //清除临时变量
                 matrixGiven(inverse);
                 return dst;
-            } else
-            {
+            } else {
                 return new float[2];
             }
         }
@@ -1809,14 +1630,11 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param to
          * @param result unknownMatrix
          */
-        public static void calculateRectTranslateMatrix(RectF from, RectF to, Matrix result)
-        {
-            if (from == null || to == null || result == null)
-            {
+        public static void calculateRectTranslateMatrix(RectF from, RectF to, Matrix result) {
+            if (from == null || to == null || result == null) {
                 return;
             }
-            if (from.width() == 0 || from.height() == 0)
-            {
+            if (from.width() == 0 || from.height() == 0) {
                 return;
             }
             result.reset();
@@ -1834,27 +1652,21 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
          * @param scaleType 图片在ImageView中的ScaleType
          * @param result    图片应该在ImageView中展示的矩形
          */
-        public static void calculateScaledRectInContainer(RectF container, float srcWidth, float srcHeight, ScaleType scaleType, RectF result)
-        {
-            if (container == null || result == null)
-            {
+        public static void calculateScaledRectInContainer(RectF container, float srcWidth, float srcHeight, ScaleType scaleType, RectF result) {
+            if (container == null || result == null) {
                 return;
             }
-            if (srcWidth == 0 || srcHeight == 0)
-            {
+            if (srcWidth == 0 || srcHeight == 0) {
                 return;
             }
             //默认scaleType为fit center
-            if (scaleType == null)
-            {
+            if (scaleType == null) {
                 scaleType = ScaleType.FIT_CENTER;
             }
             result.setEmpty();
-            if (ScaleType.FIT_XY.equals(scaleType))
-            {
+            if (ScaleType.FIT_XY.equals(scaleType)) {
                 result.set(container);
-            } else if (ScaleType.CENTER.equals(scaleType))
-            {
+            } else if (ScaleType.CENTER.equals(scaleType)) {
                 Matrix matrix = matrixTake();
                 RectF rect = rectFTake(0, 0, srcWidth, srcHeight);
                 matrix.setTranslate((container.width() - srcWidth) * 0.5f, (container.height() - srcHeight) * 0.5f);
@@ -1865,19 +1677,16 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
                 result.right += container.left;
                 result.top += container.top;
                 result.bottom += container.top;
-            } else if (ScaleType.CENTER_CROP.equals(scaleType))
-            {
+            } else if (ScaleType.CENTER_CROP.equals(scaleType)) {
                 Matrix matrix = matrixTake();
                 RectF rect = rectFTake(0, 0, srcWidth, srcHeight);
                 float scale;
                 float dx = 0;
                 float dy = 0;
-                if (srcWidth * container.height() > container.width() * srcHeight)
-                {
+                if (srcWidth * container.height() > container.width() * srcHeight) {
                     scale = container.height() / srcHeight;
                     dx = (container.width() - srcWidth * scale) * 0.5f;
-                } else
-                {
+                } else {
                     scale = container.width() / srcWidth;
                     dy = (container.height() - srcHeight * scale) * 0.5f;
                 }
@@ -1890,18 +1699,15 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
                 result.right += container.left;
                 result.top += container.top;
                 result.bottom += container.top;
-            } else if (ScaleType.CENTER_INSIDE.equals(scaleType))
-            {
+            } else if (ScaleType.CENTER_INSIDE.equals(scaleType)) {
                 Matrix matrix = matrixTake();
                 RectF rect = rectFTake(0, 0, srcWidth, srcHeight);
                 float scale;
                 float dx;
                 float dy;
-                if (srcWidth <= container.width() && srcHeight <= container.height())
-                {
+                if (srcWidth <= container.width() && srcHeight <= container.height()) {
                     scale = 1f;
-                } else
-                {
+                } else {
                     scale = Math.min(container.width() / srcWidth, container.height() / srcHeight);
                 }
                 dx = (container.width() - srcWidth * scale) * 0.5f;
@@ -1915,8 +1721,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
                 result.right += container.left;
                 result.top += container.top;
                 result.bottom += container.top;
-            } else if (ScaleType.FIT_CENTER.equals(scaleType))
-            {
+            } else if (ScaleType.FIT_CENTER.equals(scaleType)) {
                 Matrix matrix = matrixTake();
                 RectF rect = rectFTake(0, 0, srcWidth, srcHeight);
                 RectF tempSrc = rectFTake(0, 0, srcWidth, srcHeight);
@@ -1931,8 +1736,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
                 result.right += container.left;
                 result.top += container.top;
                 result.bottom += container.top;
-            } else if (ScaleType.FIT_START.equals(scaleType))
-            {
+            } else if (ScaleType.FIT_START.equals(scaleType)) {
                 Matrix matrix = matrixTake();
                 RectF rect = rectFTake(0, 0, srcWidth, srcHeight);
                 RectF tempSrc = rectFTake(0, 0, srcWidth, srcHeight);
@@ -1947,8 +1751,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
                 result.right += container.left;
                 result.top += container.top;
                 result.bottom += container.top;
-            } else if (ScaleType.FIT_END.equals(scaleType))
-            {
+            } else if (ScaleType.FIT_END.equals(scaleType)) {
                 Matrix matrix = matrixTake();
                 RectF rect = rectFTake(0, 0, srcWidth, srcHeight);
                 RectF tempSrc = rectFTake(0, 0, srcWidth, srcHeight);
@@ -1963,8 +1766,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
                 result.right += container.left;
                 result.top += container.top;
                 result.bottom += container.top;
-            } else
-            {
+            } else {
                 result.set(container);
             }
         }

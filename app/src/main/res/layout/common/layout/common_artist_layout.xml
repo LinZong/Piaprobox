@@ -20,12 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_centerVertical="true"
                 android:layout_margin="8dp"
-                bind:imageUrlWithPrefix="@{artistAvatarUrl}"
+                bind:imageArtistAvatar="@{artistAvatarUrl}"
                 android:id="@+id/Illustrator2_View_ArtistAvatar"/>
 
         <LinearLayout

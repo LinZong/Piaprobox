@@ -4,11 +4,14 @@ import android.databinding.BindingAdapter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.nemesiss.dev.piaprobox.Misc.StaticResourcesMap;
 import com.nemesiss.dev.piaprobox.R;
+import com.nemesiss.dev.piaprobox.Service.GlideApp;
 import com.nemesiss.dev.piaprobox.Service.HTMLParser;
 
 public class IllustratorViewBindings {
@@ -30,9 +33,11 @@ public class IllustratorViewBindings {
     @BindingAdapter({"bind:imageUrlWithPrefix"})
     public static void loadImage(ImageView imageView, String url) {
         if (null != url && !TextUtils.isEmpty(url) && !fixThumbReference(imageView, url)) {
-            Glide.with(imageView.getContext())
+            GlideApp.with(imageView.getContext())
                     .load(url)
-                    .apply(RequestOptions.priorityOf(Priority.HIGH))
+                    .transition(DrawableTransitionOptions.withCrossFade(500))
+                    .priority(Priority.HIGH)
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                     .into(imageView);
         }
     }
@@ -40,10 +45,24 @@ public class IllustratorViewBindings {
     @BindingAdapter({"bind:imageUrlNoPrefix"})
     public static void loadImageNoPrefix(ImageView imageView, String url) {
         if (null != url && !TextUtils.isEmpty(url) && !fixThumbReference(imageView, url)) {
-            Glide.with(imageView.getContext())
+            GlideApp.with(imageView.getContext())
                     .load(HTMLParser.GetAlbumThumb(url))
-                    .apply(RequestOptions.priorityOf(Priority.IMMEDIATE))
+                    .transition(DrawableTransitionOptions.withCrossFade(500))
+                    .priority(Priority.HIGH)
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                     .into(imageView);
+        }
+    }
+
+    @BindingAdapter({"bind:imageArtistAvatar"})
+    public static void loadImageArtistAvatar(ImageView imageView, String url) {
+        if (null != url && !TextUtils.isEmpty(url) && !fixThumbReference(imageView, url)) {
+            imageView.post(() -> GlideApp.with(imageView.getContext())
+                    .load(HTMLParser.GetAlbumThumb(url))
+                    .transform(new RoundedCorners(imageView.getWidth() / 2))
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                    .priority(Priority.HIGH)
+                    .into(imageView));
         }
     }
 }

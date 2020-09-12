@@ -4,6 +4,10 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityManagerCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -25,9 +29,11 @@ import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.RelatedImageListAdap
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback
 import com.nemesiss.dev.piaprobox.databinding.IllustratorViewFragmentBinding
 import kotlinx.android.synthetic.main.illustrator_view_fragment.*
 import kotlinx.android.synthetic.main.illustrator_view_fragment.view.*
+import java.lang.Exception
 
 class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
@@ -37,6 +43,12 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
         @JvmStatic
         val SHOULD_FETCH_DRAWABLE = "FetchDrawable"
+
+        @JvmStatic
+        val PREVIEW_IMAGE_REQ_CODE = 1
+
+        @JvmStatic
+        val PREVIEW_IMAGE_RES_CODE = 2
     }
 
     // 加载状态管理变量：
@@ -94,14 +106,12 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
         VIEW_CREATED = false
         DATA_LOADED = false
         CurrentViewModel = null
-//        Glide.clear(LoadOriginalWorkDrawableToImageView)
         super.onDestroy()
     }
 
     override fun onDestroyView() {
         VIEW_CREATED = false
         Illustrator2_View_ItemImageView.transitionName = null
-//        Glide.clear(LoadOriginalWorkDrawableToImageView)
         super.onDestroyView()
     }
 
@@ -173,12 +183,21 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
     private fun HandleEnterPinchImagePreview() {
         if (IS_CURRENT_BIG_SIZE_IMAGE_LOADED) {
+            activity?.setExitSharedElementCallback(MediaSharedElementCallback())
             val intent = Intent(context!!, PreviewImageActivity::class.java)
             PreviewImageActivity.SetPreShownDrawable(Illustrator2_View_ItemImageView.drawable)
-            startActivity(intent)
+            startActivityForResult(
+                intent,
+                PREVIEW_IMAGE_REQ_CODE,
+                ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), Illustrator2_View_ItemImageView, resources.getString(R.string.ImageViewTransitionName)).toBundle()
+            )
         } else {
             TellImageIsStillPreparing()
         }
+    }
+
+    fun HandlePreviewImageActivityReenter() {
+
     }
 
     private fun HandleDownloadImage() {

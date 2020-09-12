@@ -50,11 +50,11 @@
         <activity android:name=".Activity.Music.MusicDetailActivity">
 
         </activity>
-        <activity android:name=".Activity.Image.IllustratorViewActivity"/>
-        <activity android:name=".Activity.Image.IllustratorViewActivity2"/>
+        <activity android:name=".Activity.Image.IllustratorViewActivity2"
+                  android:theme="@style/SharedContentStyle"/>
         <activity
                 android:name=".Activity.Common.PreviewImageActivity"
-                android:theme="@style/PreviewImageTranslucentBar"
+                android:theme="@style/ShareImageViewContentStyle"
                 />
         <activity android:name=".Activity.Text.TextDetailActivity"/>
         <activity android:name=".Activity.Common.AppSettingActivity"/>
