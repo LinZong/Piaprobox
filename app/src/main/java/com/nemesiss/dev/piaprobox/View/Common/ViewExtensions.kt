@@ -211,7 +211,7 @@ fun PinchImageView.isScaling(): Boolean {
 }
 
 private fun isMovingVertical(distanceY: Float) : Boolean {
-    return abs(distanceY) > 20
+    return abs(distanceY) > 50
 }
 
 fun PiaproboxBaseActivity.wrapDragAndCloseTouchHandler(imageView: PinchImageView, backgroundView: View, closeThreshold: Int) {

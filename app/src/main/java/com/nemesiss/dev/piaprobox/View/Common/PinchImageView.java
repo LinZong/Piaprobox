@@ -38,7 +38,7 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
     /**
      * 图片最大放大比例
      */
-    private static final float MAX_SCALE = 4f;
+    private static final float MAX_SCALE = 8f;
 
 
     ////////////////////////////////监听器////////////////////////////////
