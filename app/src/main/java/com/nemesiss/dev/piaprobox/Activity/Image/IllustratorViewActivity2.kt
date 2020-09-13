@@ -31,6 +31,7 @@ import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.Util.BaseOnPageChangeListener
 import com.nemesiss.dev.piaprobox.Util.runWhenAlive
 import com.nemesiss.dev.piaprobox.View.Common.LoadingLineIndicator
+import com.nemesiss.dev.piaprobox.View.SharedElements.SharedElementUtils
 import kotlinx.android.synthetic.main.illustrator_view_activity2.*
 import org.jsoup.Jsoup
 import java.io.File
@@ -271,6 +272,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
         val intent = Intent()
         intent.putExtra("CURRENT_INDEX", CURRENT_SHOW_IMAGE_INDEX)
         setResult(REENTER_RESULT_CODE, intent)
+        SharedElementUtils.setPendingExitSharedElements(this, arrayListOf(resources.getString(R.string.ImageViewTransitionName)))
         supportFinishAfterTransition()
     }
 

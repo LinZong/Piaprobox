@@ -1,7 +1,9 @@
 package com.nemesiss.dev.piaprobox.Application
 
 import android.app.Application
+import android.content.Context
 import com.nemesiss.dev.piaprobox.Service.Persistence
+import me.weishu.reflection.Reflection
 import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
@@ -20,6 +22,11 @@ class PiaproboxApplication : Application() {
     companion object {
         lateinit var Self: PiaproboxApplication
             private set
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        Reflection.unseal(base)
     }
 
     private fun TrustAllCetificates() {
