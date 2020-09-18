@@ -3,6 +3,7 @@ package com.nemesiss.dev.piaprobox.Service.Player
 import android.app.Notification
 import android.app.Service
 import android.content.Intent
+import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
@@ -14,6 +15,8 @@ import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.Service.Player.Legacy.SimpleMusicPlayer
+import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayer
+import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.impl.SimpleMusicPlayerImpl
 import io.reactivex.subjects.BehaviorSubject
 
 class MusicPlayerService : Service() {
@@ -44,86 +47,7 @@ class MusicPlayerService : Service() {
             )
     }
 
-    var InnerPlayer: SimpleMusicPlayer? = null
-        get() {
-            if (field == null) {
-                field = SimpleMusicPlayer(this)
-            }
-            return field
-        }
-        private set
-
-    val ServiceController = object :
-        MusicPlayerServiceController {
-        override fun PrepareAsync(URL: String, musicContent: MusicContentInfo) {
-            PlayingMusicContentInfo = musicContent
-            WillPlayMusicURLFromActivity = "" // Clear pending prepare.
-            InnerPlayer!!.LoadMusic(URL)
-        }
-
-        override fun Loop(isLoop: Boolean) {
-            InnerPlayer!!.SetLooping(isLoop)
-        }
-
-        override fun Play() {
-            InnerPlayer!!.Play(false)
-            UpdateNotification(MusicStatus.PLAY, PlayingMusicContentInfo!!)
-        }
-
-        override fun Pause() {
-            InnerPlayer!!.Pause()
-            UpdateNotification(MusicStatus.PAUSE, PlayingMusicContentInfo!!)
-        }
-
-        override fun Stop() {
-            UpdateNotification(MusicStatus.STOP, PlayingMusicContentInfo!!)
-            InnerPlayer!!.Stop()
-        }
-
-        override fun SeekTo(progress: Int) {
-            InnerPlayer!!.SeekTo(progress)
-        }
-
-        override fun SetElapsedTimeListener(listener: (Int) -> Unit) {
-            InnerPlayer!!.TimeElapsedListener = SimpleMusicPlayer.OnPlayerTimeElapsedListener { listener(it) }
-        }
-
-        override fun SetBufferingListener(listener: (Int) -> Unit) {
-            InnerPlayer!!.InnerMediaPlayer.setOnBufferingUpdateListener { _, percentage ->
-                listener(percentage)
-            }
-        }
-
-        override fun PlayerStatusValue(): MusicStatus {
-            return InnerPlayer!!.MusicPlayStatus.value!!
-        }
-
-        override fun TestSendNotification(contentInfo: MusicContentInfo, currStatus: MusicStatus) {
-            musicPlayerNotificationManager.SendNotification(
-                MusicNotificationModel(
-                    contentInfo.Title,
-                    "测试歌手",
-                    currStatus
-                ), false
-            )
-        }
-
-        override fun PrepareStatus(): BehaviorSubject<SimpleMusicPlayer.PrepareStatus>? {
-            return InnerPlayer!!.IsPrepared
-        }
-
-        override fun PlayerStatus(): BehaviorSubject<MusicStatus>? {
-            return InnerPlayer!!.MusicPlayStatus
-        }
-
-        override fun DisableElapsedTimeDispatcher() {
-            InnerPlayer!!.DisableDispatchElapsedTimeStamp()
-        }
-
-        override fun EnabletElapsedTimeDispatcher() {
-            InnerPlayer!!.BeginDispatchElapsedTimeStamp()
-        }
-    }
+    var player : MusicPlayer = SimpleMusicPlayerImpl(this)
 
     // Service内部使用
     private fun UpdateNotification(playerStatus: MusicStatus, playingMusicContentInfo: MusicContentInfo) {
@@ -160,9 +84,7 @@ class MusicPlayerService : Service() {
     }
 
     inner class MusicPlayerBinder : Binder() {
-        fun GetService(): MusicPlayerService {
-            return this@MusicPlayerService
-        }
+        fun getService(): MusicPlayerService = this@MusicPlayerService
     }
 
     private fun ActAsForegroundService(noti: Notification) {
@@ -196,9 +118,7 @@ class MusicPlayerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.d("MusicPlayerService", "即将onStartCommand, 对象HashCode: ${this.hashCode()}")
-//        if (IS_BINDED && !SERVICE_AVAILABLE.value!!) {
         SERVICE_AVAILABLE.onNext(true)
-//        }
         when (intent?.action) {
             "DESTROY" -> {
                 Log.d("MusicPlayerService", "即将停止, 对象HashCode: ${this.hashCode()}")
@@ -206,27 +126,23 @@ class MusicPlayerService : Service() {
             }
             "PLAY" -> {
                 if (WillPlayMusicURLFromActivity.isNotEmpty()) {
-                    ServiceController.PrepareAsync(WillPlayMusicURLFromActivity, PlayingMusicContentInfo!!)
+                    player.play(Uri.parse(WillPlayMusicURLFromActivity))
+                } else {
+                    player.resume()
                 }
-                ServiceController.Play()
             }
             "PAUSE" -> {
-                ServiceController.Pause()
+                player.pause()
             }
             "STOP" -> {
-                ServiceController.Stop()
-            }
-            "NEXT" -> {
-
-            }
-            "PREV" -> {
-
+                player.stop()
             }
             "UPDATE_INFO" -> {
                 PlayingMusicContentInfo = intent.getSerializableExtra("UpdateMusicContentInfo") as MusicContentInfo?
                 if (PlayingMusicContentInfo != null) {
-                    ServiceController.Stop()
+                    player.stop()
                     WillPlayMusicURLFromActivity = intent.getStringExtra("WillPlayMusicURL")
+                    player.play(Uri.parse(WillPlayMusicURLFromActivity))
                 }
             }
         }
@@ -235,7 +151,7 @@ class MusicPlayerService : Service() {
 
     fun GracefullyShutdown() {
         SERVICE_AVAILABLE.onNext(false)
-        InnerPlayer!!.Stop()
+        player.destroy()
         stopForeground(true)
         IS_FOREGROUND = false
         musicPlayerNotificationManager.ClearNotification()
@@ -247,29 +163,11 @@ class MusicPlayerService : Service() {
         super.onDestroy()
         Log.d("MusicPlayerService", "MusicPlayerService onDestroy")
         SERVICE_AVAILABLE.onNext(false)
-        InnerPlayer!!.SafetyDestroy()
-        InnerPlayer = null
+        player.destroy()
         stopForeground(true)
         IS_FOREGROUND = false
         musicPlayerNotificationManager.ClearNotification()
         stopSelf()
-//        stopService(Intent(this, MusicPlayerService::class.java))
+        MusicPlayerActivity.CleanStaticResources()
     }
-}
-
-interface MusicPlayerServiceController {
-    fun PrepareAsync(URL: String, musicContent: MusicContentInfo)
-    fun Loop(isLoop: Boolean)
-    fun Play()
-    fun Pause()
-    fun Stop()
-    fun SeekTo(progress: Int)
-    fun SetElapsedTimeListener(listener: (Int) -> Unit)
-    fun SetBufferingListener(listener: (Int) -> Unit)
-    fun PlayerStatusValue(): MusicStatus
-    fun TestSendNotification(contentInfo: MusicContentInfo, currStatus: MusicStatus)
-    fun PrepareStatus(): BehaviorSubject<SimpleMusicPlayer.PrepareStatus>?
-    fun PlayerStatus(): BehaviorSubject<MusicStatus>?
-    fun DisableElapsedTimeDispatcher()
-    fun EnabletElapsedTimeDispatcher()
 }

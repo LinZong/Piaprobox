@@ -1,42 +1,350 @@
 package com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.impl
 
-import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayer
-import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayerExtension
-import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAttribute
-import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerStatus
+import android.content.Context
+import android.content.res.AssetFileDescriptor
+import android.media.MediaPlayer
+import android.net.Uri
+import android.os.Handler
+import android.util.Log
+import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.*
+import java.io.FileInputStream
+import java.lang.IllegalStateException
+import java.lang.ref.SoftReference
 
-class SimpleMusicPlayerImpl : MusicPlayer {
-    override fun play(): PlayerStatus {
-        TODO("Not yet implemented")
+/**
+ *` 简单的音乐播放器，用于封装安卓原生MediaSource。
+ */
+open class SimpleMusicPlayerImpl(
+    private val context: Context,
+    private var isLooping: Boolean = false
+) : MusicPlayer {
+
+    private var player: MediaPlayer = MediaPlayer()
+
+    private var isDestroyed: Boolean = false
+
+    private var listeners: LinkedHashSet<MusicPlayerStateChangedListener> = LinkedHashSet(3)
+
+    private var playingMediaReference: SoftReference<Any>? = null
+
+    private var prepareFailedHandler = Handler {
+        listeners.forEach { one -> one.onLoadFailed(this) }
+        true
     }
 
-    override fun play(timestamp: Long): PlayerStatus {
-        TODO("Not yet implemented")
+    private fun countDownForPrepareFailed() {
+        prepareFailedHandler.sendEmptyMessageDelayed(101, 10 * 1000)
     }
 
-    override fun pause(): PlayerStatus {
-        TODO("Not yet implemented")
+    private fun indicatePrepareFinished() {
+        prepareFailedHandler.removeMessages(101)
     }
 
-    override fun stop(): PlayerStatus {
-        TODO("Not yet implemented")
+    var currentAction = PlayerAction.STOPPED
+        private set
+
+    private var isPrepared = false
+
+    var bufferedPercent = 0
+        private set
+
+    init {
+        player.setOnPreparedListener {
+            isPrepared = true
+            indicatePrepareFinished()
+            handlePlayerNextState(PlayerAction.PLAYING) {
+                listeners.forEach { one -> one.onPlaying(this) }
+            }
+        }
+        player.setOnBufferingUpdateListener { _, percent ->
+            bufferedPercent = percent
+            listeners.forEach { one -> one.onBuffering(this) }
+        }
+        player.setOnCompletionListener {
+            if(isLooping) {
+                player.stop()
+                player.start()
+            }
+        }
+    }
+
+    private fun setCurrentPlayingMediaReference(source: Any) {
+        playingMediaReference?.clear()
+        playingMediaReference = SoftReference(source)
+    }
+
+    private fun detectPlayerNextStateByApplyingNewPlaying(source: Any): PlayerAction {
+        if (playingMediaReference == null) {
+            setCurrentPlayingMediaReference(source)
+            return PlayerAction.PREPARING
+        }
+        val nextAction = if (true == playingMediaReference?.get()?.equals(source)) {
+            when (currentAction) {
+                PlayerAction.PLAYING -> PlayerAction.NO_ACTION
+                PlayerAction.PREPARING -> PlayerAction.NO_ACTION
+                PlayerAction.STOPPED -> PlayerAction.PLAYING
+                PlayerAction.PAUSED -> PlayerAction.PLAYING
+                else -> PlayerAction.PREPARING
+            }
+        } else {
+            PlayerAction.PREPARING
+        }
+        setCurrentPlayingMediaReference(source)
+        return nextAction
+    }
+
+    private fun resetFlags() {
+        isPrepared = false
+        bufferedPercent = 0
+    }
+
+    private fun prepareSource(source: Any) {
+        when (source) {
+            is AssetFileDescriptor -> doPreparing(source)
+            is Uri -> doPreparing(source)
+            is FileInputStream -> doPreparing(source)
+        }
+        countDownForPrepareFailed()
+    }
+
+    private fun doPreparing(source: AssetFileDescriptor) {
+        resetFlags()
+        resetPlayerState()
+        player.setDataSource(source.fileDescriptor)
+        player.prepareAsync()
+    }
+
+    private fun doPreparing(source: Uri) {
+        resetFlags()
+        resetPlayerState()
+        player.setDataSource(context, source)
+        player.prepareAsync()
+    }
+
+    private fun doPreparing(source: FileInputStream) {
+        resetFlags()
+        resetPlayerState()
+        player.setDataSource(source.fd)
+        player.prepareAsync()
+    }
+
+    private fun handlePlayerNextState(nextAction: PlayerAction, callbackIfStateChanged: () -> Unit) {
+        if (nextAction == PlayerAction.NO_ACTION) {
+            return
+        }
+        when (currentAction) {
+            PlayerAction.PREPARING -> when (nextAction) {
+                PlayerAction.PREPARING -> {
+                }
+                PlayerAction.PLAYING -> {
+                    if (isPrepared) player.start()
+                }
+                PlayerAction.PAUSED -> {
+                    throw IllegalStateException("Cannot pause a preparing player.")
+                }
+                PlayerAction.STOPPED -> {
+                    resetFlags()
+                    resetPlayerState()
+                }
+                PlayerAction.NO_ACTION -> {
+                }
+            }
+            PlayerAction.PLAYING -> when (nextAction) {
+                PlayerAction.PREPARING -> {
+                    resetFlags()
+                    resetPlayerState()
+                    playingMediaReference?.get()?.let { source ->
+                        prepareSource(source)
+                    }
+                }
+                PlayerAction.PLAYING -> {
+
+                }
+                PlayerAction.PAUSED -> {
+                    player.pause()
+                }
+                PlayerAction.STOPPED -> {
+                    player.stop()
+                }
+                PlayerAction.NO_ACTION -> {
+
+                }
+            }
+            PlayerAction.PAUSED -> when (nextAction) {
+                PlayerAction.PREPARING -> {
+                    resetFlags()
+                    resetPlayerState()
+                    playingMediaReference?.get()?.let { source ->
+                        prepareSource(source)
+                    }
+                }
+                PlayerAction.PLAYING -> {
+                    player.start()
+                }
+                PlayerAction.PAUSED -> {
+                }
+                PlayerAction.STOPPED -> {
+                    player.stop()
+                }
+                PlayerAction.NO_ACTION -> {
+                }
+            }
+            PlayerAction.STOPPED -> when (nextAction) {
+                PlayerAction.PREPARING -> {
+                    resetFlags()
+                    resetPlayerState()
+                    playingMediaReference?.get()?.let { source ->
+                        prepareSource(source)
+                    }
+                }
+                PlayerAction.PLAYING -> {
+                    player.start()
+                }
+                PlayerAction.PAUSED -> {
+                    throw IllegalStateException("Cannot pause a stopped player.")
+                }
+                PlayerAction.STOPPED -> {
+                }
+                PlayerAction.NO_ACTION -> {
+                }
+            }
+            PlayerAction.NO_ACTION -> {
+            }
+        }
+        val shouldExecuteCallback = currentAction != nextAction
+        currentAction = nextAction
+        if (shouldExecuteCallback) {
+            try {
+                callbackIfStateChanged()
+            } catch (thr: Throwable) {
+                Log.e("SimpleMusicPlayerImpl", "error occurred!", thr)
+            }
+        }
+    }
+
+    override fun play(source: AssetFileDescriptor): PlayerAction {
+        checkStatus()
+        handlePlayerNextState(
+            detectPlayerNextStateByApplyingNewPlaying(source)
+        ) {
+            listeners.forEach { one -> one.onLoading(this) }
+        }
+        return currentAction
+    }
+
+    override fun play(source: Uri): PlayerAction {
+        checkStatus()
+        handlePlayerNextState(
+            detectPlayerNextStateByApplyingNewPlaying(source)
+        ) {
+            listeners.forEach { one -> one.onLoading(this) }
+        }
+        return currentAction
+    }
+
+    override fun play(source: FileInputStream): PlayerAction {
+        checkStatus()
+        handlePlayerNextState(
+            detectPlayerNextStateByApplyingNewPlaying(source)
+        ) {
+            listeners.forEach { one -> one.onLoading(this) }
+        }
+        return currentAction
+    }
+
+    override fun resume(): PlayerAction {
+        handlePlayerNextState(PlayerAction.PLAYING) {
+            listeners.forEach { one -> one.onPlaying(this) }
+        }
+        return currentAction
+    }
+
+    override fun pause(): PlayerAction {
+        handlePlayerNextState(PlayerAction.PAUSED) {
+            listeners.forEach { one -> one.onPausing(this) }
+        }
+        return currentAction
+    }
+
+    override fun stop(): PlayerAction {
+        handlePlayerNextState(PlayerAction.STOPPED) {
+            listeners.forEach { one -> one.onStopping(this) }
+        }
+        return currentAction
+    }
+
+    override fun seekTo(timestamp: Long) {
+        if (currentAction == PlayerAction.PLAYING || currentAction == PlayerAction.PAUSED) {
+            player.seekTo(timestamp.toInt())
+            listeners.forEach { one -> one.onSeekTo(this) }
+        } else {
+            throw IllegalStateException("Cannot seek media because player is not in playing or pausing.")
+        }
+    }
+
+    override fun seekTo(percent: Int) {
+        if (currentAction == PlayerAction.PLAYING || currentAction == PlayerAction.PAUSED) {
+             seekTo ((player.duration * percent.toFloat() / 100).toLong())
+        } else {
+            throw IllegalStateException("Cannot seek media because player is not in playing or pausing.")
+        }
     }
 
     override fun currentTimestamp(): Long {
-        TODO("Not yet implemented")
+        return player.currentPosition.toLong()
     }
 
-    override fun attribute(): PlayerAttribute {
-        TODO("Not yet implemented")
+    override fun duration(): Long {
+        return player.duration.toLong()
     }
 
-    override fun registerExtension(extension: MusicPlayerExtension) {
-        TODO("Not yet implemented")
+    override fun registerStateChangedListener(listener: MusicPlayerStateChangedListener): Boolean {
+        listener.onRegistered(this)
+        return listeners.add(listener)
     }
 
-    override fun unregisterExtension(extension: MusicPlayerExtension) {
-        TODO("Not yet implemented")
+    override fun unregisterStateChangedListener(listener: MusicPlayerStateChangedListener): Boolean {
+        listener.onUnregistered(this)
+        return listeners.remove(listener)
     }
 
+    override fun looping(): Boolean = isLooping
 
+    override fun looping(loop: Boolean) {
+        isLooping = loop
+    }
+
+    override fun destroy() {
+        if (isDestroyed) {
+            tellAlreadyDestroyed()
+        }
+        try {
+            player.stop()
+        } catch (thr: Throwable) {
+        }
+        player.release()
+        listeners.forEach { one -> one.onUnregistered(this) }
+        listeners.clear()
+    }
+
+    override fun state(): PlayerAction = currentAction
+    override fun buffered(): Int = bufferedPercent
+
+    private fun checkStatus() {
+        if (isDestroyed) {
+            tellAlreadyDestroyed()
+        }
+    }
+
+    private fun tellAlreadyDestroyed() {
+        throw IllegalStateException("This MediaPlayer had been destroyed!")
+    }
+
+    private fun resetPlayerState() {
+        try {
+            player.stop()
+        } catch (thr: Throwable) {
+        }
+        player.reset()
+    }
 }

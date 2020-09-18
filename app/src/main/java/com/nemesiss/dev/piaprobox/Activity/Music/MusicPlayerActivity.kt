@@ -25,7 +25,6 @@ import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.MusicLyricAdapter
 import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.RelatedMusicListAdapter
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
-import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
@@ -34,6 +33,7 @@ import com.nemesiss.dev.piaprobox.Service.GlideApp
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
+import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import kotlinx.android.synthetic.main.music_player_layout.*
@@ -276,7 +276,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         intent.putExtra("UpdateMusicContentInfo", CurrentMusicContentInfo)
         intent.putExtra("WillPlayMusicURL", playInfo.URL)
 
-        (this as? MusicControlActivity)?.PersistMusicPlayerActivityStatus(MusicStatus.STOP, true)
+        (this as? MusicControlActivity)?.PersistMusicPlayerActivityStatus(PlayerAction.STOPPED, true)
 
         startService(intent)
         HideLoadingIndicator(MusicPlayer_ContentContainer)

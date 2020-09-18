@@ -1,22 +1,42 @@
 package com.nemesiss.dev.piaprobox.Service.Player.NewPlayer
 
+import android.content.res.AssetFileDescriptor
+import android.net.Uri
+import java.io.FileInputStream
+
 interface MusicPlayer {
 
-    fun play(): PlayerStatus
+    fun play(source: AssetFileDescriptor): PlayerAction
 
-    fun play(timestamp: Long): PlayerStatus
+    fun play(source: Uri): PlayerAction
 
-    fun pause(): PlayerStatus
+    fun play(source: FileInputStream): PlayerAction
 
-    fun stop(): PlayerStatus
+    fun resume(): PlayerAction
+
+    fun pause(): PlayerAction
+
+    fun stop(): PlayerAction
+
+    fun seekTo(timestamp: Long)
+
+    fun seekTo(percent: Int)
 
     fun currentTimestamp(): Long
 
-    fun attribute(): PlayerAttribute
+    fun duration(): Long
 
-    fun attribute(attribute: PlayerAttribute)
+    fun registerStateChangedListener(listener: MusicPlayerStateChangedListener): Boolean
 
-    fun registerExtension(extension: MusicPlayerExtension)
+    fun unregisterStateChangedListener(listener: MusicPlayerStateChangedListener): Boolean
 
-    fun unregisterExtension(extension: MusicPlayerExtension)
+    fun looping(): Boolean
+
+    fun looping(loop: Boolean)
+
+    fun destroy()
+
+    fun state(): PlayerAction
+
+    fun buffered(): Int
 }
