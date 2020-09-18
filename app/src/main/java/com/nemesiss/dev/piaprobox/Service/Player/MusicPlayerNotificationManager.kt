@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Service.MusicPlayer
+package com.nemesiss.dev.piaprobox.Service.Player
 
 import android.app.*
 import android.content.Context
@@ -10,7 +10,6 @@ import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.BaseNotificationManager
-import com.nemesiss.dev.piaprobox.Util.AppUtil
 
 class MusicPlayerNotificationManager(context: Context, var activityIntent: Intent) : BaseNotificationManager(context) {
 

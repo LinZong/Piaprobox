@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Misc
+package com.nemesiss.dev.piaprobox.Model.Resources
 
 import android.graphics.Color
 import com.nemesiss.dev.piaprobox.R

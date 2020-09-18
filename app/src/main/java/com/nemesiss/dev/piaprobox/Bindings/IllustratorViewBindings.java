@@ -9,7 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.nemesiss.dev.piaprobox.Misc.StaticResourcesMap;
+import com.nemesiss.dev.piaprobox.Model.Resources.StaticResourcesMap;
 import com.nemesiss.dev.piaprobox.R;
 import com.nemesiss.dev.piaprobox.Service.GlideApp;
 import com.nemesiss.dev.piaprobox.Service.HTMLParser;

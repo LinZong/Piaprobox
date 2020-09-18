@@ -12,9 +12,9 @@ import android.widget.SeekBar
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerServiceController
-import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
-import com.nemesiss.dev.piaprobox.Service.MusicPlayer.SimpleMusicPlayer
+import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerServiceController
+import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
+import com.nemesiss.dev.piaprobox.Service.Player.Legacy.SimpleMusicPlayer
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import com.nemesiss.dev.piaprobox.View.Common.whenClicks
 import io.reactivex.disposables.Disposable

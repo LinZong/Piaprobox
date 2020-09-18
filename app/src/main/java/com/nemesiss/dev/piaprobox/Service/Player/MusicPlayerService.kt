@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Service.MusicPlayer
+package com.nemesiss.dev.piaprobox.Service.Player
 
 import android.app.Notification
 import android.app.Service
@@ -13,6 +13,7 @@ import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
+import com.nemesiss.dev.piaprobox.Service.Player.Legacy.SimpleMusicPlayer
 import io.reactivex.subjects.BehaviorSubject
 
 class MusicPlayerService : Service() {

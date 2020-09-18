@@ -7,7 +7,7 @@ import android.content.Context
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerNotificationManager
+import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerNotificationManager
 
 open class BaseNotificationManager(val context: Context) {
     var notificationManager: NotificationManager =

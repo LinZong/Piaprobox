@@ -3,7 +3,7 @@ package com.nemesiss.dev.piaprobox.Service.Download
 import android.app.Notification
 import android.content.Context
 import com.nemesiss.dev.piaprobox.Service.BaseNotificationManager
-import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerNotificationManager
+import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerNotificationManager
 
 class DownloadNotificationManager(context: Context) : BaseNotificationManager(context) {
 

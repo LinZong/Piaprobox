@@ -33,7 +33,7 @@ import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
 import com.nemesiss.dev.piaprobox.Service.GlideApp
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
-import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
+import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import kotlinx.android.synthetic.main.music_player_layout.*

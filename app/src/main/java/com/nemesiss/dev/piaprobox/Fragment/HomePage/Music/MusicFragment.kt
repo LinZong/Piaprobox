@@ -3,9 +3,7 @@ package com.nemesiss.dev.piaprobox.Fragment.HomePage.Music
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
@@ -14,7 +12,7 @@ import com.nemesiss.dev.piaprobox.Adapter.SubmissionWorkCategory.Music.MusicCate
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.BaseSubmissionWorkCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
-import com.nemesiss.dev.piaprobox.Misc.RecyclerViewInnerIndicator
+import com.nemesiss.dev.piaprobox.Model.Resources.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.View.Common.isLoadMoreIndicator

@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
-import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Illustrator.IllustrationFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Music.MusicFragment
@@ -16,7 +15,7 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.Recomme
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.TextWork.TextWorkFragment
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Service.MusicPlayer.MusicPlayerService
+import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import kotlinx.android.synthetic.main.activity_main.*
 

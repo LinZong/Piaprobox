@@ -8,7 +8,7 @@ import android.os.Message
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import com.nemesiss.dev.piaprobox.Misc.CryptonCharacterColorDefinition
+import com.nemesiss.dev.piaprobox.Model.Resources.CryptonCharacterColorDefinition
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 
 
