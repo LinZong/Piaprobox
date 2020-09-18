@@ -13,9 +13,9 @@ import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
-import com.nemesiss.dev.piaprobox.Model.MusicStatus
-import com.nemesiss.dev.piaprobox.Service.Player.Legacy.SimpleMusicPlayer
+import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.DefaultMusicPlayerStateChangedCallback
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayer
+import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.impl.SimpleMusicPlayerImpl
 import io.reactivex.subjects.BehaviorSubject
 
@@ -47,16 +47,38 @@ class MusicPlayerService : Service() {
             )
     }
 
-    var player : MusicPlayer = SimpleMusicPlayerImpl(this)
+    var player: MusicPlayer = SimpleMusicPlayerImpl(this)
+        private set
+
+    init {
+        player.registerStateChangedListener(object: DefaultMusicPlayerStateChangedCallback() {
+
+            private fun triggerNotificationUpdate() {
+                UpdateNotification(player.state(), PlayingMusicContentInfo!!)
+
+            }
+
+            override fun onPlaying(player: MusicPlayer) {
+                triggerNotificationUpdate()
+            }
+
+            override fun onPausing(player: MusicPlayer) {
+                triggerNotificationUpdate()
+            }
+            override fun onStopping(player: MusicPlayer) {
+                triggerNotificationUpdate()
+            }
+        })
+    }
 
     // Service内部使用
-    private fun UpdateNotification(playerStatus: MusicStatus, playingMusicContentInfo: MusicContentInfo) {
+    private fun UpdateNotification(playerAction: PlayerAction, playingMusicContentInfo: MusicContentInfo) {
         if (!IS_FOREGROUND) {
             ActAsForegroundService(
                 musicPlayerNotificationManager.SendNotification(
                     MusicNotificationModel(
                         playingMusicContentInfo.Title
-                        , playingMusicContentInfo.Artist, playerStatus
+                        , playingMusicContentInfo.Artist, playerAction
                     )
                     , true
                 )
@@ -65,7 +87,7 @@ class MusicPlayerService : Service() {
             musicPlayerNotificationManager.SendNotification(
                 MusicNotificationModel(
                     playingMusicContentInfo.Title
-                    , playingMusicContentInfo.Artist, playerStatus
+                    , playingMusicContentInfo.Artist, playerAction
                 )
                 , false
             )

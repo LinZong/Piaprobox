@@ -10,6 +10,7 @@ import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.BaseNotificationManager
+import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
 
 class MusicPlayerNotificationManager(context: Context, var activityIntent: Intent) : BaseNotificationManager(context) {
 
@@ -58,24 +59,25 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
             )
         }
 
-        when (model.CurrStatus) {
-            MusicStatus.PLAY -> {
+        when (model.CurrAction) {
+            PlayerAction.PREPARING -> {}
+            PlayerAction.PLAYING -> {
                 BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_pause_red_600_24dp)
                 BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, IntentMaps["PAUSE"])
             }
-            MusicStatus.PAUSE -> {
+            PlayerAction.PAUSED -> {
                 BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_play_arrow_red_600_24dp)
                 BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, IntentMaps["PLAY"])
             }
-            MusicStatus.STOP -> {
+            PlayerAction.STOPPED -> {
                 BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_play_arrow_red_600_24dp)
                 BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, IntentMaps["PLAY"])
             }
+            PlayerAction.NO_ACTION -> {}
         }
 
         BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop, IntentMaps["DESTROY"])
         NormalNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop_Normal, IntentMaps["DESTROY"])
-
 
 
 

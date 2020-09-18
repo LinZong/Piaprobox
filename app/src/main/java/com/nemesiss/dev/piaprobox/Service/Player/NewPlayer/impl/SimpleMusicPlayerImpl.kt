@@ -61,10 +61,7 @@ open class SimpleMusicPlayerImpl(
             listeners.forEach { one -> one.onBuffering(this) }
         }
         player.setOnCompletionListener {
-            if(isLooping) {
-                player.stop()
-                player.start()
-            }
+            listeners.forEach { one -> one.onPlayFinished(this) }
         }
     }
 
@@ -312,6 +309,7 @@ open class SimpleMusicPlayerImpl(
 
     override fun looping(loop: Boolean) {
         isLooping = loop
+        player.isLooping = loop
     }
 
     override fun destroy() {

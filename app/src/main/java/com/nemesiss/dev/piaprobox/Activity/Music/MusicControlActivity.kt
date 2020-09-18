@@ -29,6 +29,7 @@ class MusicControlActivity : MusicPlayerActivity() {
     private var IS_ENABLE_LOOPING = false
         @Synchronized
         set(value) {
+            player?.looping(value)
             Persistence.SetMusicPlayerLoopStatus(value)
             MusicPlayer_Control_Repeat.setImageResource(
                 if (value)
@@ -46,7 +47,7 @@ class MusicControlActivity : MusicPlayerActivity() {
     private val timeElapsedUpdater = Handler(this::handleQueryTimeStamp)
 
     private fun handleQueryTimeStamp(message: Message): Boolean {
-        MusicPlayer_CurrentTime.text = Duration2Time(CurrentMusicTotalDuration)
+        MusicPlayer_CurrentTime.text = Duration2Time(player?.currentTimestamp()?.toInt() ?: 0)
         player?.let { player ->
             MusicPlayer_Seekbar.progress = (player.currentTimestamp() * 100 / player.duration()).toInt()
         }
@@ -175,7 +176,7 @@ class MusicControlActivity : MusicPlayerActivity() {
         override fun onServiceConnected(componentName: ComponentName?, service: IBinder?) {
             PlayerService = (service as MusicPlayerService.MusicPlayerBinder).getService()
             Log.d("MusicControlActivity", "音乐播放器服务Bind完成  ${PlayerService.hashCode()}")
-            player = PlayerService!!.player
+            PlayerService?.let { ps -> player = ps.player }
             SubscribeMusicPlayerStatus()
         }
     }
@@ -233,8 +234,17 @@ class MusicControlActivity : MusicPlayerActivity() {
                 ResetTimeIndicator()
             }
 
+            override fun onPlayFinished(player: MusicPlayer) {
+                ResetTimeIndicator()
+            }
+
+            override fun onLoading(player: MusicPlayer) {
+                MusicPlayer_Control_Play.setImageResource(R.drawable.ic_more_horiz_red_600_24dp)
+            }
             override fun onPlaying(player: MusicPlayer) {
-                MusicPlayer_TotalTime.text = Duration2Time(player.duration().toInt())
+                CurrentMusicTotalDuration = player.duration().toInt()
+                player.looping(IS_ENABLE_LOOPING)
+                MusicPlayer_TotalTime.text = Duration2Time(CurrentMusicTotalDuration)
                 PersistMusicPlayerActivityStatus(PlayerAction.PLAYING)
                 beginQueryTimeStamp()
                 MusicPlayer_Control_Play.setImageResource(R.drawable.ic_pause_red_600_24dp)
@@ -263,6 +273,7 @@ class MusicControlActivity : MusicPlayerActivity() {
         MusicPlayer_CurrentTime.text = Duration2Time(0)
         MusicPlayer_TotalTime.text = Duration2Time(0)
         MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
+        stopQueryTimeStamp()
         Log.d("MusicControlActivity", "重置图标完成.")
     }
 

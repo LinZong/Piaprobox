@@ -210,5 +210,4 @@ public class SimpleMusicPlayer
         InnerMediaPlayer = null;
         Log.d("SimpleMusicPlayer", "底层音乐播放器已经停止！");
     }
-
 }
