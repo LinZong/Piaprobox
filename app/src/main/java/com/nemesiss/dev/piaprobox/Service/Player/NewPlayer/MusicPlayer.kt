@@ -36,6 +36,8 @@ interface MusicPlayer {
 
     fun destroy()
 
+    fun isDestroyed(): Boolean
+
     fun state(): PlayerAction
 
     fun buffered(): Int

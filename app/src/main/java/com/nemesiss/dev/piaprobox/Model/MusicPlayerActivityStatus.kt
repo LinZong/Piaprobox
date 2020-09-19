@@ -11,9 +11,9 @@ data class MusicPlayerActivityStatus(
     val lyrics: List<String>,
     val currentPlayMusicInfo: MusicPlayInfo,
     val currentPlayMusicContentInfo: MusicContentInfo,
-    val currentPlayMusicTotalDuration: Int,
-    val currentPlayMusicElapsedDuration: Int,
-    val currentBufferDuration: Int,
+    val musicTotalDuration: Int,
+    val seekbarProgress: Int,
+    val bufferBarProgress: Int,
     val openSingleLooping: Boolean,
     val currentPlayItemIndex: Int,
     val playLists: List<RecommendItemModel>

@@ -61,7 +61,7 @@ open class SimpleMusicPlayerImpl(
             listeners.forEach { one -> one.onBuffering(this) }
         }
         player.setOnCompletionListener {
-            listeners.forEach { one -> one.onPlayFinished(this) }
+            handlePlayerNextState(PlayerAction.STOPPED)
         }
     }
 
@@ -125,7 +125,7 @@ open class SimpleMusicPlayerImpl(
         player.prepareAsync()
     }
 
-    private fun handlePlayerNextState(nextAction: PlayerAction, callbackIfStateChanged: () -> Unit) {
+    private fun handlePlayerNextState(nextAction: PlayerAction, callbackIfStateChanged: () -> Unit = {}) {
         if (nextAction == PlayerAction.NO_ACTION) {
             return
         }
@@ -324,6 +324,8 @@ open class SimpleMusicPlayerImpl(
         listeners.forEach { one -> one.onUnregistered(this) }
         listeners.clear()
     }
+
+    override fun isDestroyed(): Boolean = isDestroyed
 
     override fun state(): PlayerAction = currentAction
     override fun buffered(): Int = bufferedPercent

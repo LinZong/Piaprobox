@@ -10,9 +10,11 @@ import android.util.Log
 import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
+import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity.Companion.PERSIST_STATUS_INTENT_KEY
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
+import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerNotificationManager.Companion.NotificationID
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.DefaultMusicPlayerStateChangedCallback
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayer
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
@@ -36,7 +38,6 @@ class MusicPlayerService : Service() {
 
     private lateinit var musicPlayerNotificationManager: MusicPlayerNotificationManager
     private var PlayingMusicContentInfo: MusicContentInfo? = null
-    private var WillPlayMusicURLFromActivity = ""
 
     override fun onCreate() {
         super.onCreate()
@@ -51,13 +52,10 @@ class MusicPlayerService : Service() {
         private set
 
     init {
-        player.registerStateChangedListener(object: DefaultMusicPlayerStateChangedCallback() {
-
+        player.registerStateChangedListener(object : DefaultMusicPlayerStateChangedCallback() {
             private fun triggerNotificationUpdate() {
                 UpdateNotification(player.state(), PlayingMusicContentInfo!!)
-
             }
-
             override fun onPlaying(player: MusicPlayer) {
                 triggerNotificationUpdate()
             }
@@ -65,6 +63,7 @@ class MusicPlayerService : Service() {
             override fun onPausing(player: MusicPlayer) {
                 triggerNotificationUpdate()
             }
+
             override fun onStopping(player: MusicPlayer) {
                 triggerNotificationUpdate()
             }
@@ -73,45 +72,40 @@ class MusicPlayerService : Service() {
 
     // Service内部使用
     private fun UpdateNotification(playerAction: PlayerAction, playingMusicContentInfo: MusicContentInfo) {
+
+        val pendingNewNotification = musicPlayerNotificationManager.prepareNotificationInstance(
+            MusicNotificationModel(
+                playingMusicContentInfo.Title
+                , playingMusicContentInfo.Artist, playerAction
+            )
+        )
         if (!IS_FOREGROUND) {
-            ActAsForegroundService(
-                musicPlayerNotificationManager.SendNotification(
-                    MusicNotificationModel(
-                        playingMusicContentInfo.Title
-                        , playingMusicContentInfo.Artist, playerAction
-                    )
-                    , true
-                )
-            )
+            ActAsForegroundService(pendingNewNotification)
         } else {
-            musicPlayerNotificationManager.SendNotification(
-                MusicNotificationModel(
-                    playingMusicContentInfo.Title
-                    , playingMusicContentInfo.Artist, playerAction
-                )
-                , false
-            )
+            musicPlayerNotificationManager.notificationManager.notify(NotificationID, pendingNewNotification)
         }
     }
 
     // Activity 主动调用的.
     fun UpdateWakeupMusicPlayerActivityIntent(musicPlayerActivityStatus: MusicPlayerActivityStatus) {
         val intent = Intent(PiaproboxApplication.Self.applicationContext, MusicControlActivity::class.java)
-        intent.putExtra(MusicPlayerActivity.PERSIST_STATUS_INTENT_KEY, musicPlayerActivityStatus)
+        intent.putExtra(PERSIST_STATUS_INTENT_KEY, musicPlayerActivityStatus)
         musicPlayerNotificationManager.activityIntent = intent
-
-        // 不需要再从Activity主动触发通知更新
-
-        Log.d("MusicPlayerService", "已更新重入Activity的信息.")
+        PlayingMusicContentInfo?.let { playingMusicContentInfo ->
+            UpdateNotification(
+                player.state(),
+                playingMusicContentInfo
+            )
+        }
     }
 
     inner class MusicPlayerBinder : Binder() {
         fun getService(): MusicPlayerService = this@MusicPlayerService
     }
 
-    private fun ActAsForegroundService(noti: Notification) {
+    private fun ActAsForegroundService(notification: Notification) {
         IS_FOREGROUND = true
-        startForeground(MusicPlayerNotificationManager.NotificationID, noti)
+        startForeground(NotificationID, notification)
     }
 
     override fun onBind(p0: Intent?): IBinder? {
@@ -144,14 +138,10 @@ class MusicPlayerService : Service() {
         when (intent?.action) {
             "DESTROY" -> {
                 Log.d("MusicPlayerService", "即将停止, 对象HashCode: ${this.hashCode()}")
-                GracefullyShutdown()
+                stopPlaying()
             }
             "PLAY" -> {
-                if (WillPlayMusicURLFromActivity.isNotEmpty()) {
-                    player.play(Uri.parse(WillPlayMusicURLFromActivity))
-                } else {
-                    player.resume()
-                }
+                player.resume()
             }
             "PAUSE" -> {
                 player.pause()
@@ -163,22 +153,21 @@ class MusicPlayerService : Service() {
                 PlayingMusicContentInfo = intent.getSerializableExtra("UpdateMusicContentInfo") as MusicContentInfo?
                 if (PlayingMusicContentInfo != null) {
                     player.stop()
-                    WillPlayMusicURLFromActivity = intent.getStringExtra("WillPlayMusicURL")
-                    player.play(Uri.parse(WillPlayMusicURLFromActivity))
+                    player.play(Uri.parse(intent.getStringExtra("WillPlayMusicURL")))
                 }
             }
         }
         return START_STICKY
     }
 
-    fun GracefullyShutdown() {
+    private fun stopPlaying() {
         SERVICE_AVAILABLE.onNext(false)
-        player.destroy()
+        player.stop()
         stopForeground(true)
         IS_FOREGROUND = false
         musicPlayerNotificationManager.ClearNotification()
         MusicPlayerActivity.CleanStaticResources()
-        Log.d("MusicPlayerService", "MusicPlayerService GracefullyShutdown")
+        Log.d("MusicPlayerService", "MusicPlayerService stopPlaying")
     }
 
     override fun onDestroy() {

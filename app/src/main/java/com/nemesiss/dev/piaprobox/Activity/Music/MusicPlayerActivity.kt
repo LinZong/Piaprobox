@@ -152,7 +152,10 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         PLAY_LISTS = activityStatus.playLists
 
         if (LAST_MUSIC_BITMAP != null) {
-            MusicPlayer_ThumbBackground.setImageDrawable(LAST_MUSIC_BITMAP)
+            GlideApp.with(this)
+                .load(LAST_MUSIC_BITMAP)
+                .priority(Priority.HIGH)
+                .into(MusicPlayer_ThumbBackground)
         } else {
             GlideLoadThumbToImageView(CurrentMusicPlayInfo?.Thumb ?: "")
         }

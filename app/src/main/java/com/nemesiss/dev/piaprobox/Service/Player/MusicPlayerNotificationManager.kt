@@ -35,7 +35,7 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
         notificationManager.cancel(NotificationID)
     }
 
-    fun SendNotification(model: MusicNotificationModel, butDontSend: Boolean = true): Notification {
+    fun prepareNotificationInstance(model: MusicNotificationModel): Notification {
 
         val NormalNotiView = RemoteViews(context.packageName, R.layout.player_noti_normal)
         val BigNotiView = RemoteViews(context.packageName, R.layout.player_noti_big)
@@ -84,7 +84,6 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
         CheckAndBuildChannel()
 
 
-
         activityIntent.action = Intent.ACTION_MAIN
         activityIntent.addCategory(Intent.CATEGORY_LAUNCHER)
 
@@ -99,17 +98,13 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
         val PrevMusicIntents = arrayListOf(prevIntent)
 
 
-        // 判断如果此时App退出了，才重启MainActivity.
+        val beginMainActivityIntent = Intent(context, MainActivity::class.java)
+        beginMainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        beginMainActivityIntent.flags = beginMainActivityIntent.flags or Intent.FLAG_ACTIVITY_NEW_TASK
 
-//        if (!AppUtil.IsActivityAlivInTaskStack(context, MainActivity::class.java)) {
-            val beginMainActivityIntent = Intent(context, MainActivity::class.java)
-            beginMainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            beginMainActivityIntent.flags = beginMainActivityIntent.flags or Intent.FLAG_ACTIVITY_NEW_TASK
-
-            ClickNotificationToOpenMusicPlayerIntents.add(0,beginMainActivityIntent)
-            NextMusicIntents.add(0,beginMainActivityIntent)
-            PrevMusicIntents.add(0,beginMainActivityIntent)
-//        }
+        ClickNotificationToOpenMusicPlayerIntents.add(0, beginMainActivityIntent)
+        NextMusicIntents.add(0, beginMainActivityIntent)
+        PrevMusicIntents.add(0, beginMainActivityIntent)
 
 
         val OpenMusicPlayerActivityPendingContentIntent =
@@ -134,8 +129,6 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
         notification.bigContentView = BigNotiView
         notification.flags = notification.flags or Notification.FLAG_ONGOING_EVENT
         notification.`when` = System.currentTimeMillis()
-        if (!butDontSend)
-            notificationManager.notify(NotificationID, notification)
         return notification
     }
 }
