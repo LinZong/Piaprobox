@@ -175,6 +175,7 @@ class MusicControlActivity : MusicPlayerActivity() {
         MusicPlayer_CurrentTime.text = Duration2Time(
                 Progress2Duration(activityStatus.seekbarProgress, activityStatus.musicTotalDuration)
         )
+        MusicPlayer_TotalTime.text = Duration2Time(CurrentMusicTotalDuration)
         MusicPlayer_Seekbar.secondaryProgress = activityStatus.bufferBarProgress
     }
 
