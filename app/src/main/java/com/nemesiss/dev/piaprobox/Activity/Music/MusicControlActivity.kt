@@ -287,7 +287,7 @@ class MusicControlActivity : MusicPlayerActivity() {
 
             override fun onStopping(player: MusicPlayer) {
                 stopQueryTimeStamp()
-                ResetTimeIndicator()
+                repeat(10) { ResetTimeIndicator() }
             }
 
             override fun onBuffering(player: MusicPlayer) {

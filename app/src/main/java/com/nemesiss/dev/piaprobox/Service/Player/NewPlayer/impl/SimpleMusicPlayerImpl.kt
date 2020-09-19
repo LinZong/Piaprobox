@@ -1,11 +1,17 @@
 package com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.impl
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.AssetFileDescriptor
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
 import android.util.Log
+import android.widget.Toast
+import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.*
 import java.io.FileInputStream
 import java.lang.IllegalStateException
@@ -26,6 +32,8 @@ open class SimpleMusicPlayerImpl(
     private var listeners: LinkedHashSet<MusicPlayerStateChangedListener> = LinkedHashSet(3)
 
     private var playingMediaReference: SoftReference<Any>? = null
+
+    private lateinit var audioManager: AudioManager
 
     private var prepareFailedHandler = Handler {
         listeners.forEach { one -> one.onLoadFailed(this) }
@@ -48,6 +56,25 @@ open class SimpleMusicPlayerImpl(
     var bufferedPercent = 0
         private set
 
+
+    private val headphoneConnectIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+    private val headPhoneConnectReceiver = HeadPhoneConnectReceiver()
+
+    private inner class HeadPhoneConnectReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
+                Log.d("SimpleMusicPlayerImpl", "Headset unplugged! Pause!")
+                // Pause the playback
+                handlePlayerNextState(PlayerAction.PAUSED) {
+                    listeners.forEach { one -> one.onPausing(this@SimpleMusicPlayerImpl) }
+                }
+            }
+        }
+    }
+
+    private var audioFocusChangedListener: AudioManager.OnAudioFocusChangeListener
+
     init {
         player.setOnPreparedListener {
             isPrepared = true
@@ -61,8 +88,45 @@ open class SimpleMusicPlayerImpl(
             listeners.forEach { one -> one.onBuffering(this) }
         }
         player.setOnCompletionListener {
-            handlePlayerNextState(PlayerAction.STOPPED)
+            handlePlayerNextState(PlayerAction.STOPPED) {
+                listeners.forEach { one ->
+                    one.onStopping(this)
+                    one.onPlayFinished(this)
+                }
+            }
         }
+
+        context.registerReceiver(headPhoneConnectReceiver, headphoneConnectIntentFilter)
+
+        audioFocusChangedListener = AudioManager.OnAudioFocusChangeListener { grantCode ->
+            when (grantCode) {
+                AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
+                    Log.d("SimpleMusicPlayerImpl", "AudioFocus is granted!")
+                    player.start()
+                }
+                AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> Toast.makeText(
+                    context,
+                    context.getString(R.string.AudioFocusDelayHint),
+                    Toast.LENGTH_SHORT
+                ).show()
+                AudioManager.AUDIOFOCUS_REQUEST_FAILED -> Toast.makeText(
+                    context,
+                    context.getString(R.string.AudioFocusFailedHint),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    }
+
+    private fun requestPlay() {
+        val responseCode = audioManager.requestAudioFocus(
+            audioFocusChangedListener,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN
+        )
+        audioFocusChangedListener.onAudioFocusChange(responseCode)
     }
 
     private fun setCurrentPlayingMediaReference(source: Any) {
@@ -134,7 +198,7 @@ open class SimpleMusicPlayerImpl(
                 PlayerAction.PREPARING -> {
                 }
                 PlayerAction.PLAYING -> {
-                    if (isPrepared) player.start()
+                    if (isPrepared) requestPlay()
                 }
                 PlayerAction.PAUSED -> {
                     throw IllegalStateException("Cannot pause a preparing player.")
@@ -176,7 +240,7 @@ open class SimpleMusicPlayerImpl(
                     }
                 }
                 PlayerAction.PLAYING -> {
-                    player.start()
+                    requestPlay()
                 }
                 PlayerAction.PAUSED -> {
                 }
@@ -195,7 +259,7 @@ open class SimpleMusicPlayerImpl(
                     }
                 }
                 PlayerAction.PLAYING -> {
-                    player.start()
+                    requestPlay()
                 }
                 PlayerAction.PAUSED -> {
                     throw IllegalStateException("Cannot pause a stopped player.")
@@ -281,7 +345,7 @@ open class SimpleMusicPlayerImpl(
 
     override fun seekTo(percent: Int) {
         if (currentAction == PlayerAction.PLAYING || currentAction == PlayerAction.PAUSED) {
-             seekTo ((player.duration * percent.toFloat() / 100).toLong())
+            seekTo((player.duration * percent.toFloat() / 100).toLong())
         } else {
             throw IllegalStateException("Cannot seek media because player is not in playing or pausing.")
         }
@@ -321,6 +385,7 @@ open class SimpleMusicPlayerImpl(
         } catch (thr: Throwable) {
         }
         player.release()
+        context.unregisterReceiver(headPhoneConnectReceiver)
         listeners.forEach { one -> one.onUnregistered(this) }
         listeners.clear()
     }

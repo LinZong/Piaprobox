@@ -36,9 +36,13 @@
     <string name="DownloadMusicRequestDialogTitle">Download Music</string>
     <string name="DownloadMusicRequestDialogMessgae">It seems that you are trying to download this music file. Remember that you MUST follow the licenses claimed by the author.</string>
 
+    <string name="AudioFocusDelayHint">Music will be playing when current media ended.</string>
+
+    <string name="AudioFocusFailedHint">Play music failed. Please check whether another app is using your playback device.</string>
 
 
-<!--    In-App use flags-->
+
+    <!--    In-App use flags-->
 
     <string name="ImageViewTransitionName">ImageViewTransitionName</string>
     <string name="RecyclerViewNoMoreItem">Nothing more >_&lt; </string>

@@ -39,19 +39,13 @@ class MusicPlayerService : Service() {
     private lateinit var musicPlayerNotificationManager: MusicPlayerNotificationManager
     private var PlayingMusicContentInfo: MusicContentInfo? = null
 
-    override fun onCreate() {
-        super.onCreate()
-        musicPlayerNotificationManager =
-            MusicPlayerNotificationManager(
-                PiaproboxApplication.Self.applicationContext,
-                Intent(this, MusicControlActivity::class.java)
-            )
-    }
-
-    var player: MusicPlayer = SimpleMusicPlayerImpl(this)
+    lateinit var player: MusicPlayer
         private set
 
-    init {
+    override fun onCreate() {
+        super.onCreate()
+        player = SimpleMusicPlayerImpl(this)
+
         player.registerStateChangedListener(object : DefaultMusicPlayerStateChangedCallback() {
             private fun triggerNotificationUpdate() {
                 UpdateNotification(player.state(), PlayingMusicContentInfo!!)
@@ -68,7 +62,16 @@ class MusicPlayerService : Service() {
                 triggerNotificationUpdate()
             }
         })
+
+        musicPlayerNotificationManager =
+            MusicPlayerNotificationManager(
+                PiaproboxApplication.Self.applicationContext,
+                Intent(this, MusicControlActivity::class.java)
+            )
     }
+
+
+
 
     // Service内部使用
     private fun UpdateNotification(playerAction: PlayerAction, playingMusicContentInfo: MusicContentInfo) {
