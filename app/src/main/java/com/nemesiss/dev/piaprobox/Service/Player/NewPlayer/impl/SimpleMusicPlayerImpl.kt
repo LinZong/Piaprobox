@@ -33,10 +33,12 @@ open class SimpleMusicPlayerImpl(
 
     private var playingMediaReference: SoftReference<Any>? = null
 
-    private lateinit var audioManager: AudioManager
+    private var audioManager: AudioManager
 
     private var prepareFailedHandler = Handler {
-        listeners.forEach { one -> one.onLoadFailed(this) }
+        handlePlayerNextState(PlayerAction.STOPPED) {
+            listeners.forEach { one -> one.onLoadFailed(this) }
+        }
         true
     }
 
