@@ -129,6 +129,12 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             }
         }
         HandleSwitchMusicIntent(intent)
+
+        MusicPlayer_Lyric_RecyclerView_Container.let { container ->
+            container.post {
+                MusicPlayer_Lyric_RecyclerView.setPadding(0, container.height / 2, 0, container.height / 2)
+            }
+        }
     }
 
     private fun HandleSwitchMusicIntent(intent: Intent?) {
@@ -305,10 +311,6 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         } else {
             lyricListAdapter?.items = lyricListData!!
             lyricListAdapter?.notifyDataSetChanged()
-        }
-        MusicPlayer_Lyric_RecyclerView_Container.post {
-            val LyricViewHeight = MusicPlayer_Lyric_RecyclerView_Container.height
-            MusicPlayer_Lyric_RecyclerView.setPadding(0, LyricViewHeight / 2, 0, LyricViewHeight / 2)
         }
     }
 
