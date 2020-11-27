@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SmartFoxWorkToolsProjectState">
-    <option name="branch" value="new_player" />
+    <option name="branch" value="support_login" />
     <option name="gitUrl" value="https://github.com/LinZong/Piaprobox.git" />
-    <option name="localBranch" value="new_player" />
-    <option name="revision" value="bb94bf5b75c79df8200a5de26f28a77118af807c" />
+    <option name="localBranch" value="support_login" />
+    <option name="revision" value="b0fe13862af55604394652bf72734e14f55ef4fa" />
   </component>
 </project>
