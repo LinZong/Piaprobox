@@ -21,12 +21,6 @@ class NoLoginCredentialsException : Exception()
 class LoginFailedException(result: LoginResult) : Exception()
 
 interface UserLoginService {
-
-    /**
-     * 获取登陆状态
-     */
-    fun getLoginStatus(): LoginStatus
-
     /**
      * 获取用户信息。未登录会抛出异常
      */

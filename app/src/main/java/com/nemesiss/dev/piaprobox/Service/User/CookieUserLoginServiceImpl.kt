@@ -3,15 +3,13 @@ package com.nemesiss.dev.piaprobox.Service.User
 import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
 import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
 import com.nemesiss.dev.piaprobox.Model.User.UserInfo
+import javax.inject.Inject
 
 /**
  * Maintain Piapro's cookie for a login status.
  * This is a simple fashion also being used for Piapro's official site.
  */
-class CookieUserLoginServiceImpl : UserLoginService {
-    override fun getLoginStatus(): LoginStatus {
-        TODO("Not yet implemented")
-    }
+class CookieUserLoginServiceImpl @Inject constructor() : UserLoginService {
 
     override fun getUserInfo(): UserInfo {
         TODO("Not yet implemented")
@@ -40,5 +38,4 @@ class CookieUserLoginServiceImpl : UserLoginService {
     override fun checkLogin(): LoginStatus {
         TODO("Not yet implemented")
     }
-
 }
