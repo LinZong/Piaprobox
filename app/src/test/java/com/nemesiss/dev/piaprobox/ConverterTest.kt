@@ -1,7 +1,12 @@
 package com.nemesiss.dev.piaprobox
 
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.serializer.SerializeConfig
+import com.alibaba.fastjson.util.TypeUtils
 import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
+import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
+import com.nemesiss.dev.piaprobox.Model.User.UserInfo
+import com.nemesiss.dev.piaprobox.Service.Persistence
 import org.junit.Assert
 import org.junit.Test
 
@@ -29,5 +34,20 @@ class ConverterTest {
             Assert.assertEquals("测试用户", UserName)
             Assert.assertEquals("测试用户密码", Password)
         }
+    }
+
+    @Test
+    fun LoginStatusToNameCorrect() {
+        val name = LoginStatus.NOT_LOGIN.name
+        Assert.assertEquals(LoginStatus.NOT_LOGIN, LoginStatus.valueOf(name))
+    }
+
+    @Test
+    fun UserInfoConvertCorrect() {
+        val nemesiss = UserInfo("nemesisslin", "Nemesiss Lin", "http://no.avatar")
+        val nemesissJsonUserInfo = JSON.toJSONString(nemesiss)
+        println(nemesissJsonUserInfo)
+        val reparsedNemesiss = JSON.parseObject(nemesissJsonUserInfo, UserInfo::class.java)
+        Assert.assertEquals(nemesiss, reparsedNemesiss)
     }
 }

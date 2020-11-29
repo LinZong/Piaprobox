@@ -14,12 +14,14 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.Music.MusicFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.TextWork.TextWorkFragment
+import com.nemesiss.dev.piaprobox.Model.User.LoginResult
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
+import com.nemesiss.dev.piaprobox.Service.User.LoginCallback
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : PiaproboxBaseActivity() {
+class MainActivity : LoginCallbackActivity() {
 
     private val MainFragmentsCollection: HashMap<Int, BaseMainFragment> = HashMap()
     private lateinit var CurrentShowMainFragment: BaseMainFragment
@@ -29,6 +31,10 @@ class MainActivity : PiaproboxBaseActivity() {
     override fun onDestroy() {
         MainFragmentsCollection.clear()
         super.onDestroy()
+    }
+
+    override fun handleLoginResult(loginResult: LoginResult) {
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,7 +150,6 @@ class MainActivity : PiaproboxBaseActivity() {
     }
 
     // 向对应Fragment转发看图Activity退出时的Intent，辅助完成共享元素回缩的效果.
-
     override fun onActivityReenter(resultCode: Int, data: Intent?) {
         super.onActivityReenter(resultCode, data)
         when (CurrentShowMainFragment) {

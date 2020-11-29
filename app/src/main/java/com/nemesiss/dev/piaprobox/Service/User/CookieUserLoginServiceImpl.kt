@@ -1,8 +1,14 @@
 package com.nemesiss.dev.piaprobox.Service.User
 
+import android.content.Intent
+import com.nemesiss.dev.piaprobox.Activity.Common.LoginActivity
+import com.nemesiss.dev.piaprobox.Activity.Common.LoginCallbackActivity
+import com.nemesiss.dev.piaprobox.Model.Resources.Constants
 import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
 import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
 import com.nemesiss.dev.piaprobox.Model.User.UserInfo
+import com.nemesiss.dev.piaprobox.Service.Persistence
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -11,31 +17,56 @@ import javax.inject.Inject
  */
 class CookieUserLoginServiceImpl @Inject constructor() : UserLoginService {
 
-    override fun getUserInfo(): UserInfo {
-        TODO("Not yet implemented")
+    override fun getUserInfo(): UserInfo = Persistence.GetUserInfo() ?: throw NotLoginException()
+
+    private fun saveUserInfo(userInfo: UserInfo): Boolean {
+        return Persistence.SaveUserInfo(userInfo)
     }
 
-    override fun getLoginCredentials(): LoginCredentials {
-        TODO("Not yet implemented")
+    override fun getLoginCredentials(): LoginCredentials? {
+        return Persistence.GetLoginCredentials()
     }
 
     override fun saveLoginCredentials(credentials: LoginCredentials): Boolean {
-        TODO("Not yet implemented")
+        return Persistence.SaveLoginCredentials(credentials)
     }
 
     override fun login(): UserInfo {
-        TODO("Not yet implemented")
+        TODO("Not implemented")
     }
 
     override fun login(credentials: LoginCredentials): UserInfo {
-        TODO("Not yet implemented")
+        TODO("Not implemented")
     }
 
-    override fun startLoginActivity() {
-        TODO("Not yet implemented")
+    override fun startLoginActivity(loginCallbackActivity: LoginCallbackActivity) {
+        loginCallbackActivity.startActivityForResult(
+            Intent(loginCallbackActivity, LoginActivity::class.java),
+            Constants.Login.REQUEST_CODE
+        )
     }
 
-    override fun checkLogin(): LoginStatus {
-        TODO("Not yet implemented")
+    override fun checkLogin(useCache: Boolean): LoginStatus {
+        if (useCache) {
+            // 如果loginTimeStamp == 0 或者当前时间已经超过Cache有效期，则尝试强制发出网络请求，查询登录态
+            if (checkCachedLoginStatusValid()) {
+                return LoginStatus.LOGIN
+            }
+        }
+        return forceCheckLogin()
+    }
+
+    private fun checkCachedLoginStatusValid(): Boolean {
+        // in milliseconds
+        val now = Date().time
+        // in milliseconds
+        val loginTimeStamp = Persistence.GetLoginTimeStamp()
+        // second to milliseconds
+        val cacheStillValidInterval = Constants.Login.LOGIN_CACHE_VALID_TIME_INTERVAL_SEC * 1000
+        return loginTimeStamp > 0 && (now - loginTimeStamp) < cacheStillValidInterval
+    }
+
+    private fun forceCheckLogin(): LoginStatus {
+        return LoginStatus.NOT_LOGIN
     }
 }

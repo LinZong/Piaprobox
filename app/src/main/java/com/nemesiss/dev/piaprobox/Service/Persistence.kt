@@ -2,8 +2,13 @@ package com.nemesiss.dev.piaprobox.Service
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.text.TextUtils
+import com.alibaba.fastjson.JSON
 import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
 import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
+import com.nemesiss.dev.piaprobox.Model.User.UserInfo
+import java.sql.SQLPermission
+import java.util.*
 
 class Persistence {
 
@@ -17,6 +22,12 @@ class Persistence {
         @JvmStatic
         lateinit var SharedPrefEditor: SharedPreferences.Editor
 
+        internal object UserLoginServiceKey {
+            val LOGIN_CREDENTIALS = "LOGIN_CREDENTIALS"
+            val LOGIN_STATUS = "LOGIN_STATUS"
+            val USER_INFO = "USER_INFO"
+            val LOGIN_TIMESTAMP = "LOGIN_TIMESTAMP"
+        }
 
         @JvmStatic
         fun Init(context: Context) {
@@ -36,19 +47,54 @@ class Persistence {
         }
 
         fun SaveLoginCredentials(loginCredentials: LoginCredentials): Boolean {
-            return true
-        }
-
-        fun SaveLoginStatus(): Boolean {
-            return true
+            SharedPrefEditor = SharedPref.edit()
+            SharedPrefEditor.putString(UserLoginServiceKey.LOGIN_CREDENTIALS, JSON.toJSONString(loginCredentials))
+            return SharedPrefEditor.commit()
         }
 
         fun GetLoginCredentials(): LoginCredentials? {
-            return null
+            return SharedPref.getString(UserLoginServiceKey.LOGIN_CREDENTIALS, "")
+                .let { credentials ->
+                    if (TextUtils.isEmpty(credentials)) null
+                    else JSON.parseObject(credentials, LoginCredentials::class.java)
+                }
+        }
+
+        fun SaveLoginStatus(loginStatus: LoginStatus): Boolean {
+            SharedPrefEditor = SharedPref.edit()
+            SharedPrefEditor.putString(UserLoginServiceKey.LOGIN_STATUS, loginStatus.name)
+            return SharedPrefEditor.commit()
         }
 
         fun GetLoginStatus(): LoginStatus? {
-            return null
+            return SharedPref.getString(UserLoginServiceKey.LOGIN_STATUS, "")
+                .let { status -> if (TextUtils.isEmpty(status)) null else LoginStatus.valueOf(status) }
+        }
+
+        fun SaveUserInfo(userInfo: UserInfo): Boolean {
+            SharedPrefEditor = SharedPref.edit()
+            SharedPrefEditor.putString(UserLoginServiceKey.USER_INFO, JSON.toJSONString(userInfo))
+            return SharedPrefEditor.commit()
+        }
+
+        fun GetUserInfo(): UserInfo? {
+            return SharedPref.getString(UserLoginServiceKey.USER_INFO, "")
+                .let { userInfo ->
+                    if (TextUtils.isEmpty(userInfo)) null else JSON.parseObject(
+                        userInfo,
+                        UserInfo::class.java
+                    )
+                }
+        }
+
+        fun SaveLoginTimeStamp(): Boolean {
+            SharedPrefEditor = SharedPref.edit()
+            SharedPrefEditor.putLong(UserLoginServiceKey.LOGIN_TIMESTAMP, Date().time)
+            return SharedPrefEditor.commit()
+        }
+
+        fun GetLoginTimeStamp(): Long {
+            return SharedPref.getLong(UserLoginServiceKey.LOGIN_TIMESTAMP, 0)
         }
     }
 }

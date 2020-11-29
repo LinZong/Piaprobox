@@ -12,5 +12,13 @@ enum class LoginResult {
     /**
      * 网络出错
      */
-    NETWORK_ERR
+    NETWORK_ERR,
+    /**
+     * 成功
+     */
+    SUCCESS,
+    /**
+     * 未知错误
+     */
+    UNKNOWN_ERR
 }

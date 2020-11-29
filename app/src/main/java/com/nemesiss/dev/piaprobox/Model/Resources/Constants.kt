@@ -8,7 +8,13 @@ package com.nemesiss.dev.piaprobox.Model.Resources
  */
 object Constants {
     object Login {
-        val REQUEST_CODE = 3939
-        val RESULT_CODE = 2727
+        const val REQUEST_CODE = 3939
+        const val RESULT_CODE = 2727
+
+        /**
+         * 登录态缓存有效期 (以秒为单位)
+         */
+        const val LOGIN_CACHE_VALID_TIME_INTERVAL_SEC = 30 * 60
+        const val LOGIN_RESULT_KEY = "LOGIN_RESULT_KEY"
     }
 }

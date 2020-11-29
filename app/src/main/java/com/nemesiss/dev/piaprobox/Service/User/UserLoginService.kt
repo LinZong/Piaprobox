@@ -1,10 +1,10 @@
 package com.nemesiss.dev.piaprobox.Service.User
 
+import com.nemesiss.dev.piaprobox.Activity.Common.LoginCallbackActivity
 import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
 import com.nemesiss.dev.piaprobox.Model.User.LoginResult
 import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
 import com.nemesiss.dev.piaprobox.Model.User.UserInfo
-import java.lang.Exception
 
 /**
  * This service is used to maintain user login status,
@@ -18,7 +18,7 @@ class NotLoginException : Exception()
 
 class NoLoginCredentialsException : Exception()
 
-class LoginFailedException(result: LoginResult) : Exception()
+class LoginFailedException(lr : LoginResult) : Exception()
 
 interface UserLoginService {
     /**
@@ -30,7 +30,7 @@ interface UserLoginService {
     /**
      * 获取登陆信息，如果没存储过会返回null
      */
-    fun getLoginCredentials(): LoginCredentials
+    fun getLoginCredentials(): LoginCredentials?
 
     /**
      * 保存登陆信息
@@ -55,7 +55,7 @@ interface UserLoginService {
     /**
      * 跳转至LoginActivity进行登陆。
      */
-    fun startLoginActivity()
+    fun startLoginActivity(loginCallbackActivity: LoginCallbackActivity)
 
     /**
      * 检测当前用户的登录态是否有效。
@@ -63,5 +63,5 @@ interface UserLoginService {
      * 也可以手动指定不读缓存，强制走检测函数。
      * 只要完整的走了一遍检测函数后，检测结果将会写入缓存。
      */
-    fun checkLogin(): LoginStatus
+    fun checkLogin(useCache: Boolean = true): LoginStatus
 }
