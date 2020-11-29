@@ -8,6 +8,7 @@ import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
 import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
 import com.nemesiss.dev.piaprobox.Model.User.UserInfo
 import com.nemesiss.dev.piaprobox.Service.Persistence
+import okhttp3.OkHttpClient
 import java.util.*
 import javax.inject.Inject
 
@@ -15,8 +16,7 @@ import javax.inject.Inject
  * Maintain Piapro's cookie for a login status.
  * This is a simple fashion also being used for Piapro's official site.
  */
-class CookieUserLoginServiceImpl @Inject constructor() : UserLoginService {
-
+class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClient) : UserLoginService {
     override fun getUserInfo(): UserInfo = Persistence.GetUserInfo() ?: throw NotLoginException()
 
     private fun saveUserInfo(userInfo: UserInfo): Boolean {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
+import com.nemesiss.dev.piaprobox.Model.User.LoginCookie
 import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
 import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
 import com.nemesiss.dev.piaprobox.Model.User.UserInfo
@@ -23,10 +24,11 @@ class Persistence {
         lateinit var SharedPrefEditor: SharedPreferences.Editor
 
         internal object UserLoginServiceKey {
-            val LOGIN_CREDENTIALS = "LOGIN_CREDENTIALS"
-            val LOGIN_STATUS = "LOGIN_STATUS"
-            val USER_INFO = "USER_INFO"
-            val LOGIN_TIMESTAMP = "LOGIN_TIMESTAMP"
+            const val LOGIN_CREDENTIALS = "LOGIN_CREDENTIALS"
+            const val LOGIN_COOKIES = "LOGIN_COOKIES"
+            const val LOGIN_STATUS = "LOGIN_STATUS"
+            const val USER_INFO = "USER_INFO"
+            const val LOGIN_TIMESTAMP = "LOGIN_TIMESTAMP"
         }
 
         @JvmStatic
@@ -44,6 +46,20 @@ class Persistence {
         @JvmStatic
         fun GetMusicPlayerLoopStatus(): Boolean {
             return SharedPref.getBoolean(MUSIC_PLAYER_LOOP_STATUS, false)
+        }
+
+        fun GetLoginCookie(): LoginCookie? {
+            return SharedPref.getString(UserLoginServiceKey.LOGIN_COOKIES, "")
+                .let { credentials ->
+                    if (TextUtils.isEmpty(credentials)) null
+                    else JSON.parseObject(credentials, LoginCookie::class.java)
+                }
+        }
+
+        fun SaveLoginCookie(cookie: LoginCookie): Boolean {
+            SharedPrefEditor = SharedPref.edit()
+            SharedPrefEditor.putString(UserLoginServiceKey.LOGIN_COOKIES, JSON.toJSONString(cookie))
+            return SharedPrefEditor.commit()
         }
 
         fun SaveLoginCredentials(loginCredentials: LoginCredentials): Boolean {

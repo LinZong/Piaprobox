@@ -15,8 +15,6 @@ import javax.inject.Singleton;
 @Component(modules = {HTMLParserModules.class})
 public interface AsyncExecutorFactory {
 
-    AsyncExecutor executor();
-
     void inject(SplashActivity splashActivity);
 
     void inject(IllustratorViewActivity illustratorViewActivity);

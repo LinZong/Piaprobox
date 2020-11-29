@@ -41,6 +41,7 @@
                 android:parentActivityName=".Activity.Common.MainActivity">
         </activity>
         <activity android:name=".Activity.TestSkeletonActivity">
+
         </activity>
 
         <service android:name=".Service.Player.MusicPlayerService"/>

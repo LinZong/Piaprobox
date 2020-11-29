@@ -17,8 +17,6 @@ public interface DownloadServiceFactory {
 
     DownloadService ds();
 
-    void inject(TestSkeletonActivity ba);
-
     void inject(MusicPlayerActivity mpa);
 
     void inject(IllustratorViewActivity2 illustratorViewActivity);

@@ -10,7 +10,10 @@ import okhttp3.Request
 import okhttp3.Response
 import javax.inject.Inject
 
-class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor: AsyncExecutor) {
+class Fetch @Inject constructor(
+    val httpClient: OkHttpClient,
+    val asyncExecutor: AsyncExecutor
+) {
     var URL: String = ""
     var cookies: ArrayList<Pair<String, String>> = ArrayList()
 
@@ -31,7 +34,7 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient, val asyncExecutor:
     }
 
     fun cookie(name: String, value: String): Fetch {
-        cookies.add(Pair(name, value))
+        cookies.add(name to value)
         return this
     }
 
