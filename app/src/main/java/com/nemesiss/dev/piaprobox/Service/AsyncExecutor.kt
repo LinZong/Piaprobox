@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class AsyncExecutor @Inject constructor() {
+class AsyncExecutor {
 
     companion object {
         @JvmStatic
@@ -20,6 +20,9 @@ class AsyncExecutor @Inject constructor() {
 
         @JvmStatic
         private val LOG_TAG = "AsyncExecutorLog"
+
+        val INSTANCE: AsyncExecutor = AsyncExecutor()
+
     }
 
     private val mainThreadHandler = object : Handler(Looper.getMainLooper()) {

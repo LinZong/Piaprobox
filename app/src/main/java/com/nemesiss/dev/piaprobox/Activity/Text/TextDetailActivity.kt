@@ -10,11 +10,10 @@ import com.nemesiss.dev.piaprobox.Model.Text.TextDetailActivityViewModel
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerErrorHandlerFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.ErrorHandlerModules
-import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler.ParseContentErrorHandler
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.SimpleResponseHandler
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.databinding.TextDetailActivityBinding
 import kotlinx.android.synthetic.main.text_detail_activity.*
@@ -43,7 +42,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
 
         DaggerHTMParserFactory
             .builder()
-            .hTMLParserModules(HTMLParserModules(this))
+            .htmlParserModules(HtmlParserModules(this))
             .build()
             .inject(this)
 

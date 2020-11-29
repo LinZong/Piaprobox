@@ -15,13 +15,12 @@ import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
-import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerErrorHandlerFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.ErrorHandlerModules
-import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
 import com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler.ParseContentErrorHandler
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
@@ -53,8 +52,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     @Inject
     lateinit var htmlParser: HTMLParser
 
-    @Inject
-    lateinit var asyncExecutor: AsyncExecutor
+    val asyncExecutor: AsyncExecutor = AsyncExecutor.INSTANCE
 
     @Inject
     lateinit var downloader: DownloadService
@@ -100,11 +98,11 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
         // Dagger inject to activity.
         DaggerHTMParserFactory
             .builder()
-            .hTMLParserModules(HTMLParserModules(this))
+            .htmlParserModules(HtmlParserModules(this))
             .build()
             .inject(this)
 
-        DaggerAsyncExecutorFactory.builder().hTMLParserModules(HTMLParserModules(this)).build().inject(this)
+//        DaggerAsyncExecutorFactory.builder().hTMLParserModules(HTMLParserModules(this)).build().inject(this)
 
         DaggerDownloadServiceFactory
             .builder()

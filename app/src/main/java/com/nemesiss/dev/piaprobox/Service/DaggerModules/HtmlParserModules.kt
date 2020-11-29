@@ -7,7 +7,7 @@ import javax.inject.Qualifier
 
 
 @Module
-class HTMLParserModules(val context : Context) {
+class HtmlParserModules(val context : Context) {
 
     @Provides
     fun getCtx() = context

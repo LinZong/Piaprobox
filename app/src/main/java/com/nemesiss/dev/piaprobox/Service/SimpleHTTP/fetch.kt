@@ -10,10 +10,9 @@ import okhttp3.Request
 import okhttp3.Response
 import javax.inject.Inject
 
-class Fetch @Inject constructor(
-    val httpClient: OkHttpClient,
-    val asyncExecutor: AsyncExecutor
-) {
+class Fetch @Inject constructor(val httpClient: OkHttpClient) {
+
+    private val asyncExecutor: AsyncExecutor = AsyncExecutor.INSTANCE
     var URL: String = ""
     var cookies: ArrayList<Pair<String, String>> = ArrayList()
 

@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 @Component(modules = {DownloadServiceModules.class})
 public interface DownloadServiceFactory {
 
-    DownloadService ds();
+    DownloadService instance();
 
     void inject(MusicPlayerActivity mpa);
 

@@ -14,9 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
@@ -25,11 +23,10 @@ import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
-import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
-import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
@@ -72,8 +69,7 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
     @Inject
     lateinit var htmlParser: HTMLParser
 
-    @Inject
-    lateinit var asyncExecutor: AsyncExecutor
+    private var asyncExecutor: AsyncExecutor = AsyncExecutor.INSTANCE
 
     @Inject
     lateinit var downloader: DownloadService
@@ -135,11 +131,9 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
 
         DaggerHTMParserFactory
             .builder()
-            .hTMLParserModules(HTMLParserModules(this))
+            .htmlParserModules(HtmlParserModules(this))
             .build()
             .inject(this)
-
-        DaggerAsyncExecutorFactory.builder().hTMLParserModules(HTMLParserModules(this)).build().inject(this)
 
         DaggerDownloadServiceFactory
             .builder()

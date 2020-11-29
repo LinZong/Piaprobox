@@ -18,8 +18,8 @@ import com.nemesiss.dev.piaprobox.Util.PermissionUtil
 import java.io.File
 import javax.inject.Inject
 
-class DownloadService @Inject constructor(val context: Context, val asyncExecutor: AsyncExecutor) {
-
+class DownloadService @Inject constructor(val context: Context) {
+    private val asyncExecutor: AsyncExecutor = AsyncExecutor.INSTANCE
     private val downloadNotificationManager = DownloadNotificationManager(context)
 
     companion object {

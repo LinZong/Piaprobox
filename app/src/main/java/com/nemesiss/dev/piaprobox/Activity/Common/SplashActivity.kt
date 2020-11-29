@@ -5,27 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
-import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
-import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
 import com.nemesiss.dev.piaprobox.Util.AnimatorListenerBuilder
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import kotlinx.android.synthetic.main.activity_splash.*
-import javax.inject.Inject
 
 class SplashActivity : PiaproboxBaseActivity() {
 
-    @Inject
-    lateinit var asyncExecutor: AsyncExecutor
+    var asyncExecutor: AsyncExecutor = AsyncExecutor.INSTANCE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
-        DaggerAsyncExecutorFactory
-            .builder()
-            .hTMLParserModules(HTMLParserModules(this))
-            .build()
-            .inject(this)
 
         AppUtil.HideNavigationBar(this)
         FadeInPiaproIcon()

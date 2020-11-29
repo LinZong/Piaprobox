@@ -12,9 +12,9 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
-import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
+//import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
-import com.nemesiss.dev.piaprobox.Service.DaggerModules.HTMLParserModules
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
@@ -29,8 +29,7 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
     @Inject
     protected lateinit var htmlParser: HTMLParser
 
-    @Inject
-    protected lateinit var asyncExecutor: AsyncExecutor
+    protected var asyncExecutor: AsyncExecutor = AsyncExecutor.INSTANCE
 
     protected open var tagListAdapter: TagItemAdapter? = null
     protected open var tagListLayoutManager: LinearLayoutManager? = null
@@ -45,20 +44,20 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val htmlParserModules = HTMLParserModules(context ?: PiaproboxApplication.Self.applicationContext)
+        val htmlParserModules = HtmlParserModules(context ?: PiaproboxApplication.Self.applicationContext)
 
         DaggerHTMParserFactory
             .builder()
-            .hTMLParserModules(htmlParserModules)
+            .htmlParserModules(htmlParserModules)
             .build()
             .inject(this)
 
 
-        DaggerAsyncExecutorFactory
-            .builder()
-            .hTMLParserModules(htmlParserModules)
-            .build()
-            .inject(this)
+//        DaggerAsyncExecutorFactory
+//            .builder()
+//            .hTMLParserModules(htmlParserModules)
+//            .build()
+//            .inject(this)
     }
 
     protected open fun LoadFragmentPage(
