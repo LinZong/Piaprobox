@@ -24,10 +24,10 @@ import kotlinx.android.synthetic.main.music_player_layout.*
 
 class MusicControlActivity : MusicPlayerActivity() {
 
-    private var FROM_NOTIFICATION_INTENT = false
-    private var NEW_MUSIC_LOADED = false
-    private var IS_SEEKING = false
-    private var IS_ENABLE_LOOPING = false
+    private var fromNotificationIntent = false
+    private var newMusicLoaded = false
+    private var isSeeking = false
+    private var isEnableLooping = false
         @Synchronized
         set(value) {
             player?.looping(value)
@@ -77,7 +77,7 @@ class MusicControlActivity : MusicPlayerActivity() {
     }
 
     private fun LoadUserPreferenceSetup() {
-        IS_ENABLE_LOOPING = Persistence.GetMusicPlayerLoopStatus()
+        isEnableLooping = Persistence.GetMusicPlayerLoopStatus()
     }
 
     private fun PrepareActivityStatus() {
@@ -85,19 +85,19 @@ class MusicControlActivity : MusicPlayerActivity() {
         StartMusicPlayService(onlyBindService = status != null)
         if (status != null) {
             // 从通知栏消息过来.
-            FROM_NOTIFICATION_INTENT = true
-            NEW_MUSIC_LOADED = false
+            fromNotificationIntent = true
+            newMusicLoaded = false
             val activityStatus = status as MusicPlayerActivityStatus
             RecoverActivityStatusFromPersistObject(activityStatus)
         } else {
-            FROM_NOTIFICATION_INTENT = false
+            fromNotificationIntent = false
             // 从点击RecommendItem过来
             val MusicContentUrl = intent.getStringExtra(MUSIC_CONTENT_URL) ?: ""
             if (LAST_MUSIC_PLAYER_ACTIVITY_STATUS != null) {
                 // 恢复
                 RecoverActivityStatusFromPersistObject(LAST_MUSIC_PLAYER_ACTIVITY_STATUS!!)
             } else if (MusicContentUrl.isNotEmpty()) {
-                NEW_MUSIC_LOADED = true
+                newMusicLoaded = true
             }
         }
     }
@@ -112,12 +112,12 @@ class MusicControlActivity : MusicPlayerActivity() {
             }
 
             override fun onStartTrackingTouch(seekbar: SeekBar?) {
-                IS_SEEKING = true
+                isSeeking = true
             }
 
             override fun onStopTrackingTouch(seekbar: SeekBar?) {
                 seekbar?.apply {
-                    IS_SEEKING = false
+                    isSeeking = false
                     player?.seekTo(progress)
                 }
             }
@@ -159,7 +159,7 @@ class MusicControlActivity : MusicPlayerActivity() {
                     intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, CurrentMusicContentInfo)
                     startActivity(intent)
                 }, {
-                    IS_ENABLE_LOOPING = !IS_ENABLE_LOOPING
+                    isEnableLooping = !isEnableLooping
                 }, {
                     NextMusic()
                 }, {
@@ -209,7 +209,7 @@ class MusicControlActivity : MusicPlayerActivity() {
                     CurrentMusicTotalDuration,
                     MusicPlayer_Seekbar.progress,
                     MusicPlayer_Seekbar.secondaryProgress,
-                    IS_ENABLE_LOOPING,
+                    isEnableLooping,
                     CurrentPlayItemIndex,
                     PLAY_LISTS!!
             )
@@ -240,7 +240,7 @@ class MusicControlActivity : MusicPlayerActivity() {
 
 
     private fun SubscribeMusicPlayerStatus() {
-        player?.looping(IS_ENABLE_LOOPING)
+        player?.looping(isEnableLooping)
         player?.registerStateChangedListener(object : DefaultMusicPlayerStateChangedCallback() {
 
             override fun onRegistered(player: MusicPlayer) {
@@ -268,7 +268,7 @@ class MusicControlActivity : MusicPlayerActivity() {
 
             override fun onPlaying(player: MusicPlayer) {
                 CurrentMusicTotalDuration = player.duration().toInt()
-                player.looping(IS_ENABLE_LOOPING)
+                player.looping(isEnableLooping)
                 MusicPlayer_TotalTime.text = Duration2Time(CurrentMusicTotalDuration)
                 PersistMusicPlayerActivityStatus(PlayerAction.PLAYING, true)
                 beginQueryTimeStamp()
@@ -298,6 +298,7 @@ class MusicControlActivity : MusicPlayerActivity() {
             override fun onUnregistered(player: MusicPlayer) {
                 stopQueryTimeStamp()
                 ResetTimeIndicator()
+                MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
             }
         })
     }
@@ -308,7 +309,6 @@ class MusicControlActivity : MusicPlayerActivity() {
         MusicPlayer_Seekbar.secondaryProgress = 0
         MusicPlayer_CurrentTime.text = Duration2Time(0)
         MusicPlayer_TotalTime.text = Duration2Time(0)
-        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
     }
 
     private fun StartMusicPlayService(onlyBindService: Boolean = false) {
