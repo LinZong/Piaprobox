@@ -24,7 +24,7 @@ import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
-import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHtmlParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
@@ -128,8 +128,8 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
         setContentView(R.layout.illustrator_view_activity)
 
         Illustrator_View_ItemImageView.setImageDrawable(PRE_SHOWN_BITMAP)
-
-        DaggerHTMParserFactory
+//
+        DaggerHtmlParserFactory
             .builder()
             .htmlParserModules(HtmlParserModules(this))
             .build()

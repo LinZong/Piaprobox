@@ -17,7 +17,7 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerErrorHandlerFactory
-import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHtmlParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.ErrorHandlerModules
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
@@ -96,13 +96,11 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
         setContentView(R.layout.illustrator_view_activity2)
 
         // Dagger inject to activity.
-        DaggerHTMParserFactory
+        DaggerHtmlParserFactory
             .builder()
             .htmlParserModules(HtmlParserModules(this))
             .build()
             .inject(this)
-
-//        DaggerAsyncExecutorFactory.builder().hTMLParserModules(HTMLParserModules(this)).build().inject(this)
 
         DaggerDownloadServiceFactory
             .builder()

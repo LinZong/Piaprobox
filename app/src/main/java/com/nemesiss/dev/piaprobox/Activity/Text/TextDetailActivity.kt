@@ -8,7 +8,7 @@ import com.nemesiss.dev.HTMLContentParser.Model.TextContentInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Model.Text.TextDetailActivityViewModel
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerErrorHandlerFactory
-import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHtmlParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.ErrorHandlerModules
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler.ParseContentErrorHandler
@@ -40,7 +40,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        DaggerHTMParserFactory
+        DaggerHtmlParserFactory
             .builder()
             .htmlParserModules(HtmlParserModules(this))
             .build()

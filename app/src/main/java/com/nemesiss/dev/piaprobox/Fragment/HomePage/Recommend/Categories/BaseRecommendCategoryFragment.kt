@@ -12,8 +12,7 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
-//import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerAsyncExecutorFactory
-import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHTMParserFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHtmlParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
@@ -46,18 +45,11 @@ abstract class BaseRecommendCategoryFragment : BaseMainFragment() {
 
         val htmlParserModules = HtmlParserModules(context ?: PiaproboxApplication.Self.applicationContext)
 
-        DaggerHTMParserFactory
+        DaggerHtmlParserFactory
             .builder()
             .htmlParserModules(htmlParserModules)
             .build()
             .inject(this)
-
-
-//        DaggerAsyncExecutorFactory
-//            .builder()
-//            .hTMLParserModules(htmlParserModules)
-//            .build()
-//            .inject(this)
     }
 
     protected open fun LoadFragmentPage(

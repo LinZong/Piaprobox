@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @Component(modules = {HtmlParserModules.class})
-public interface HTMParserFactory {
+public interface HtmlParserFactory {
 
     HTMLParser parser();
 
