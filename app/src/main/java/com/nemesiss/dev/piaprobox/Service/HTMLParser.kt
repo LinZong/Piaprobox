@@ -5,8 +5,8 @@ import android.util.Log
 import com.alibaba.fastjson.JSONObject
 import com.nemesiss.dev.HTMLContentParser.ContentParserFactory
 import com.nemesiss.dev.HTMLContentParser.Steps.ContentParserImpl
-import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Model.HTMLParser.RuleVersion
+import com.nemesiss.dev.piaprobox.Model.Resources.Constants
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import java.io.BufferedReader
 import java.io.File
@@ -17,11 +17,9 @@ import javax.inject.Inject
 class HTMLParser @Inject constructor(val context: Context) {
     companion object {
 
-        @JvmStatic
-        val LOGTAG = "HTMLParser"
+        const val LOG_TAG = "HTMLParser"
 
-        @JvmStatic
-        val MAIN_DOMAIN = "https://piapro.jp"
+        const val MAIN_DOMAIN = Constants.Url.MAIN_DOMAIN
 
         @JvmStatic
         fun ProvideRuleJsonFileHandle(): File {
@@ -68,7 +66,7 @@ class HTMLParser @Inject constructor(val context: Context) {
         version = RuleVersion(Rules.getString("version"))
         Parser = ContentParserFactory.Provide()
 
-        Log.d(LOGTAG, "HTML Parser Loaded! Description here: ↓")
+        Log.d(LOG_TAG, "HTML Parser Loaded! Description here: ↓")
         Parser.Description()
     }
 }

@@ -3,6 +3,7 @@ package com.nemesiss.dev.piaprobox.Service.SimpleHTTP
 
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.OkHttpModules
+import com.nemesiss.dev.piaprobox.Service.Persistence
 import dagger.Component
 import okhttp3.Headers
 import okhttp3.OkHttpClient
@@ -14,7 +15,7 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient) {
 
     private val asyncExecutor: AsyncExecutor = AsyncExecutor.INSTANCE
     var URL: String = ""
-    var cookies: ArrayList<Pair<String, String>> = ArrayList()
+    var savedCookies: ArrayList<Pair<String, String>> = ArrayList()
 
     fun visit(url: String): Fetch {
         URL = url
@@ -24,7 +25,7 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient) {
     fun go(): Response {
         val hds = Headers
             .Builder()
-            .add("Cookie", cookies.joinToString(";") { "${it.first}=${it.second}" })
+            .add("Cookie", savedCookies.joinToString(";") { "${it.first}=${it.second}" })
             .build()
 
         CheckParameter()
@@ -32,15 +33,32 @@ class Fetch @Inject constructor(val httpClient: OkHttpClient) {
             .execute()
     }
 
+    fun cookie(single: Pair<String,String>): Fetch {
+        cookie(single.first, single.second)
+        return this
+    }
+
     fun cookie(name: String, value: String): Fetch {
-        cookies.add(name to value)
+        savedCookies.add(name to value)
+        return this
+    }
+
+    fun cookies(vararg cookies: Pair<String, String>): Fetch {
+        cookies.forEach { single -> cookie(single) }
+        return this
+    }
+
+    fun withLoginCookie(): Fetch {
+        Persistence.GetLoginCookie()?.apply {
+            cookies(*pairs)
+        }
         return this
     }
 
     fun goAsync(resolve: (Response) -> Unit, unexpectedFail: (Exception) -> Unit) {
         val hds = Headers
             .Builder()
-            .add("Cookie", cookies.joinToString(";") { "${it.first}=${it.second}" })
+            .add("Cookie", savedCookies.joinToString(";") { "${it.first}=${it.second}" })
             .build()
 
         CheckParameter()

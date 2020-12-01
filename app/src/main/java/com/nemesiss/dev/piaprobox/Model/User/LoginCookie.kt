@@ -7,4 +7,10 @@ data class LoginCookie(
     val piapro_s: String,
     @JSONField(name = "piapro_r")
     val piapro_r: String
-)
+) {
+    val pairs
+        get() = arrayOf(
+            "piapro_s" to piapro_s,
+            "piapro_r" to piapro_r
+        )
+}

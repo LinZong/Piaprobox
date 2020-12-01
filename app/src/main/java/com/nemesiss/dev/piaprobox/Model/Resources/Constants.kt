@@ -17,4 +17,11 @@ object Constants {
         const val LOGIN_CACHE_VALID_TIME_INTERVAL_SEC = 30 * 60
         const val LOGIN_RESULT_KEY = "LOGIN_RESULT_KEY"
     }
+
+    object Url {
+        const val MAIN_DOMAIN = "https://piapro.jp"
+        const val LOGIN_PAGE = "https://piapro.jp/login/"
+
+        fun getUserProfileUrl(username: String) = "${MAIN_DOMAIN}/${username}"
+    }
 }

@@ -18,7 +18,14 @@ class NotLoginException : Exception()
 
 class NoLoginCredentialsException : Exception()
 
-class LoginFailedException(lr : LoginResult) : Exception()
+class LoginFailedException @JvmOverloads constructor(
+    val loginResult: LoginResult,
+    message: String? = null,
+    cause: Throwable? = null,
+    enableSuppression: Boolean = true,
+    writableStackTrace: Boolean = true
+) :
+    Exception(message, cause, enableSuppression, writableStackTrace)
 
 interface UserLoginService {
     /**

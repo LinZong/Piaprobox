@@ -5,10 +5,7 @@ import android.os.Looper
 import android.os.Message
 import android.util.Log
 import dagger.Component
-import java.util.concurrent.BlockingQueue
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -48,6 +45,8 @@ class AsyncExecutor {
     fun SendTask(Task : () -> Unit) {
         InnerTaskThreadPool.execute(Task)
     }
+
+    fun <T> SendTaskWithResult(Task: () -> T): Future<T> = InnerTaskThreadPool.submit(Task)
 
     fun SendTaskMainThread(Task :Runnable) {
         val message = Message()
