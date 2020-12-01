@@ -10,14 +10,13 @@ import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Util.getOrException
-import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Future
-import java.util.concurrent.FutureTask
 import javax.inject.Inject
 
 
@@ -159,8 +158,6 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
         }
         return cookieFuture.getOrException()
     }
-
-
 
     override fun startLoginActivity(loginCallbackActivity: LoginCallbackActivity) {
         loginCallbackActivity.startActivityForResult(
