@@ -87,7 +87,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     private fun getUserInfoFromPiapro(): UserInfo {
         // When we reach here we must have a correct login credentials so we can feel free to unwrap nullable ty
         val loginCredentials = Persistence.GetLoginCredentials()!!
-        val userProfileUrl = Constants.Url.getUserProfileUrl(loginCredentials.UserName)
+        val userProfileUrl = Constants.Url.getUserProfileUrl(loginCredentials.userName)
         val response = DaggerFetchFactory.create().fetcher().withLoginCookie().visit(userProfileUrl).go()
         if (response.isSuccessful) {
             val html = Jsoup.parse(response.body?.string())
@@ -95,7 +95,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             val userInfo = htmlParser.Parser.GoSteps(html, parseUserInfoSteps) as UserInfo
             // Remove postfix 'さん' as we actually don't need it.
             userInfo.apply {
-                NickName = NickName.replace("さん", "")
+                nickName = nickName.replace("さん", "")
             }
             return userInfo
         }
@@ -105,7 +105,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
 
     private fun getUserLoginCookie(piapro_s_Cookie: String, loginCredentials: LoginCredentials): LoginCookie {
         val mediaType = "application/x-www-form-urlencoded".toMediaType()
-        val body: RequestBody = loginCredentials.json.toRequestBody(mediaType)
+        val body: RequestBody = loginCredentials.queryString.toRequestBody(mediaType)
         val request: Request = Request.Builder()
             .url("https://piapro.jp/login/exe")
             .method("POST", body)

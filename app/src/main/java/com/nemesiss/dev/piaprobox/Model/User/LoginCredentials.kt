@@ -9,8 +9,14 @@ import com.alibaba.fastjson.annotation.JSONField
  * 所以这个类给open
  */
 open class LoginCredentials(
-    @JSONField(name = "_username") val UserName: String,
-    @JSONField(name = "_password") val Password: String
+    @JSONField(name = "_username") val userName: String,
+    @JSONField(name = "_password") val password: String
 ) {
-    val json get() = JSON.toJSONString(this)
+    val json: String
+        @JSONField(serialize = false)
+        get() = JSON.toJSONString(this)
+
+    val queryString: String
+        @JSONField(serialize = false)
+        get() = "_username=${userName}&_password=${password}&_remember_me=on&login=ログイン"
 }

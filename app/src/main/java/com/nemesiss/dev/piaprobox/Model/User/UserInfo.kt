@@ -4,11 +4,11 @@ import android.os.Parcel
 import android.os.Parcelable
 
 /**
- * @param UserName 用户登录名
- * @param NickName 用户昵称
- * @param AvatarImage 用户头像Url (会带上http头)
+ * @param userName 用户登录名
+ * @param nickName 用户昵称
+ * @param avatarImage 用户头像Url (会带上http头)
  */
-data class UserInfo(var UserName: String, var NickName: String, var AvatarImage: String) : Parcelable {
+data class UserInfo(var userName: String, var nickName: String, var avatarImage: String) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
@@ -16,9 +16,9 @@ data class UserInfo(var UserName: String, var NickName: String, var AvatarImage:
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(UserName)
-        parcel.writeString(NickName)
-        parcel.writeString(AvatarImage)
+        parcel.writeString(userName)
+        parcel.writeString(nickName)
+        parcel.writeString(avatarImage)
     }
 
     override fun describeContents(): Int {

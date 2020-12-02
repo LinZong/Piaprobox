@@ -63,7 +63,7 @@ class Persistence {
 
         fun SaveLoginCredentials(loginCredentials: LoginCredentials): Boolean {
             SharedPrefEditor = SharedPref.edit()
-            SharedPrefEditor.putString(UserLoginServiceKey.LOGIN_CREDENTIALS, JSON.toJSONString(loginCredentials))
+            SharedPrefEditor.putString(UserLoginServiceKey.LOGIN_CREDENTIALS, loginCredentials.json)
             return SharedPrefEditor.commit()
         }
 
