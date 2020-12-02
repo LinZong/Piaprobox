@@ -66,9 +66,9 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             val loginCookie = LoginCookie(piapro_s, piapro_r)
 
             Persistence.SaveLoginCookie(loginCookie)
+            Persistence.SaveLoginTimeStamp()
             Persistence.SaveLoginStatus(LoginStatus.LOGIN)
             val userInfo = getUserInfoFromPiapro()
-
             Persistence.SaveUserInfo(userInfo)
             return userInfo
         } catch (e: Exception) {
@@ -86,7 +86,6 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     private fun getUserInfoFromPiapro(): UserInfo {
         // When we reach here we must have a correct login credentials so we can feel free to unwrap nullable ty
         val loginCredentials = Persistence.GetLoginCredentials()!!
-        val loginCookie = Persistence.GetLoginCookie()!!
         val userProfileUrl = Constants.Url.getUserProfileUrl(loginCredentials.UserName)
         val response = DaggerFetchFactory.create().fetcher().withLoginCookie().visit(userProfileUrl).go()
         if (response.isSuccessful) {
@@ -101,7 +100,6 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
         }
         throw LoginFailedException(LoginResult.NETWORK_ERR, "Cannot get user info from Piapro.")
     }
-
 
     private fun getPiapro_r(piapro_s_Cookie: String, loginCredentials: LoginCredentials): String {
         val mediaType = "application/x-www-form-urlencoded".toMediaType()
@@ -204,6 +202,20 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     }
 
     private fun forceCheckLogin(): LoginStatus {
-        return LoginStatus.NOT_LOGIN
+        val loginCookies = Persistence.GetLoginCookie() ?: return LoginStatus.NOT_LOGIN
+        /**
+         * 1. 带着Cookie请求首页
+         * 2. 看首页banner位置能否提取出用户信息
+         */
+        try {
+            val response = DaggerFetchFactory.create().fetcher().visit(Constants.Url.MAIN_DOMAIN).withLoginCookie().go()
+            if (response.isSuccessful) {
+                val html = Jsoup.parse(response.body?.string())
+                
+            }
+        } catch (e: java.lang.Exception) {
+
+        }
+        TODO("还没写完")
     }
 }

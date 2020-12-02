@@ -8,7 +8,6 @@ import com.nemesiss.dev.piaprobox.Model.User.LoginCookie
 import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
 import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
 import com.nemesiss.dev.piaprobox.Model.User.UserInfo
-import java.sql.SQLPermission
 import java.util.*
 
 class Persistence {
