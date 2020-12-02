@@ -1805,5 +1805,57 @@
         }
       }
     ]
+  },
+  "UserProfile": {
+    "Steps": [
+      {
+        "getElementByIdSingle": {
+          "Name": "_filterbox_character"
+        }
+      },
+      {
+        "getElementsByClassSingle": {
+          "Name": "filterlist",
+          "Index": 0
+        }
+      },
+      {
+        "getElementsByTag": {
+          "Name": "li"
+        }
+      },
+      {
+        "forEachOutput": {
+          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel",
+          "GenerateOutputRule": {
+            "URL": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "href"
+                }
+              }
+            ],
+            "Name": [
+              {
+                "getElementsByTagSingle": {
+                  "Name": "a",
+                  "Index": 0
+                }
+              },
+              {
+                "textSingle": {
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
   }
 }

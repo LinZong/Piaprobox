@@ -7,9 +7,9 @@ import com.nemesiss.dev.piaprobox.Activity.Common.LoginCallbackActivity
 import com.nemesiss.dev.piaprobox.Model.Resources.Constants
 import com.nemesiss.dev.piaprobox.Model.User.*
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
+import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Util.getOrException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -24,7 +24,8 @@ import javax.inject.Inject
  * Maintain Piapro's cookie for a login status.
  * This is a simple fashion also being used for Piapro's official site.
  */
-class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClient) : UserLoginService {
+class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClient, val htmlParser: HTMLParser) :
+    UserLoginService {
 
 
     private val asyncExecutor = AsyncExecutor.INSTANCE
@@ -86,12 +87,19 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
         val loginCookie = Persistence.GetLoginCookie()!!
         val userProfileUrl = Constants.Url.getUserProfileUrl(loginCredentials.UserName)
 
-        asyncExecutor.SendTaskWithResult {
+        try {
             val response = DaggerFetchFactory.create().fetcher().withLoginCookie().visit(userProfileUrl).go()
+            if (response.isSuccessful) {
+                val html = response.body?.string()
+                
+            }
+        } catch (ioe: IOException) {
+        } catch (e: Exception) {
 
         }
         TODO("还没写完")
     }
+
 
     private fun getPiapro_r(piapro_s_Cookie: String, loginCredentials: LoginCredentials): String {
         val mediaType = "application/x-www-form-urlencoded".toMediaType()
@@ -122,41 +130,48 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             .addHeader("Accept-Language", "en-US,en;q=0.9")
             .addHeader("Cookie", "piapro_s=${piapro_s_Cookie}")
             .build()
-        val piapro_r_Cookie = asyncExecutor.SendTaskWithResult {
-            try {
-                val response = httpClient.newCall(request).execute()
-                val piapro_r = response.header("piapro_r", "")!!
-                if (TextUtils.isEmpty(piapro_r)) {
-                    throw LoginFailedException(LoginResult.ACCOUNT_OR_PASSWORD_WRONG)
-                }
-                return@SendTaskWithResult piapro_r
-            } catch (ioe : IOException) {
-                throw LoginFailedException(LoginResult.NETWORK_ERR, "Cannot get the 'piapro_r' cookie due to network error.")
-            } catch (e: Exception) {
-                throw LoginFailedException(LoginResult.NETWORK_ERR, "Cannot get the 'piapro_r' cookie due to unknown exception.")
+
+        try {
+            val response = httpClient.newCall(request).execute()
+            val piapro_r = response.header("piapro_r", "")!!
+            if (TextUtils.isEmpty(piapro_r)) {
+                throw LoginFailedException(LoginResult.ACCOUNT_OR_PASSWORD_WRONG)
             }
+            return piapro_r
+        } catch (ioe: IOException) {
+            throw LoginFailedException(
+                LoginResult.NETWORK_ERR,
+                "Cannot get the 'piapro_r' cookie due to network error."
+            )
+        } catch (e: Exception) {
+            throw LoginFailedException(
+                LoginResult.NETWORK_ERR,
+                "Cannot get the 'piapro_r' cookie due to unknown exception."
+            )
         }
-        return piapro_r_Cookie.getOrException()
     }
 
     private fun getPiapro_s(): String {
         // 之所以选用LoginPage, 是因为这个页面的大小只有首页的1/4，但是同样能具有拿到piapro_s的能力。
         val request = Request.Builder().url(Constants.Url.LOGIN_PAGE).get().build()
-        val cookieFuture= asyncExecutor.SendTaskWithResult {
-            try {
-                val response = httpClient.newCall(request).execute()
-                val piapro_s_Cookie = response.header("piapro_s", "")!!
-                if (TextUtils.isEmpty(piapro_s_Cookie)) {
-                    throw LoginFailedException(LoginResult.UNKNOWN_ERR, "Cannot get the 'piapro_s' cookie from header.")
-                }
-                return@SendTaskWithResult piapro_s_Cookie
-            } catch (ioe : IOException) {
-                throw LoginFailedException(LoginResult.NETWORK_ERR, "Cannot get the 'piapro_s' cookie due to network error.")
-            } catch (e: Exception) {
-                throw LoginFailedException(LoginResult.NETWORK_ERR, "Cannot get the 'piapro_s' cookie due to unknown exception.")
+        try {
+            val response = httpClient.newCall(request).execute()
+            val piapro_s_Cookie = response.header("piapro_s", "")!!
+            if (TextUtils.isEmpty(piapro_s_Cookie)) {
+                throw LoginFailedException(LoginResult.UNKNOWN_ERR, "Cannot get the 'piapro_s' cookie from header.")
             }
+            return piapro_s_Cookie
+        } catch (ioe: IOException) {
+            throw LoginFailedException(
+                LoginResult.NETWORK_ERR,
+                "Cannot get the 'piapro_s' cookie due to network error."
+            )
+        } catch (e: Exception) {
+            throw LoginFailedException(
+                LoginResult.NETWORK_ERR,
+                "Cannot get the 'piapro_s' cookie due to unknown exception."
+            )
         }
-        return cookieFuture.getOrException()
     }
 
     override fun startLoginActivity(loginCallbackActivity: LoginCallbackActivity) {
