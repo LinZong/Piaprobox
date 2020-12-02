@@ -1809,47 +1809,53 @@
   "UserProfile": {
     "Steps": [
       {
-        "getElementByIdSingle": {
-          "Name": "_filterbox_character"
-        }
-      },
-      {
-        "getElementsByClassSingle": {
-          "Name": "filterlist",
-          "Index": 0
-        }
-      },
-      {
-        "getElementsByTag": {
-          "Name": "li"
-        }
-      },
-      {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel",
+          "ElementMapClassName": "com.nemesiss.dev.piaprobox.Model.User.UserInfo",
           "GenerateOutputRule": {
-            "URL": [
+            "UserName": [
               {
-                "getElementsByTagSingle": {
-                  "Name": "a",
-                  "Index": 0
+                "getElementByIdSingle": {
+                  "Name": "user_prof"
                 }
               },
               {
-                "attrSingle": {
-                  "Name": "href"
+                "getElementsByTagSingle": {
+                  "Name": "p",
+                  "Index": 1
+                }
+              },
+              {
+                "textSingle": {
                 }
               }
             ],
-            "Name": [
+            "NickName": [
+              {
+                "getElementByIdSingle": {
+                  "Name": "user_prof"
+                }
+              },
               {
                 "getElementsByTagSingle": {
-                  "Name": "a",
+                  "Name": "p",
                   "Index": 0
                 }
               },
               {
                 "textSingle": {
+                }
+              }
+            ],
+            "AvatarImage": [
+              {
+                "getElementsByClassSingle": {
+                  "Name": "profile-icon-image",
+                  "Index": 0
+                }
+              },
+              {
+                "attrSingle": {
+                  "Name": "src"
                 }
               }
             ]

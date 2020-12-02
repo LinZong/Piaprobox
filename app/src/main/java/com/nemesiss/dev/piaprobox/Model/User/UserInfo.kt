@@ -8,7 +8,7 @@ import android.os.Parcelable
  * @param NickName 用户昵称
  * @param AvatarImage 用户头像Url (会带上http头)
  */
-data class UserInfo(val UserName: String, val NickName: String, val AvatarImage: String) : Parcelable {
+data class UserInfo(var UserName: String, var NickName: String, var AvatarImage: String) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),

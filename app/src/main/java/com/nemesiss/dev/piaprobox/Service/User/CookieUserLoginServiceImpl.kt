@@ -15,6 +15,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.jsoup.Jsoup
 import java.io.IOException
 import java.util.*
 import javax.inject.Inject
@@ -66,13 +67,14 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
 
             Persistence.SaveLoginCookie(loginCookie)
             Persistence.SaveLoginStatus(LoginStatus.LOGIN)
+            val userInfo = getUserInfoFromPiapro()
 
-
+            Persistence.SaveUserInfo(userInfo)
+            return userInfo
         } catch (e: Exception) {
             Persistence.SaveLoginStatus(LoginStatus.NOT_LOGIN)
             throw e
         }
-        TODO("还没写完2")
     }
 
     override fun login(credentials: LoginCredentials): UserInfo {
@@ -82,22 +84,22 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     }
 
     private fun getUserInfoFromPiapro(): UserInfo {
-        // When we reach here we must have a correct login credentials.
+        // When we reach here we must have a correct login credentials so we can feel free to unwrap nullable ty
         val loginCredentials = Persistence.GetLoginCredentials()!!
         val loginCookie = Persistence.GetLoginCookie()!!
         val userProfileUrl = Constants.Url.getUserProfileUrl(loginCredentials.UserName)
-
-        try {
-            val response = DaggerFetchFactory.create().fetcher().withLoginCookie().visit(userProfileUrl).go()
-            if (response.isSuccessful) {
-                val html = response.body?.string()
-                
+        val response = DaggerFetchFactory.create().fetcher().withLoginCookie().visit(userProfileUrl).go()
+        if (response.isSuccessful) {
+            val html = Jsoup.parse(response.body?.string())
+            val parseUserInfoSteps = htmlParser.Rules.getJSONObject("UserProfile").getJSONArray("Steps")
+            val userInfo = htmlParser.Parser.GoSteps(html, parseUserInfoSteps) as UserInfo
+            // Remove postfix 'さん' as we actually don't need it.
+            userInfo.apply {
+                NickName = NickName.replace("さん", "")
             }
-        } catch (ioe: IOException) {
-        } catch (e: Exception) {
-
+            return userInfo
         }
-        TODO("还没写完")
+        throw LoginFailedException(LoginResult.NETWORK_ERR, "Cannot get user info from Piapro.")
     }
 
 
