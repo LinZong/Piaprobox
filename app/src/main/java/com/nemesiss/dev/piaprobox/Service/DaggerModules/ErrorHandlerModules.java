@@ -9,17 +9,16 @@ import dagger.Provides;
 @Module
 public class ErrorHandlerModules {
 
-    private Context context;
+    private final Context context;
 
     public ErrorHandlerModules(Context context) {
         this.context = context;
     }
 
     @Provides
-    public Context getCtx() {
+    public Context context() {
         return this.context;
     }
-
 
     @Provides
     @ParseContentErrorToastHandler.ToastHandler

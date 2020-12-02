@@ -67,6 +67,12 @@ class Persistence {
             return SharedPrefEditor.commit()
         }
 
+        fun RemoveLoginCredentials(): Boolean {
+            SharedPrefEditor = SharedPref.edit()
+            SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_CREDENTIALS)
+            return SharedPrefEditor.commit()
+        }
+
         fun GetLoginCredentials(): LoginCredentials? {
             return SharedPref.getString(UserLoginServiceKey.LOGIN_CREDENTIALS, "")
                 .let { credentials ->

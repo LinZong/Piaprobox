@@ -12,6 +12,7 @@ abstract class UserLoginServiceModules {
     @Binds
     @CookieLoginService
     abstract fun getCookieUserLoginService(cookieUserLoginServiceImpl: CookieUserLoginServiceImpl): UserLoginService
+
 }
 
 @Qualifier

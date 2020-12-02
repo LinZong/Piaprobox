@@ -7,14 +7,14 @@ import dagger.Provides;
 @Module
 public class DownloadServiceModules {
 
-    private Context context;
+    private final Context context;
 
     public DownloadServiceModules(Context context) {
         this.context = context;
     }
 
     @Provides
-    public Context getCtx() {
+    public Context context() {
         return this.context;
     }
 }

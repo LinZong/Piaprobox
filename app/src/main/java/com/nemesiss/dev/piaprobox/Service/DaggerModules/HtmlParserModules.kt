@@ -7,10 +7,9 @@ import javax.inject.Qualifier
 
 
 @Module
-class HtmlParserModules(val context : Context) {
-
+class HtmlParserModules(private val context : Context) {
     @Provides
-    fun getCtx() = context
+    fun context() = context
 }
 
 

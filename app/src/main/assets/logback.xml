@@ -1,0 +1,54 @@
+<configuration>
+    <property name="ANDROID_DIR" value="${DATA_DIR}/logs"/>
+    <property name="PC_DIR" value="${user.home}/${project.name}/logs"/>
+
+    <if condition='"${log.debug}" === "false" || "${log.debug}" === "log.debug_IS_UNDEFINED"'>
+        <then>
+            <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+        </then>
+    </if>
+
+    <if condition='"${log.platform}" === "ANDROID"'>
+        <then>
+            <appender name="console" class="ch.qos.logback.classic.android.LogcatAppender">
+                <tagEncoder>
+                    <pattern>%logger{12}</pattern>
+                </tagEncoder>
+                <encoder>
+                    <pattern>[%thread] %msg</pattern>
+                </encoder>
+            </appender>
+        </then>
+        <else>
+            <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+                <tagEncoder>
+                    <pattern>%logger{12}</pattern>
+                </tagEncoder>
+                <encoder>
+                    <pattern>[%date{yyyy-M-d HH:mm:ss.SSS}] [%level] [%thread] %msg%n</pattern>
+                </encoder>
+            </appender>
+        </else>
+    </if>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${${log.platform}_DIR}/trace.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>trace-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>350MB</totalSizeCap>
+        </rollingPolicy>
+        <tagEncoder>
+            <pattern>%logger{12}</pattern>
+        </tagEncoder>
+        <encoder>
+            <pattern>[%date{yyyy-M-d HH:mm:ss.SSS}] [%level] [%thread] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+    </root>
+</configuration>

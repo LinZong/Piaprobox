@@ -6,7 +6,6 @@ import com.nemesiss.dev.piaprobox.Activity.Common.LoginActivity
 import com.nemesiss.dev.piaprobox.Activity.Common.LoginCallbackActivity
 import com.nemesiss.dev.piaprobox.Model.Resources.Constants
 import com.nemesiss.dev.piaprobox.Model.User.*
-import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
@@ -16,6 +15,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.jsoup.Jsoup
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.util.*
 import javax.inject.Inject
@@ -28,8 +28,9 @@ import javax.inject.Inject
 class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClient, val htmlParser: HTMLParser) :
     UserLoginService {
 
-
-    private val asyncExecutor = AsyncExecutor.INSTANCE
+    companion object {
+        private val log = LoggerFactory.getLogger(CookieUserLoginServiceImpl::class.java)
+    }
 
     override fun getUserInfo(): UserInfo = Persistence.GetUserInfo() ?: throw NotLoginException()
 
@@ -61,17 +62,17 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             // 1
             val piapro_s = getPiapro_s()
             // 2
-            val piapro_r = getPiapro_r(piapro_s, loginCredentials)
-
-            val loginCookie = LoginCookie(piapro_s, piapro_r)
-
+            val loginCookie = getUserLoginCookie(piapro_s, loginCredentials)
+            // 登陆成功，保存登录态
             Persistence.SaveLoginCookie(loginCookie)
             Persistence.SaveLoginTimeStamp()
             Persistence.SaveLoginStatus(LoginStatus.LOGIN)
             val userInfo = getUserInfoFromPiapro()
-            Persistence.SaveUserInfo(userInfo)
+            saveUserInfo(userInfo)
             return userInfo
         } catch (e: Exception) {
+            log.error("exception occurred while log in.", e)
+            Persistence.RemoveLoginCredentials()
             Persistence.SaveLoginStatus(LoginStatus.NOT_LOGIN)
             throw e
         }
@@ -98,10 +99,11 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             }
             return userInfo
         }
+        log.error("get userinfo from piapro not successful, code: {}, response:{}", response.code, response)
         throw LoginFailedException(LoginResult.NETWORK_ERR, "Cannot get user info from Piapro.")
     }
 
-    private fun getPiapro_r(piapro_s_Cookie: String, loginCredentials: LoginCredentials): String {
+    private fun getUserLoginCookie(piapro_s_Cookie: String, loginCredentials: LoginCredentials): LoginCookie {
         val mediaType = "application/x-www-form-urlencoded".toMediaType()
         val body: RequestBody = loginCredentials.json.toRequestBody(mediaType)
         val request: Request = Request.Builder()
@@ -134,16 +136,21 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
         try {
             val response = httpClient.newCall(request).execute()
             val piapro_r = response.header("piapro_r", "")!!
-            if (TextUtils.isEmpty(piapro_r)) {
+            // 需要使用登陆后的piapro_s替换掉先前请求登陆的旧piapro_s
+            val new_piapro_s = response.header("piapro_s", "")!!
+            val loginCookie = LoginCookie(new_piapro_s, piapro_r)
+            if (!loginCookie.isValid) {
                 throw LoginFailedException(LoginResult.ACCOUNT_OR_PASSWORD_WRONG)
             }
-            return piapro_r
+            return loginCookie
         } catch (ioe: IOException) {
+            log.error("Do login execution IOE error.", ioe)
             throw LoginFailedException(
                 LoginResult.NETWORK_ERR,
                 "Cannot get the 'piapro_r' cookie due to network error."
             )
         } catch (e: Exception) {
+            log.error("Do login execution error.", e)
             throw LoginFailedException(
                 LoginResult.NETWORK_ERR,
                 "Cannot get the 'piapro_r' cookie due to unknown exception."
@@ -162,11 +169,13 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             }
             return piapro_s_Cookie
         } catch (ioe: IOException) {
+            log.error("get piapro_s IOE.", ioe)
             throw LoginFailedException(
                 LoginResult.NETWORK_ERR,
                 "Cannot get the 'piapro_s' cookie due to network error."
             )
         } catch (e: Exception) {
+            log.error("get piapro_s error.", e)
             throw LoginFailedException(
                 LoginResult.NETWORK_ERR,
                 "Cannot get the 'piapro_s' cookie due to unknown exception."
@@ -203,6 +212,9 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
 
     private fun forceCheckLogin(): LoginStatus {
         val loginCookies = Persistence.GetLoginCookie() ?: return LoginStatus.NOT_LOGIN
+        if (!loginCookies.isValid) {
+            return LoginStatus.NOT_LOGIN
+        }
         /**
          * 1. 带着Cookie请求首页
          * 2. 看首页banner位置能否提取出用户信息
@@ -211,11 +223,14 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             val response = DaggerFetchFactory.create().fetcher().visit(Constants.Url.MAIN_DOMAIN).withLoginCookie().go()
             if (response.isSuccessful) {
                 val html = Jsoup.parse(response.body?.string())
-                
+                val userMenu = html.getElementsByClass("user_menu_mini")
+                return if (userMenu.size > 0) LoginStatus.LOGIN else LoginStatus.LOGIN_EXPIRED
             }
+            return LoginStatus.NOT_LOGIN
         } catch (e: java.lang.Exception) {
-
+            // Log exception
+            log.error("Check login status error.", e)
+            return LoginStatus.NOT_LOGIN
         }
-        TODO("还没写完")
     }
 }

@@ -13,8 +13,9 @@ object Constants {
 
         /**
          * 登录态缓存有效期 (以秒为单位)
+         * 默认5天
          */
-        const val LOGIN_CACHE_VALID_TIME_INTERVAL_SEC = 30 * 60
+        const val LOGIN_CACHE_VALID_TIME_INTERVAL_SEC = 5 * 24 * 60 * 60
         const val LOGIN_RESULT_KEY = "LOGIN_RESULT_KEY"
     }
 

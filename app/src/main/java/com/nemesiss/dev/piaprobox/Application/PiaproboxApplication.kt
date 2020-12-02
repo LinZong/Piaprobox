@@ -22,6 +22,12 @@ class PiaproboxApplication : Application() {
     companion object {
         lateinit var Self: PiaproboxApplication
             private set
+
+        init {
+            System.setProperty("project.name", "Piaprobox")
+            System.setProperty("log.platform", "ANDROID")
+            System.setProperty("log.debug", "false")
+        }
     }
 
     override fun attachBaseContext(base: Context?) {
