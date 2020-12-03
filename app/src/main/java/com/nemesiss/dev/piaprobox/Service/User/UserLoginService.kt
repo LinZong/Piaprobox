@@ -69,9 +69,9 @@ interface UserLoginService {
 
     /**
      * 登出用户:
-     * 仅供登录态使用
+     * 如果当前登录状态有效，则会进行登出动作
+     * 否则什么也不会发生。
      */
-    @Throws(NotLoginException::class)
     fun logout()
 
     /**

@@ -95,7 +95,30 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     override fun logout() {
         if (checkCachedLoginStatusValid()) {
             // cookie exists, need to do actual logout operations.
+            val logoutRequest = buildLogoutRequest()
+            try {
+                val response = httpClient.newCall(logoutRequest).execute()
+                if (response.code == 302) {
+                    val serverCookies = response.serverSetCookies().associateBy { cookie -> cookie.name }
+                    if (serverCookies.containsKey("piapro_r") && serverCookies.getValue("piapro_r").value == "deleted") {
+                        log.info("Logout successful!")
+                    } else {
+                        log.warn("Logout server not response delete cookie directives!")
+                    }
+                } else {
+                    log.error("Logout failed! Response is not successful! Response: {}", response)
+                }
+            } catch (ioe: IOException) {
+                log.error("Log out failed! IOE: ", ioe)
+            } catch (e: java.lang.Exception) {
+                log.error("Log out failed! Unknown exception: ", e)
+            }
         }
+        else {
+            log.warn("Log info is already expired. Just clean login info is enough.")
+        }
+        // anyway we clean our cache.
+        Persistence.RemoveLoginInfo()
     }
 
     private fun getUserInfoFromPiapro(): UserInfo {

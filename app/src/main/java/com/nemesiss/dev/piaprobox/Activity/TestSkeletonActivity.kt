@@ -52,4 +52,10 @@ class TestSkeletonActivity : PiaproboxBaseActivity() {
         log.warn("LoginCookie: {}", Persistence.GetLoginCookie())
         log.warn("LoginCredentials: {}", Persistence.GetLoginCredentials())
     }
+
+    fun logout(view: View) {
+        asyncExecutor.SendTask {
+            userLoginService.logout()
+        }
+    }
 }

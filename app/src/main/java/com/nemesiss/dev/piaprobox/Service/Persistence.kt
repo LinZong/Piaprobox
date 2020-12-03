@@ -72,6 +72,7 @@ class Persistence {
             SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_COOKIES)
             SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_TIMESTAMP)
             SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_STATUS)
+            SharedPrefEditor.remove(UserLoginServiceKey.USER_INFO)
             return SharedPrefEditor.commit()
         }
 
@@ -89,9 +90,9 @@ class Persistence {
             return SharedPrefEditor.commit()
         }
 
-        fun GetLoginStatus(): LoginStatus? {
+        fun GetLoginStatus(): LoginStatus {
             return SharedPref.getString(UserLoginServiceKey.LOGIN_STATUS, "")
-                .let { status -> if (TextUtils.isEmpty(status)) null else LoginStatus.valueOf(status) }
+                .let { status -> if (TextUtils.isEmpty(status)) LoginStatus.NOT_LOGIN else LoginStatus.valueOf(status) }
         }
 
         fun SaveUserInfo(userInfo: UserInfo): Boolean {

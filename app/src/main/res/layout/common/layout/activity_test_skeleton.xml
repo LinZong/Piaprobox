@@ -24,4 +24,10 @@
             android:text="Read user info"
             android:onClick="readUserInfo"/>
 
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="logout"
+            android:onClick="logout"/>
+
 </LinearLayout>
