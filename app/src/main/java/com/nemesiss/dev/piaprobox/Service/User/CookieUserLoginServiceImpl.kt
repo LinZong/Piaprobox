@@ -109,9 +109,9 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
                     log.error("Logout failed! Response is not successful! Response: {}", response)
                 }
             } catch (ioe: IOException) {
-                log.error("Log out failed! IOE: ", ioe)
+                log.error("Logout failed! IOE: ", ioe)
             } catch (e: java.lang.Exception) {
-                log.error("Log out failed! Unknown exception: ", e)
+                log.error("Logout failed! Unknown exception: ", e)
             }
         }
         else {
