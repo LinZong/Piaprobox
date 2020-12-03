@@ -67,9 +67,11 @@ class Persistence {
             return SharedPrefEditor.commit()
         }
 
-        fun RemoveLoginCredentials(): Boolean {
+        fun RemoveLoginInfo(): Boolean {
             SharedPrefEditor = SharedPref.edit()
-            SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_CREDENTIALS)
+            SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_COOKIES)
+            SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_TIMESTAMP)
+            SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_STATUS)
             return SharedPrefEditor.commit()
         }
 
@@ -108,10 +110,14 @@ class Persistence {
                 }
         }
 
-        fun SaveLoginTimeStamp(): Boolean {
+        fun SaveLoginTimeStamp(date: Date): Boolean {
             SharedPrefEditor = SharedPref.edit()
-            SharedPrefEditor.putLong(UserLoginServiceKey.LOGIN_TIMESTAMP, Date().time)
+            SharedPrefEditor.putLong(UserLoginServiceKey.LOGIN_TIMESTAMP, date.time)
             return SharedPrefEditor.commit()
+        }
+
+        fun SaveLoginTimeStamp(): Boolean {
+            return SaveLoginTimeStamp(Date())
         }
 
         fun GetLoginTimeStamp(): Long {

@@ -181,3 +181,7 @@ inline fun Activity.runWhenAlive(crossinline execute: () -> Unit) {
         execute()
     }
 }
+
+fun String.addHttpIfNeeded(): String = if (startsWith("//")) { "http:$this" } else this
+
+fun String.addHttpsIfNeeded(): String = if (startsWith("//")) { "https:$this" } else this

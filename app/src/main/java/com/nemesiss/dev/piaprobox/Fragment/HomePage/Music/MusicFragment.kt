@@ -37,7 +37,7 @@ class MusicFragment : BaseSubmissionWorkCategoryFragment() {
         val item = recommendListData!![index]
         val intent = Intent(context, MusicControlActivity::class.java)
         intent.putExtra(MusicPlayerActivity.CLICK_ITEM_INDEX, index)
-        intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, HTMLParser.WrapDomain(item.URL))
+        intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, HTMLParser.wrapDomain(item.URL))
         MusicPlayerActivity.PLAY_LISTS =
             recommendListData!!.filter { model -> !(model.isLoadMoreIndicator() || model.isNoMoreIndicator()) }
         startActivity(intent)

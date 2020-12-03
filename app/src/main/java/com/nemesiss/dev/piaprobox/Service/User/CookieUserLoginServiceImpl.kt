@@ -9,6 +9,7 @@ import com.nemesiss.dev.piaprobox.Model.User.*
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
+import com.nemesiss.dev.piaprobox.Util.serverSetCookies
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -61,18 +62,25 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
 
             // 1
             val piapro_s = getPiapro_s()
+            log.info("Finish getting piapro_s: {}", piapro_s)
             // 2
             val loginCookie = getUserLoginCookie(piapro_s, loginCredentials)
+            log.info("Finish getting login cookie: {}", loginCookie)
             // 登陆成功，保存登录态
             Persistence.SaveLoginCookie(loginCookie)
             Persistence.SaveLoginTimeStamp()
             Persistence.SaveLoginStatus(LoginStatus.LOGIN)
+            log.info("try getting user info from piapro")
             val userInfo = getUserInfoFromPiapro()
+            log.info("Finish getting user info from piapro: {}", userInfo)
             saveUserInfo(userInfo)
             return userInfo
+        } catch (userInfoEx: GetUserInfoFailedException) {
+            log.error("cannot get userinfo but we actually log in.", userInfoEx)
+            throw userInfoEx
         } catch (e: Exception) {
             log.error("exception occurred while log in.", e)
-            Persistence.RemoveLoginCredentials()
+            Persistence.RemoveLoginInfo()
             Persistence.SaveLoginStatus(LoginStatus.NOT_LOGIN)
             throw e
         }
@@ -82,6 +90,12 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
         Persistence.SaveLoginCredentials(credentials)
         // Now we can call login method without parameters.
         return login()
+    }
+
+    override fun logout() {
+        if (checkCachedLoginStatusValid()) {
+            // cookie exists, need to do actual logout operations.
+        }
     }
 
     private fun getUserInfoFromPiapro(): UserInfo {
@@ -96,17 +110,18 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             // Remove postfix 'さん' as we actually don't need it.
             userInfo.apply {
                 nickName = nickName.replace("さん", "")
+                avatarImage = HTMLParser.GetAlbumThumb(avatarImage)
             }
             return userInfo
         }
         log.error("get userinfo from piapro not successful, code: {}, response:{}", response.code, response)
-        throw LoginFailedException(LoginResult.NETWORK_ERR, "Cannot get user info from Piapro.")
+        throw GetUserInfoFailedException(LoginResult.NETWORK_ERR, "Cannot get user info from Piapro.")
     }
 
-    private fun getUserLoginCookie(piapro_s_Cookie: String, loginCredentials: LoginCredentials): LoginCookie {
+    private fun buildLoginRequest(piapro_s_Cookie: String, loginCredentials: LoginCredentials): Request {
         val mediaType = "application/x-www-form-urlencoded".toMediaType()
         val body: RequestBody = loginCredentials.queryString.toRequestBody(mediaType)
-        val request: Request = Request.Builder()
+        return Request.Builder()
             .url("https://piapro.jp/login/exe")
             .method("POST", body)
             .addHeader("Connection", "keep-alive")
@@ -132,17 +147,69 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             .addHeader("Accept-Language", "en-US,en;q=0.9")
             .addHeader("Cookie", "piapro_s=${piapro_s_Cookie}")
             .build()
+    }
 
+    private fun buildLogoutRequest(): Request {
+        val cookie = Persistence.GetLoginCookie()!!
+        return Request.Builder()
+            .url("https://piapro.jp/logout/")
+            .method("GET", null)
+            .addHeader("Connection", "keep-alive")
+            .addHeader(
+                "sec-ch-ua",
+                "\"\\Not;A\"Brand\";v=\"99\", \"Google Chrome\";v=\"85\", \"Chromium\";v=\"85\""
+            )
+            .addHeader("sec-ch-ua-mobile", "?0")
+            .addHeader("Upgrade-Insecure-Requests", "1")
+            .addHeader(
+                "User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
+            )
+            .addHeader(
+                "Accept",
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+            )
+            .addHeader("Sec-Fetch-Site", "same-origin")
+            .addHeader("Sec-Fetch-Mode", "navigate")
+            .addHeader("Sec-Fetch-User", "?1")
+            .addHeader("Sec-Fetch-Dest", "document")
+            .addHeader("Referer", "https://piapro.jp/nemesisslin")
+            .addHeader("Accept-Language", "en-US,en;q=0.9")
+            .addHeader(
+                "Cookie",
+                "piapro_s=${cookie.piapro_s}; piapro_r=${cookie.piapro_r}"
+            )
+            .build()
+    }
+
+    private fun getUserLoginCookie(piapro_s_Cookie: String, loginCredentials: LoginCredentials): LoginCookie {
+
+        val request = buildLoginRequest(piapro_s_Cookie, loginCredentials)
         try {
             val response = httpClient.newCall(request).execute()
-            val piapro_r = response.header("piapro_r", "")!!
-            // 需要使用登陆后的piapro_s替换掉先前请求登陆的旧piapro_s
-            val new_piapro_s = response.header("piapro_s", "")!!
-            val loginCookie = LoginCookie(new_piapro_s, piapro_r)
-            if (!loginCookie.isValid) {
-                throw LoginFailedException(LoginResult.ACCOUNT_OR_PASSWORD_WRONG)
+            val serverSetCookies = response.serverSetCookies().associateBy { cookie -> cookie.name }
+
+            // must ensure server returns 'piapro_r' and the cookie value is not empty, or resulting an error.
+            val haveValidUserCookie =
+                serverSetCookies.containsKey("piapro_r") and !TextUtils.isEmpty(serverSetCookies["piapro_r"]?.value)
+
+            if (!haveValidUserCookie) {
+                throw LoginFailedException(
+                    LoginResult.ACCOUNT_OR_PASSWORD_WRONG,
+                    "Account or password error, because we cannot get 'piapro_r' from login response."
+                )
             }
-            return loginCookie
+            // here we can unwrap the value of 'piapro_r' safely.
+            val piapro_r = serverSetCookies.getValue("piapro_r")
+            // here we are trying to update 'piapro_s' to a new value if possible.
+            val piapro_s = serverSetCookies["piapro_s"]?.value ?: piapro_s_Cookie
+
+            // if 'piapro_r' contains an expired time, we use it as cookie expired time, or we use a constant value
+            // to avoid re-authentication.
+            val expires =
+                piapro_r.expires?.time ?: Date().time + Constants.Login.LOGIN_CACHE_VALID_TIME_INTERVAL_SEC * 1000L
+
+            return LoginCookie(piapro_s, piapro_r.value!!, expires)
         } catch (ioe: IOException) {
             log.error("Do login execution IOE error.", ioe)
             throw LoginFailedException(
@@ -159,15 +226,17 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     }
 
     private fun getPiapro_s(): String {
-        // 之所以选用LoginPage, 是因为这个页面的大小只有首页的1/4，但是同样能具有拿到piapro_s的能力。
+        // here we use the login page of Piapro instead of home page
+        // because this page body is much smaller than home page (only 1/4 of home page),
+        // and it can still provide a valid 'piapro_s' cookie.
         val request = Request.Builder().url(Constants.Url.LOGIN_PAGE).get().build()
         try {
             val response = httpClient.newCall(request).execute()
-            val piapro_s_Cookie = response.header("piapro_s", "")!!
-            if (TextUtils.isEmpty(piapro_s_Cookie)) {
+            val serverSetCookies = response.serverSetCookies().associateBy { cookie -> cookie.name }
+            if (!serverSetCookies.containsKey("piapro_s") || TextUtils.isEmpty(serverSetCookies["piapro_s"]?.value)) {
                 throw LoginFailedException(LoginResult.UNKNOWN_ERR, "Cannot get the 'piapro_s' cookie from header.")
             }
-            return piapro_s_Cookie
+            return serverSetCookies["piapro_s"]?.value!!
         } catch (ioe: IOException) {
             log.error("get piapro_s IOE.", ioe)
             throw LoginFailedException(

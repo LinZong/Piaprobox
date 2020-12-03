@@ -384,7 +384,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         if (PLAY_LISTS != null && CurrentPlayItemIndex != -1 && CurrentPlayItemIndex + 1 < PLAY_LISTS!!.size) {
             val nextItem = PLAY_LISTS!![CurrentPlayItemIndex + 1]
             MusicPlayer_Toolbar.title = nextItem.ItemName
-            LoadMusicContentInfo(HTMLParser.WrapDomain(nextItem.URL), false)
+            LoadMusicContentInfo(HTMLParser.wrapDomain(nextItem.URL), false)
             CurrentPlayItemIndex++
         }
     }
@@ -393,7 +393,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         if (PLAY_LISTS != null && CurrentPlayItemIndex != -1 && CurrentPlayItemIndex - 1 >= 0) {
             val nextItem = PLAY_LISTS!![CurrentPlayItemIndex - 1]
             MusicPlayer_Toolbar.title = nextItem.ItemName
-            LoadMusicContentInfo(HTMLParser.WrapDomain(nextItem.URL), false)
+            LoadMusicContentInfo(HTMLParser.wrapDomain(nextItem.URL), false)
             CurrentPlayItemIndex--
         }
     }

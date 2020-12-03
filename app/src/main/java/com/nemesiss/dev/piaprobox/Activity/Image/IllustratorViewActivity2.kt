@@ -195,7 +195,7 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
             ArtistName = content.ArtistName
         }
 
-        val url = HTMLParser.WrapDomain(content.URL)
+        val url = HTMLParser.wrapDomain(content.URL)
 
         model.BrowserPageUrl = url
         LoadingItemPageViewModel.put(needFragmentIndex, model)

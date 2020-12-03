@@ -23,6 +23,8 @@ public interface OkHttpModules {
     static OkHttpClient http() {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .followRedirects(false)
+                .followSslRedirects(false)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10,TimeUnit.SECONDS)
                 .hostnameVerifier((s, sslSession) -> true);

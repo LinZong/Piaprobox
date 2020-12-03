@@ -156,7 +156,7 @@ abstract class BaseSubmissionWorkCategoryFragment : BaseRecommendCategoryFragmen
             })!![position]
             ShowLoadingIndicator()
             DisableFilter()
-            LoadFragmentPage(HTMLParser.WrapDomain(selectedItem.URL),
+            LoadFragmentPage(HTMLParser.wrapDomain(selectedItem.URL),
                 {
                     EnableFilter()
                     ParseSubmissionWorkListContent(it, MySubmissionType) // Load all recommend item.

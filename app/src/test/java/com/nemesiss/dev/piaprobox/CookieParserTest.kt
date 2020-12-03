@@ -1,6 +1,7 @@
 package com.nemesiss.dev.piaprobox
 
-import com.nemesiss.dev.piaprobox.Util.parseCookies
+import com.nemesiss.dev.piaprobox.Util.Cookie
+import com.nemesiss.dev.piaprobox.Util.CookieUtil.parseCookies
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -35,4 +36,5 @@ class CookieParserTest {
         assertFalse(cookie.isSecure)
         asEquals("/", cookie.path)
     }
+
 }

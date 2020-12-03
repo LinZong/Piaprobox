@@ -18,7 +18,7 @@ class NotLoginException : Exception()
 
 class NoLoginCredentialsException : Exception()
 
-class LoginFailedException @JvmOverloads constructor(
+open class LoginFailedException @JvmOverloads constructor(
     val loginResult: LoginResult,
     message: String? = null,
     cause: Throwable? = null,
@@ -26,6 +26,14 @@ class LoginFailedException @JvmOverloads constructor(
     writableStackTrace: Boolean = true
 ) :
     Exception(message, cause, enableSuppression, writableStackTrace)
+
+class GetUserInfoFailedException @JvmOverloads constructor(
+    loginResult: LoginResult,
+    message: String? = null,
+    cause: Throwable? = null,
+    enableSuppression: Boolean = true,
+    writableStackTrace: Boolean = true
+) : LoginFailedException(loginResult, message, cause, enableSuppression, writableStackTrace)
 
 interface UserLoginService {
     /**
@@ -56,8 +64,15 @@ interface UserLoginService {
      * 使用传入的Credentials登陆，这会覆盖掉当前保存的登陆信息。
      * 这是同步调用，登陆成功会返回UserInfo，不成功则会抛出登陆失败异常
      */
-    @Throws(LoginFailedException::class)
+    @Throws(LoginFailedException::class, GetUserInfoFailedException::class)
     fun login(credentials: LoginCredentials): UserInfo
+
+    /**
+     * 登出用户:
+     * 仅供登录态使用
+     */
+    @Throws(NotLoginException::class)
+    fun logout()
 
     /**
      * 跳转至LoginActivity进行登陆。

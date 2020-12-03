@@ -41,7 +41,11 @@ class ConverterTest {
 
     @Test
     fun UserInfoConvertCorrect() {
-        val nemesiss = UserInfo("nemesisslin", "Nemesiss Lin", "http://no.avatar")
+        val nemesiss = UserInfo().apply {
+            userName = "nemesisslin"
+            nickName = "Nemesiss Lin"
+            avatarImage = "http://no.avatar"
+        }
         val nemesissJsonUserInfo = JSON.toJSONString(nemesiss)
         println(nemesissJsonUserInfo)
         val reparsedNemesiss = JSON.parseObject(nemesissJsonUserInfo, UserInfo::class.java)

@@ -1809,10 +1809,10 @@
   "UserProfile": {
     "Steps": [
       {
-        "forEachOutput": {
+        "OutputSingle": {
           "ElementMapClassName": "com.nemesiss.dev.piaprobox.Model.User.UserInfo",
           "GenerateOutputRule": {
-            "UserName": [
+            "userName": [
               {
                 "getElementByIdSingle": {
                   "Name": "user_prof"
@@ -1829,7 +1829,7 @@
                 }
               }
             ],
-            "NickName": [
+            "nickName": [
               {
                 "getElementByIdSingle": {
                   "Name": "user_prof"
@@ -1846,7 +1846,7 @@
                 }
               }
             ],
-            "AvatarImage": [
+            "avatarImage": [
               {
                 "getElementsByClassSingle": {
                   "Name": "profile-icon-image",

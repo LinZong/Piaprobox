@@ -72,7 +72,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
         DaggerFetchFactory
             .create()
             .fetcher()
-            .visit(HTMLParser.WrapDomain(content.URL))
+            .visit(HTMLParser.wrapDomain(content.URL))
             .goAsync(
                 { response ->
                     response.handle<String>(

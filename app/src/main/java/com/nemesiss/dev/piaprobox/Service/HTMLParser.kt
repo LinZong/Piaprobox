@@ -27,6 +27,9 @@ class HTMLParser @Inject constructor(val context: Context) {
             return File(cachePath).resolve("ContentParserRule.json")
         }
 
+        /**
+         * 图片Url都需要用这个方法处理下，带上前缀。
+         */
         @JvmStatic
         fun GetAlbumThumb(ValueFromParser: String): String {
             return if (ValueFromParser.startsWith("http") || ValueFromParser.startsWith("https")) {
@@ -34,12 +37,12 @@ class HTMLParser @Inject constructor(val context: Context) {
             } else if (ValueFromParser.contains("cdn")) {
                 "http:${ValueFromParser}"
             } else {
-                WrapDomain(ValueFromParser)
+                wrapDomain(ValueFromParser)
             }
         }
 
         @JvmStatic
-        fun WrapDomain(urlForWrap: String): String {
+        fun wrapDomain(urlForWrap: String): String {
             return if (urlForWrap.startsWith("http")) {
                 urlForWrap
             } else {

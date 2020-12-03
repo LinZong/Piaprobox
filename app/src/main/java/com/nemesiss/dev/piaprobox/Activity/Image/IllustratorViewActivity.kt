@@ -160,7 +160,7 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
             { HandleEnterPinchImagePreview() },
             {
                 if (CurremtImageRecommendInfo != null) {
-                    AppUtil.OpenBrowser(this, HTMLParser.WrapDomain(CurremtImageRecommendInfo!!.URL))
+                    AppUtil.OpenBrowser(this, HTMLParser.wrapDomain(CurremtImageRecommendInfo!!.URL))
                 }
             })
     }
@@ -210,7 +210,7 @@ class IllustratorViewActivity : PiaproboxBaseActivity() {
         CurremtImageRecommendInfo = content
 
         Illustrator_View_ArtistName.text = content.ArtistName
-        val url = HTMLParser.WrapDomain(content.URL)
+        val url = HTMLParser.wrapDomain(content.URL)
 
         DaggerFetchFactory
             .create()
