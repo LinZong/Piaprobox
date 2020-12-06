@@ -21,6 +21,10 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
         <activity android:name=".Activity.Common.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
                 android:name=".Activity.Common.SplashActivity"
@@ -37,11 +41,7 @@
                 android:parentActivityName=".Activity.Common.MainActivity">
         </activity>
         <activity android:name=".Activity.TestSkeletonActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <service android:name=".Service.Player.MusicPlayerService"/>

@@ -68,12 +68,13 @@ class Persistence {
         }
 
         fun RemoveLoginInfo(): Boolean {
-            SharedPrefEditor = SharedPref.edit()
-            SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_COOKIES)
-            SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_TIMESTAMP)
-            SharedPrefEditor.remove(UserLoginServiceKey.LOGIN_STATUS)
-            SharedPrefEditor.remove(UserLoginServiceKey.USER_INFO)
-            return SharedPrefEditor.commit()
+            return SharedPref.edit().run {
+                remove(UserLoginServiceKey.LOGIN_COOKIES)
+                remove(UserLoginServiceKey.LOGIN_TIMESTAMP)
+                remove(UserLoginServiceKey.LOGIN_STATUS)
+                remove(UserLoginServiceKey.USER_INFO)
+                commit()
+            }
         }
 
         fun GetLoginCredentials(): LoginCredentials? {

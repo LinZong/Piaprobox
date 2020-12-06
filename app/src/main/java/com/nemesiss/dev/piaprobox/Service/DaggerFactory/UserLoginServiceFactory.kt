@@ -1,6 +1,6 @@
 package com.nemesiss.dev.piaprobox.Service.DaggerFactory
 
-import android.content.Context
+import com.nemesiss.dev.piaprobox.Activity.Common.LoginActivity
 import com.nemesiss.dev.piaprobox.Activity.TestSkeletonActivity
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.OkHttpModules
@@ -12,6 +12,8 @@ import javax.inject.Singleton
 @Component(modules = [UserLoginServiceModules::class, OkHttpModules::class, HtmlParserModules::class])
 interface UserLoginServiceFactory {
     fun inject(activity: TestSkeletonActivity)
+
+    fun inject(activity: LoginActivity)
 }
 
 /*
@@ -25,7 +27,7 @@ interface UserLoginServiceFactory {
        写Modules的时候，如果当前实例依赖一些别的对象来构造，而这些对象Dagger并不知道怎么产生的时候（例如，依赖一些需要外部给的变量，如context）
        这种情况下就要在Modules里写构造函数然后通过Provider给出去了。参考Context的注入方式。
 
-    4. 声明Factory，就像这个一样，要写明Scope（Singleton），如果这个实力有别的依赖，例如产生实例需要依赖别的Inject过的东西，就需要一同声明
+    4. 声明Factory，就像这个一样，要写明Scope（Singleton），如果这个instance有别的依赖，例如产生实例需要依赖别的Inject过的东西，就需要一同声明
         Component注解，注解中给到的Modules要覆盖到全部的依赖。如果需要inject到Activity，还需要写上面那样的inject函数。
     5. 收工，检查是否注入正常，
 */

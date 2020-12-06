@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
+       tools:parentTag="android.widget.RelativeLayout">
+
+    <ImageView
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/loading_button_background_iv"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/loading_button_background"/>
+
+    <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:id="@+id/loading_button_icon_container"
+            android:layout_alignBottom="@id/loading_button_background_iv"
+            android:layout_alignStart="@id/loading_button_background_iv"
+            android:layout_alignEnd="@id/loading_button_background_iv"
+            android:layout_alignTop="@id/loading_button_background_iv">
+    </RelativeLayout>
+</merge>

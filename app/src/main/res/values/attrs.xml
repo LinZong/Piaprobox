@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LoadingButton">
+        <attr name="iconSize" format="dimension"/>
+        <attr name="progressColor" format="color"/>
+        <attr name="initMode" format="enum">
+            <enum name="pending" value="0"/>
+            <enum name="loading" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>

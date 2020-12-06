@@ -86,5 +86,8 @@
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
 
-
+    <style name="HintText" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/DarkPiaproColor</item>
+    </style>
 </resources>

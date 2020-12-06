@@ -25,6 +25,14 @@ allprojects {
     }
 }
 
+ext {
+    roomVersion = '2.2.5'
+    archLifecycleVersion = '2.2.0'
+    coreTestingVersion = '2.1.0'
+    materialVersion = '1.2.1'
+    coroutines = '1.3.4'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

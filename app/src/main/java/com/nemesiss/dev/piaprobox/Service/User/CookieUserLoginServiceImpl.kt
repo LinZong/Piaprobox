@@ -53,7 +53,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
                 ?: throw NoLoginCredentialsException()
 
             /**
-             * 登陆分两步。
+             * 登陆分4步。
              * 1. 访问piapro.jp官网，拿到piapro_s的Cookie
              * 2. 带着piapro_s的Cookie去发用户名密码
              * 3. 检测是否登陆成功（看服务器有没有下发piapro_r)
@@ -67,9 +67,12 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             val loginCookie = getUserLoginCookie(piapro_s, loginCredentials)
             log.info("Finish getting login cookie: {}", loginCookie)
             // 登陆成功，保存登录态
-            Persistence.SaveLoginCookie(loginCookie)
-            Persistence.SaveLoginTimeStamp()
-            Persistence.SaveLoginStatus(LoginStatus.LOGIN)
+            Persistence.apply {
+                SaveLoginCookie(loginCookie)
+                SaveLoginTimeStamp()
+                SaveLoginStatus(LoginStatus.LOGIN)
+            }
+
             log.info("try getting user info from piapro")
             val userInfo = getUserInfoFromPiapro()
             log.info("Finish getting user info from piapro: {}", userInfo)
@@ -113,8 +116,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             } catch (e: java.lang.Exception) {
                 log.error("Logout failed! Unknown exception: ", e)
             }
-        }
-        else {
+        } else {
             log.warn("Log info is already expired. Just clean login info is enough.")
         }
         // anyway we clean our cache.
