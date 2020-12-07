@@ -3,15 +3,30 @@
        xmlns:tools="http://schemas.android.com/tools"
        tools:parentTag="android.widget.RelativeLayout">
 
+
+    <FrameLayout
+            android:layout_margin="6dp"
+            android:clipChildren="false"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/loading_button_background_iv_shadow"
+                android:src="@drawable/loading_button_background"
+                android:elevation="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </FrameLayout>
+
     <ImageView
+            android:layout_margin="6dp"
             android:clickable="true"
             android:focusable="true"
             android:id="@+id/loading_button_background_iv"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"/>
 
     <RelativeLayout
@@ -23,6 +38,5 @@
             android:layout_alignBottom="@id/loading_button_background_iv"
             android:layout_alignStart="@id/loading_button_background_iv"
             android:layout_alignEnd="@id/loading_button_background_iv"
-            android:layout_alignTop="@id/loading_button_background_iv">
-    </RelativeLayout>
+            android:layout_alignTop="@id/loading_button_background_iv"/>
 </merge>

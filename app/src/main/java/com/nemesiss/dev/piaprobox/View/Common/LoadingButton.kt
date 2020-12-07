@@ -34,6 +34,30 @@ class LoadingButton @JvmOverloads constructor(
 
     private var mIconContainer: RelativeLayout
 
+    private val lazyPendingIcon = lazy {
+        ImageView(context)
+            .apply {
+                layoutParams = LayoutParams(mInnerIconSize, mInnerIconSize)
+                    .apply {
+                        addRule(CENTER_IN_PARENT, TRUE)
+                    }
+                setImageDrawable(context.getDrawable(R.drawable.baseline_arrow_forward_white_24dp))
+            }
+    }
+
+    private val lazyLoadingIcon = lazy {
+        ProgressBar(context)
+            .apply {
+                layoutParams = LayoutParams(mInnerIconSize, mInnerIconSize)
+                    .apply {
+                        addRule(CENTER_IN_PARENT, TRUE)
+                    }
+                isIndeterminate = true
+                indeterminateTintList = ColorStateList.valueOf(mProgressColor)
+            }
+    }
+
+
     init {
         View.inflate(context, R.layout.loading_button, this)
         mBackgroundImageView = loading_button_background_iv
@@ -62,13 +86,13 @@ class LoadingButton @JvmOverloads constructor(
 
     fun setInnerIconSize(@Dimension(unit = PX) size: Int) {
         mInnerIconSize = size
-        lazyLoadingIcon().value.apply {
+        lazyLoadingIcon.value.apply {
             val lp = layoutParams
             lp.width = size
             lp.height = size
             layoutParams = lp
         }
-        lazyPendingIcon().value.apply {
+        lazyPendingIcon.value.apply {
             val lp = layoutParams
             lp.width = size
             lp.height = size
@@ -78,7 +102,7 @@ class LoadingButton @JvmOverloads constructor(
 
     fun setProgressColor(@ColorInt color: Int) {
         mProgressColor = color
-        lazyLoadingIcon().value.indeterminateTintList = ColorStateList.valueOf(color)
+        lazyLoadingIcon.value.indeterminateTintList = ColorStateList.valueOf(color)
     }
 
     fun setBackgroundSrc(drawable: Drawable?) {
@@ -89,12 +113,13 @@ class LoadingButton @JvmOverloads constructor(
 
     fun pending() {
         mIconContainer.removeAllViews()
-        mIconContainer.addView(lazyPendingIcon().value)
+        mIconContainer.addView(lazyPendingIcon.value)
+
     }
 
     fun loading() {
         mIconContainer.removeAllViews()
-        mIconContainer.addView(lazyLoadingIcon().value)
+        mIconContainer.addView(lazyLoadingIcon.value)
     }
 
     fun disable() {
@@ -109,29 +134,6 @@ class LoadingButton @JvmOverloads constructor(
             isClickable = true
             isFocusable = true
         }
-    }
-
-    private fun lazyPendingIcon() = lazy {
-        ImageView(context)
-            .apply {
-                layoutParams = LayoutParams(mInnerIconSize, mInnerIconSize)
-                    .apply {
-                        addRule(CENTER_IN_PARENT, TRUE)
-                    }
-                setImageDrawable(context.getDrawable(R.drawable.baseline_arrow_forward_white_24dp))
-            }
-    }
-
-    private fun lazyLoadingIcon() = lazy {
-        ProgressBar(context)
-            .apply {
-                layoutParams = LayoutParams(mInnerIconSize, mInnerIconSize)
-                    .apply {
-                        addRule(CENTER_IN_PARENT, TRUE)
-                    }
-                isIndeterminate = true
-                indeterminateTintList = ColorStateList.valueOf(mProgressColor)
-            }
     }
 
     /**
