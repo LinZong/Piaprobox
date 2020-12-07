@@ -13,11 +13,15 @@ import android.support.annotation.Dimension.PX
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Util.AnimationUtil
 import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.Util.SimpleAnimationListener
 import kotlinx.android.synthetic.main.loading_button.view.*
 
 class LoadingButton @JvmOverloads constructor(
@@ -42,6 +46,7 @@ class LoadingButton @JvmOverloads constructor(
                         addRule(CENTER_IN_PARENT, TRUE)
                     }
                 setImageDrawable(context.getDrawable(R.drawable.baseline_arrow_forward_white_24dp))
+                visibility = GONE
             }
     }
 
@@ -54,6 +59,7 @@ class LoadingButton @JvmOverloads constructor(
                     }
                 isIndeterminate = true
                 indeterminateTintList = ColorStateList.valueOf(mProgressColor)
+                visibility = GONE
             }
     }
 
@@ -77,9 +83,11 @@ class LoadingButton @JvmOverloads constructor(
                 )
                 setProgressColor(getColor(R.styleable.LoadingButton_progressColor, Color.WHITE))
                 setBackgroundSrc(getDrawable(R.styleable.LoadingButton_backgroundSrc))
+                mIconContainer.addView(lazyPendingIcon.value)
+                mIconContainer.addView(lazyLoadingIcon.value)
                 when (getInt(R.styleable.LoadingButton_initMode, 0)) {
-                    PENDING -> pending()
-                    LOADING -> loading()
+                    PENDING -> lazyPendingIcon.value.visibility = View.VISIBLE
+                    LOADING -> lazyLoadingIcon.value.visibility = View.VISIBLE
                 }
             }.recycle()
     }
@@ -112,14 +120,13 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     fun pending() {
-        mIconContainer.removeAllViews()
-        mIconContainer.addView(lazyPendingIcon.value)
-
+        switch(lazyLoadingIcon.value, lazyPendingIcon.value)
     }
 
     fun loading() {
-        mIconContainer.removeAllViews()
-        mIconContainer.addView(lazyLoadingIcon.value)
+//        lazyPendingIcon.value.visibility = View.GONE
+//        lazyLoadingIcon.value.visibility = View.VISIBLE
+        switch(lazyPendingIcon.value, lazyLoadingIcon.value)
     }
 
     fun disable() {
@@ -134,6 +141,20 @@ class LoadingButton @JvmOverloads constructor(
             isClickable = true
             isFocusable = true
         }
+    }
+
+    private fun switch(viewExit: View, viewEnter: View) {
+        val moveIn = AnimationUtils.loadAnimation(context, R.anim.move_in)
+        val moveOut = AnimationUtils.loadAnimation(context, R.anim.move_out)
+        viewEnter.visibility = View.VISIBLE
+        viewExit.startAnimation(moveOut)
+        viewEnter.startAnimation(moveIn)
+
+        moveOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                viewExit.visibility = GONE
+            }
+        })
     }
 
     /**

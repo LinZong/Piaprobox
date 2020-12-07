@@ -37,7 +37,7 @@ class LoginActivity : PiaproboxBaseActivity() {
         enter_login_button
             .setOnClickListener {
                 testLoading()
-                it.postDelayed({ testPending() }, 1000L)
+                it.postDelayed({ testPending() }, 3000L)
             }
     }
 
