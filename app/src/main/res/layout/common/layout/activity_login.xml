@@ -88,6 +88,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                app:backgroundSrc="@drawable/loading_button_background"
                 app:initMode="pending"
                 app:iconSize="40dp"
                 app:progressColor="@android:color/white"/>

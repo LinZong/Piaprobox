@@ -12,8 +12,7 @@
             android:layout_alignParentEnd="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:src="@drawable/loading_button_background"/>
+            android:adjustViewBounds="true"/>
 
     <RelativeLayout
             android:layout_width="0dp"

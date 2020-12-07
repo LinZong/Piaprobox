@@ -7,5 +7,6 @@
             <enum name="pending" value="0"/>
             <enum name="loading" value="1"/>
         </attr>
+        <attr name="backgroundSrc" format="reference|color"/>
     </declare-styleable>
 </resources>

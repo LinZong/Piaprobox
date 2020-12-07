@@ -3,11 +3,16 @@ package com.nemesiss.dev.piaprobox.View.Common
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Outline
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.RippleDrawable
+import android.graphics.drawable.ShapeDrawable
 import android.support.annotation.ColorInt
 import android.support.annotation.Dimension
 import android.support.annotation.Dimension.PX
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
@@ -47,6 +52,7 @@ class LoadingButton @JvmOverloads constructor(
                     )
                 )
                 setProgressColor(getColor(R.styleable.LoadingButton_progressColor, Color.WHITE))
+                setBackgroundSrc(getDrawable(R.styleable.LoadingButton_backgroundSrc))
                 when (getInt(R.styleable.LoadingButton_initMode, 0)) {
                     PENDING -> pending()
                     LOADING -> loading()
@@ -56,20 +62,39 @@ class LoadingButton @JvmOverloads constructor(
 
     fun setInnerIconSize(@Dimension(unit = PX) size: Int) {
         mInnerIconSize = size
+        lazyLoadingIcon().value.apply {
+            val lp = layoutParams
+            lp.width = size
+            lp.height = size
+            layoutParams = lp
+        }
+        lazyPendingIcon().value.apply {
+            val lp = layoutParams
+            lp.width = size
+            lp.height = size
+            layoutParams = lp
+        }
     }
 
     fun setProgressColor(@ColorInt color: Int) {
         mProgressColor = color
+        lazyLoadingIcon().value.indeterminateTintList = ColorStateList.valueOf(color)
+    }
+
+    fun setBackgroundSrc(drawable: Drawable?) {
+        if (drawable != null) {
+            mBackgroundImageView.setImageDrawable(drawable)
+        }
     }
 
     fun pending() {
         mIconContainer.removeAllViews()
-        mIconContainer.addView(buildPendingIcon().value)
+        mIconContainer.addView(lazyPendingIcon().value)
     }
 
     fun loading() {
         mIconContainer.removeAllViews()
-        mIconContainer.addView(buildLoadingIcon().value)
+        mIconContainer.addView(lazyLoadingIcon().value)
     }
 
     fun disable() {
@@ -86,7 +111,7 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    private fun buildPendingIcon() = lazy {
+    private fun lazyPendingIcon() = lazy {
         ImageView(context)
             .apply {
                 layoutParams = LayoutParams(mInnerIconSize, mInnerIconSize)
@@ -97,7 +122,7 @@ class LoadingButton @JvmOverloads constructor(
             }
     }
 
-    private fun buildLoadingIcon() = lazy {
+    private fun lazyLoadingIcon() = lazy {
         ProgressBar(context)
             .apply {
                 layoutParams = LayoutParams(mInnerIconSize, mInnerIconSize)
