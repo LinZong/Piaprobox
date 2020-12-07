@@ -124,8 +124,6 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     fun loading() {
-//        lazyPendingIcon.value.visibility = View.GONE
-//        lazyLoadingIcon.value.visibility = View.VISIBLE
         switch(lazyPendingIcon.value, lazyLoadingIcon.value)
     }
 
