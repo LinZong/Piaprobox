@@ -49,8 +49,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
 
     override fun login(): UserInfo {
         try {
-            val loginCredentials = Persistence.GetLoginCredentials()
-                ?: throw NoLoginCredentialsException()
+            val loginCredentials = getLoginCredentials() ?: throw NoLoginCredentialsException()
 
             /**
              * 登陆分4步。
@@ -90,7 +89,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     }
 
     override fun login(credentials: LoginCredentials): UserInfo {
-        Persistence.SaveLoginCredentials(credentials)
+        saveLoginCredentials(credentials)
         // Now we can call login method without parameters.
         return login()
     }
@@ -125,7 +124,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
 
     private fun getUserInfoFromPiapro(): UserInfo {
         // When we reach here we must have a correct login credentials so we can feel free to unwrap nullable ty
-        val loginCredentials = Persistence.GetLoginCredentials()!!
+        val loginCredentials = getLoginCredentials()!!
         val userProfileUrl = Constants.Url.getUserProfileUrl(loginCredentials.userName)
         val response = DaggerFetchFactory.create().fetcher().withLoginCookie().visit(userProfileUrl).go()
         if (response.isSuccessful) {
