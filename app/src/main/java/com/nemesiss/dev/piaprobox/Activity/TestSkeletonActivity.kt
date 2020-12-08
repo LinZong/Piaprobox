@@ -1,7 +1,11 @@
 package com.nemesiss.dev.piaprobox.Activity
 
+import android.app.ActionBar
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
+import android.widget.TextView
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
 import com.nemesiss.dev.piaprobox.R
@@ -57,5 +61,16 @@ class TestSkeletonActivity : PiaproboxBaseActivity() {
         asyncExecutor.SendTask {
             userLoginService.logout()
         }
+    }
+
+    private fun codePlaygrounds() {
+        val dialog = Dialog(this)
+        dialog.setContentView(TextView(this).apply {
+            text = "Hello, world!"
+        })
+        // 一般Dialog需要使用应用Activity的Context来显示。
+        // 如果是系统Window类型特殊，可以不需要Token，但是需要指定对话框Window的类型为系统类型，如下所示。
+        dialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY)
+        dialog.show()
     }
 }

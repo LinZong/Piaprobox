@@ -300,11 +300,8 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     private fun checkCachedLoginStatusValid(): Boolean {
         // in milliseconds
         val now = Date().time
-        // in milliseconds
-        val loginTimeStamp = Persistence.GetLoginTimeStamp()
-        // second to milliseconds
-        val cacheStillValidInterval = Constants.Login.LOGIN_CACHE_VALID_TIME_INTERVAL_SEC * 1000
-        return loginTimeStamp > 0 && (now - loginTimeStamp) < cacheStillValidInterval
+        val cookie = Persistence.GetLoginCookie() ?: return false
+        return cookie.expires > now
     }
 
     private fun forceCheckLogin(): LoginStatus {
