@@ -119,6 +119,10 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             log.warn("Log info is already expired. Just clean login info is enough.")
         }
         // anyway we clean our cache.
+        removeLoginInfo()
+    }
+
+    private fun removeLoginInfo() {
         Persistence.RemoveLoginInfo()
     }
 
