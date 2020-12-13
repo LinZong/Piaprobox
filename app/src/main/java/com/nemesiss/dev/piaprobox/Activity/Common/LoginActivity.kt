@@ -27,19 +27,28 @@ class LoginActivity : PiaproboxBaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        imm = getSystemService()
+        initComponents()
+        bindComponents()
 
+    }
+
+
+    private fun initComponents() {
+        imm = getSystemService()
         getRootLayout<LinearLayout>().enableAutoHideSoftKeyboard()
         login_password_textinputfield.enableAutoHideSoftKeyboard(imm)
         login_username_textinputfield.enableAutoHideSoftKeyboard(imm)
         DaggerUserLoginServiceFactory.builder().htmlParserModules(HtmlParserModules(this)).build().inject(this)
+    }
 
+    private fun bindComponents() {
         enter_login_button
             .setOnClickListener {
                 testLoading()
                 it.postDelayed({ testPending() }, 3000L)
             }
     }
+
 
     private fun testPending() {
         enter_login_button
