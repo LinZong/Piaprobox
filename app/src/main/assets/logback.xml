@@ -1,10 +1,12 @@
 <configuration>
     <property name="ANDROID_DIR" value="${DATA_DIR}/logs"/>
     <property name="PC_DIR" value="${user.home}/${project.name}/logs"/>
+    <property name="LOGVIEWER_SEARCH_DIR" value="${ANDROID_DIR}"
+              scope="system"/>
 
     <if condition='"${log.debug}" === "false" || "${log.debug}" === "log.debug_IS_UNDEFINED"'>
         <then>
-            <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+            <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
         </then>
     </if>
 
