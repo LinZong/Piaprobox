@@ -6,6 +6,7 @@ buildscript {
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
         maven { url 'https://jitpack.io' }
+        maven { url 'http://47.107.119.93:8090/repository/maven-public/' }
         mavenLocal()
     }
     dependencies {
@@ -21,6 +22,7 @@ allprojects {
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
         maven { url 'https://jitpack.io' }
+        maven { url 'http://47.107.119.93:8090/repository/maven-public/' }
         mavenLocal()
     }
 }
