@@ -163,9 +163,11 @@ class MainActivity : LoginCallbackActivity() {
         if (hc > 0) {
             val navHeaderUserInfoAreaLayout = Main_Drawer_Navigation.getHeaderView(0)
                 .findViewById<LinearLayout>(R.id.nav_header_click_login)
-            navHeaderUserInfoAreaLayout.setOnClickListener(this::onNavHeaderUserInfoAreaClicked)
-            navHeaderUserAvatarIv = navHeaderUserInfoAreaLayout.findViewById(R.id.nav_header_user_avatar)
-            navHeaderNickNameTv = navHeaderUserInfoAreaLayout.findViewById(R.id.nav_header_username)
+            navHeaderUserInfoAreaLayout.apply {
+                setOnClickListener(this@MainActivity::onNavHeaderUserInfoAreaClicked)
+                navHeaderUserAvatarIv = findViewById(R.id.nav_header_user_avatar)
+                navHeaderNickNameTv = findViewById(R.id.nav_header_username)
+            }
         }
     }
 

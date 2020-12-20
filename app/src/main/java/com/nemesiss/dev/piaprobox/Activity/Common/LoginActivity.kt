@@ -20,7 +20,6 @@ import com.nemesiss.dev.piaprobox.Service.User.UserLoginService
 import com.nemesiss.dev.piaprobox.Util.enableAutoHideSoftKeyboard
 import com.nemesiss.dev.piaprobox.Util.getRootLayout
 import com.nemesiss.dev.piaprobox.Util.getSystemService
-import com.nemesiss.dev.piaprobox.Util.hideSoftKeyboard
 import kotlinx.android.synthetic.main.activity_login.*
 import org.slf4j.getLogger
 import javax.inject.Inject
