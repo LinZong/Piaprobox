@@ -106,9 +106,13 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     }
 
     override fun logout() {
-        if (checkCachedLoginStatus() == LoginStatus.LOGIN) {
+        val isLogin = checkCachedLoginStatus() == LoginStatus.LOGIN
+        // anyway we clean our cache.
+        if (isLogin) {
             // cookie exists, need to do actual logout operations.
             val logoutRequest = buildLogoutRequest()
+            // remove login info here
+            removeLoginInfo()
             try {
                 val response = httpClient.newCall(logoutRequest).execute()
                 if (response.code == 302) {
@@ -128,9 +132,8 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             }
         } else {
             log.warn("Log info is already expired. Just clean login info is enough.")
+            removeLoginInfo()
         }
-        // anyway we clean our cache.
-        removeLoginInfo()
     }
 
     private fun removeLoginInfo() {

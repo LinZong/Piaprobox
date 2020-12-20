@@ -34,9 +34,25 @@
     </if>
 
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${${log.platform}_DIR}/trace.log</file>
+        <file>${${log.platform}_DIR}/applog.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>trace-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>applog-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>350MB</totalSizeCap>
+        </rollingPolicy>
+        <tagEncoder>
+            <pattern>%logger{12}</pattern>
+        </tagEncoder>
+        <encoder>
+            <pattern>[%date{yyyy-M-d HH:mm:ss.SSS}] [%level] [%thread] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="crash" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${${log.platform}_DIR}/crash.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>crash-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
             <maxHistory>7</maxHistory>
             <totalSizeCap>350MB</totalSizeCap>
@@ -53,4 +69,8 @@
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
     </root>
+
+    <logger name="crash" level="INFO" additivity="false">
+        <appender-ref ref="crash"/>
+    </logger>
 </configuration>

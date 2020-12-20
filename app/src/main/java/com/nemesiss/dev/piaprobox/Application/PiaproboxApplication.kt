@@ -2,8 +2,11 @@ package com.nemesiss.dev.piaprobox.Application
 
 import android.app.Application
 import android.content.Context
+import com.nemesiss.dev.piaprobox.Model.User.UserInfo
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import me.weishu.reflection.Reflection
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
@@ -12,17 +15,20 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.X509TrustManager
 
 class PiaproboxApplication : Application() {
+    private lateinit var crashLog: Logger
     override fun onCreate() {
         super.onCreate()
         Self = this
+        crashLog = LoggerFactory.getLogger("crash")
+
         Persistence.Init(applicationContext)
         TrustAllCetificates()
+        setCrashLogHandler()
     }
 
     companion object {
         lateinit var Self: PiaproboxApplication
             private set
-
         init {
             System.setProperty("project.name", "Piaprobox")
             System.setProperty("log.platform", "ANDROID")
@@ -63,5 +69,14 @@ class PiaproboxApplication : Application() {
         )
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.socketFactory)
         HttpsURLConnection.setDefaultHostnameVerifier { _, _ -> true }
+    }
+
+    private fun setCrashLogHandler() {
+        val defaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { t, e ->
+            crashLog.error("Crash detected!  \n", e)
+            defaultCrashHandler.uncaughtException(t, e)
+        }
+        crashLog.info("Crash log handler is initialized!")
     }
 }

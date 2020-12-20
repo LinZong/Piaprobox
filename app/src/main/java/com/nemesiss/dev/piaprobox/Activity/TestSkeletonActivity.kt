@@ -39,8 +39,6 @@ class TestSkeletonActivity : PiaproboxBaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_skeleton)
         DaggerUserLoginServiceFactory.builder().htmlParserModules(HtmlParserModules(this)).build().inject(this)
-        log.warn("Hello, world!")
-        log.warn("Injected: {}", userLoginService)
     }
 
     fun login(view: View) {

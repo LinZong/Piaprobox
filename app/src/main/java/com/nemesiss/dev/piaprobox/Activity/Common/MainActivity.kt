@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.bumptech.glide.Priority
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
+import com.nemesiss.dev.piaprobox.Activity.TestSkeletonActivity
 import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Illustrator.IllustrationFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Music.MusicFragment
@@ -168,18 +169,12 @@ class MainActivity : LoginCallbackActivity() {
         }
     }
 
-    private fun resetUserInfoToPendingLogin() {
-        navHeaderUserAvatarIv?.setImageDrawable(getDrawable(R.drawable.not_login))
-        navHeaderNickNameTv?.text = getString(R.string.not_login)
-    }
-
     private fun onNavHeaderUserInfoAreaClicked(v: View) {
         if (userLoginService.checkLogin() != LoginStatus.LOGIN) {
             userLoginService.startLoginActivity(this)
             return
         }
 
-        // TODO Open browser to show user info page or logout.
         UserInfoActionsSheet().apply {
             setOnItemClickedListener {
                 when (it.itemId) {
@@ -201,6 +196,11 @@ class MainActivity : LoginCallbackActivity() {
             }
             show(supportFragmentManager, "USERINFO_ACTIONS")
         }
+    }
+
+    private fun resetUserInfoToPendingLogin() {
+        navHeaderUserAvatarIv?.setImageDrawable(getDrawable(R.drawable.not_login))
+        navHeaderNickNameTv?.text = getString(R.string.not_login)
     }
 
     private fun setUserInfoIfLogin() {
@@ -239,6 +239,10 @@ class MainActivity : LoginCallbackActivity() {
 
 
     private fun OnNavigationItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.debug_tools) {
+            startActivity(Intent(this, TestSkeletonActivity::class.java))
+            return true
+        }
         LoadMainFragmentFromCache(item?.itemId)
         Main_Drawer.closeDrawers()
         return true
