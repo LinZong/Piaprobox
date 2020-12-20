@@ -19,6 +19,7 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.Music.MusicFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.TextWork.TextWorkFragment
+import com.nemesiss.dev.piaprobox.Model.Events.MusicPlayerClosedEvent
 import com.nemesiss.dev.piaprobox.Model.Resources.Constants
 import com.nemesiss.dev.piaprobox.Model.User.LoginResult
 import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
@@ -36,6 +37,9 @@ import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.View.Common.UserInfoActionsSheet
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_main.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.slf4j.getLogger
 import javax.inject.Inject
 
@@ -80,6 +84,7 @@ class MainActivity : LoginCallbackActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        EventBus.getDefault().register(this)
         DaggerUserLoginServiceFactory.builder().htmlParserModules(HtmlParserModules(this)).build().inject(this)
         InitView()
     }
@@ -118,8 +123,8 @@ class MainActivity : LoginCallbackActivity() {
 
     // 管理Toolbar上面的播放按钮是不是存在.
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if ((MusicPlayerService.SERVICE_AVAILABLE.value == true ||
-                    AppUtil.IsServiceRunning(this, MusicPlayerService::class.java))
+//        AppUtil.IsServiceRunning(this, MusicPlayerService::class.java)
+        if ((MusicPlayerService.SERVICE_AVAILABLE.value == true)
             && menu?.findItem(MUSIC_PLAYER_MENU_ID) == null
         ) {
             val playerMenu = menu?.add(Menu.NONE, MUSIC_PLAYER_MENU_ID, 2, "Music Player")
@@ -289,5 +294,10 @@ class MainActivity : LoginCallbackActivity() {
                 illuFragment.onActivityReenter(resultCode, data)
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMusicPlayerClosedByNotificationBtn(event: MusicPlayerClosedEvent) {
+        invalidateOptionsMenu()
     }
 }

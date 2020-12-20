@@ -12,6 +12,7 @@ import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity.Companion.PERSIST_STATUS_INTENT_KEY
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
+import com.nemesiss.dev.piaprobox.Model.Events.MusicPlayerClosedEvent
 import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerNotificationManager.Companion.NotificationID
@@ -20,6 +21,7 @@ import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayer
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.impl.SimpleMusicPlayerImpl
 import io.reactivex.subjects.BehaviorSubject
+import org.greenrobot.eventbus.EventBus
 
 class MusicPlayerService : Service() {
 
@@ -142,6 +144,7 @@ class MusicPlayerService : Service() {
             "DESTROY" -> {
                 Log.d("MusicPlayerService", "即将停止, 对象HashCode: ${this.hashCode()}")
                 stopPlaying()
+                EventBus.getDefault().post(MusicPlayerClosedEvent("MusicPlayerService"))
             }
             "PLAY" -> {
                 player.resume()
