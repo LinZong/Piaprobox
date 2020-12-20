@@ -17,6 +17,7 @@ object Constants {
          */
         const val LOGIN_CACHE_VALID_TIME_INTERVAL_SEC = 5 * 24 * 60 * 60
         const val LOGIN_RESULT_KEY = "LOGIN_RESULT_KEY"
+        const val LOGIN_RESULT_USERINFO_PAYLOAD_KEY = "LOGIN_RESULT_PAYLOAD_KEY"
     }
 
     object Url {

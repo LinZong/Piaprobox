@@ -1,6 +1,7 @@
 package com.nemesiss.dev.piaprobox.Service.DaggerFactory
 
 import com.nemesiss.dev.piaprobox.Activity.Common.LoginActivity
+import com.nemesiss.dev.piaprobox.Activity.Common.MainActivity
 import com.nemesiss.dev.piaprobox.Activity.TestSkeletonActivity
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.OkHttpModules
@@ -14,6 +15,8 @@ interface UserLoginServiceFactory {
     fun inject(activity: TestSkeletonActivity)
 
     fun inject(activity: LoginActivity)
+
+    fun inject(activity: MainActivity)
 }
 
 /*

@@ -3,9 +3,13 @@ package com.nemesiss.dev.piaprobox.Activity.Common
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import com.bumptech.glide.Priority
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
@@ -14,41 +18,82 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.Music.MusicFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.TextWork.TextWorkFragment
+import com.nemesiss.dev.piaprobox.Model.Resources.Constants
 import com.nemesiss.dev.piaprobox.Model.User.LoginResult
+import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
+import com.nemesiss.dev.piaprobox.Model.User.UserInfo
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerUserLoginServiceFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.CookieLoginService
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
+import com.nemesiss.dev.piaprobox.Service.GlideApp
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
-import com.nemesiss.dev.piaprobox.Service.User.LoginCallback
+import com.nemesiss.dev.piaprobox.Service.User.NotLoginException
+import com.nemesiss.dev.piaprobox.Service.User.UserLoginService
 import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.View.Common.UserInfoActionsSheet
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_main.*
+import org.slf4j.getLogger
+import javax.inject.Inject
 
 class MainActivity : LoginCallbackActivity() {
+
+    companion object {
+        @JvmStatic
+        val MainFragmentIDs = arrayOf(
+            R.id.Main_Drawer_Nav_Music,
+            R.id.Main_Drawer_Nav_Illustrator,
+            R.id.Main_Drawer_Nav_Text,
+            R.id.Main_Drawer_Nav_Recommand
+        ).zip(
+            arrayOf(
+                MusicFragment::class.java,
+                IllustrationFragment::class.java,
+                TextWorkFragment::class.java,
+                MainRecommendFragment::class.java
+            )
+        )
+
+        @JvmStatic
+        private val MUSIC_PLAYER_MENU_ID = Int.MAX_VALUE - 100
+    }
+
+    @Inject
+    @CookieLoginService
+    lateinit var userLoginService: UserLoginService
 
     private val MainFragmentsCollection: HashMap<Int, BaseMainFragment> = HashMap()
     private lateinit var CurrentShowMainFragment: BaseMainFragment
 
+    private val asyncExecutor = AsyncExecutor.INSTANCE
+    private val log = getLogger<MainActivity>()
+
     var DisableRefreshButton = false
+    private val SHOW_MAIN_PAGES = true
+
+    private var navHeaderUserAvatarIv: CircleImageView? = null
+    private var navHeaderNickNameTv: TextView? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        DaggerUserLoginServiceFactory.builder().htmlParserModules(HtmlParserModules(this)).build().inject(this)
+        InitView()
+    }
 
     override fun onDestroy() {
         MainFragmentsCollection.clear()
         super.onDestroy()
     }
 
-    override fun handleLoginResult(loginResult: LoginResult) {
-
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        InitView()
-    }
-
-    private fun InitView() {
-        setSupportActionBar(Main_Toolbar)
-        Main_Toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-        Main_Toolbar.setNavigationOnClickListener { Main_Drawer.openDrawer(GravityCompat.START) }
-        Main_Drawer_Navigation.setNavigationItemSelectedListener(this::OnNavigationItemSelected)
-        LoadMainFragmentFromCache(R.id.Main_Drawer_Nav_Recommand)
+    override fun handleLoginResult(loginResult: LoginResult, userInfo: UserInfo?) {
+        if (loginResult == LoginResult.SUCCESS) {
+            log.info("请求登陆成功, 登陆用户为: {}", userInfo)
+            setUserInfoIfLogin()
+            return
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -67,7 +112,6 @@ class MainActivity : LoginCallbackActivity() {
     }
 
     override fun onBackPressed() {
-        Log.d("MainActivity","退到主界面.")
         moveTaskToBack(false)
     }
 
@@ -101,25 +145,98 @@ class MainActivity : LoginCallbackActivity() {
         return true
     }
 
-    companion object {
-        @JvmStatic
-        val MainFragmentIDs = arrayOf(
-            R.id.Main_Drawer_Nav_Music,
-            R.id.Main_Drawer_Nav_Illustrator,
-            R.id.Main_Drawer_Nav_Text,
-            R.id.Main_Drawer_Nav_Recommand
-        ).zip(
-            arrayOf(
-                MusicFragment::class.java,
-                IllustrationFragment::class.java,
-                TextWorkFragment::class.java,
-                MainRecommendFragment::class.java
-            )
-        )
-
-        @JvmStatic
-        private val MUSIC_PLAYER_MENU_ID = Int.MAX_VALUE - 100
+    private fun InitView() {
+        setSupportActionBar(Main_Toolbar)
+        Main_Toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+        Main_Toolbar.setNavigationOnClickListener { Main_Drawer.openDrawer(GravityCompat.START) }
+        Main_Drawer_Navigation.setNavigationItemSelectedListener(this::OnNavigationItemSelected)
+        if (SHOW_MAIN_PAGES) {
+            LoadMainFragmentFromCache(R.id.Main_Drawer_Nav_Recommand)
+        }
+        bindNavHeaderUserInfoAreaActions()
+        setUserInfoIfLogin()
     }
+
+    private fun bindNavHeaderUserInfoAreaActions() {
+        val hc = Main_Drawer_Navigation.headerCount
+        if (hc > 0) {
+            val navHeaderUserInfoAreaLayout = Main_Drawer_Navigation.getHeaderView(0)
+                .findViewById<LinearLayout>(R.id.nav_header_click_login)
+            navHeaderUserInfoAreaLayout.setOnClickListener(this::onNavHeaderUserInfoAreaClicked)
+            navHeaderUserAvatarIv = navHeaderUserInfoAreaLayout.findViewById(R.id.nav_header_user_avatar)
+            navHeaderNickNameTv = navHeaderUserInfoAreaLayout.findViewById(R.id.nav_header_username)
+        }
+    }
+
+    private fun resetUserInfoToPendingLogin() {
+        navHeaderUserAvatarIv?.setImageDrawable(getDrawable(R.drawable.not_login))
+        navHeaderNickNameTv?.text = getString(R.string.not_login)
+    }
+
+    private fun onNavHeaderUserInfoAreaClicked(v: View) {
+        if (userLoginService.checkLogin() != LoginStatus.LOGIN) {
+            userLoginService.startLoginActivity(this)
+            return
+        }
+
+        // TODO Open browser to show user info page or logout.
+        UserInfoActionsSheet().apply {
+            setOnItemClickedListener {
+                when (it.itemId) {
+                    R.id.open_userinfo_in_browser -> {
+                        AppUtil.OpenBrowser(
+                            this@MainActivity,
+                            Constants.Url.getUserProfileUrl(userLoginService.getUserInfo().userName)
+                        )
+                    }
+                    R.id.user_logout -> {
+                        asyncExecutor.SendTask {
+                            runOnUiThread { resetUserInfoToPendingLogin() }
+                            userLoginService.logout()
+                        }
+                    }
+                }
+                dismiss()
+                true
+            }
+            show(supportFragmentManager, "USERINFO_ACTIONS")
+        }
+    }
+
+    private fun setUserInfoIfLogin() {
+        if (userLoginService.checkLogin(useCache = true) == LoginStatus.LOGIN) {
+            asyncExecutor.SendTask {
+                try {
+                    val userInfo = userLoginService.getUserInfo()
+                    runOnUiThread { setUserInfo(userInfo) }
+                } catch (nle: NotLoginException) {
+                    // 没有登陆, 处理登录态失效, 直接做登出
+                    userLoginService.logout()
+                    log.warn("Login status is expired, now doing manually logout to correct this.")
+                } catch (e: Exception) {
+                    log.error("Get user info failed!", e)
+                    runOnUiThread {
+                        Toast.makeText(this, "获取用户信息失败", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setUserInfo(userInfo: UserInfo) {
+        // load user avatar
+        navHeaderUserAvatarIv?.let { iv ->
+            GlideApp
+                .with(this)
+                .load(userInfo.avatarImage)
+                .priority(Priority.HIGH)
+                .into(iv)
+        }
+        // load user nickname instead of username
+        // because username is usually meaningless.
+        navHeaderNickNameTv?.text = userInfo.nickName
+    }
+
 
     private fun OnNavigationItemSelected(item: MenuItem?): Boolean {
         LoadMainFragmentFromCache(item?.itemId)
@@ -134,7 +251,7 @@ class MainActivity : LoginCallbackActivity() {
             .run {
                 var fragment = MainFragmentsCollection[this.first]
                 if (fragment == null) {
-//                    保证单例
+                    //  保证单例
                     fragment = this.second.newInstance()
                     MainFragmentsCollection[this.first] = fragment
                 }

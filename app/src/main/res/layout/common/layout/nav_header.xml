@@ -3,7 +3,6 @@
                                              android:layout_width="match_parent"
                                              android:layout_height="wrap_content"
                                              xmlns:android="http://schemas.android.com/apk/res/android">
-
     <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -15,25 +14,42 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/nav_header_click_login"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="4dp"
             android:padding="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/nav_header_user_avatar"
+                android:layout_gravity="center_vertical"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/not_login"/>
+
+        <TextView
+                android:id="@+id/nav_header_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/round_button_background"
-                android:textColor="@android:color/white"
-                android:elevation="6dp"
-                android:textSize="17sp"
-                android:text="登陆"/>
+                android:textSize="19sp"
+                android:text="@string/not_login"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:shadowColor="@android:color/darker_gray"
+                android:shadowDx="4"
+                android:shadowDy="4"
+                android:shadowRadius="6"/>
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
 

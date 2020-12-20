@@ -24,15 +24,15 @@ open class PiaproboxBaseActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        activities.removeAt(activities.size-1)
-        if(activities.isEmpty() && !MusicPlayerService.IS_FOREGROUND) {
+        activities.removeAt(activities.size - 1)
+        if (activities.isEmpty() && !MusicPlayerService.IS_FOREGROUND) {
             stopService(Intent(this, MusicPlayerService::class.java))
         }
     }
 
-    protected var loadingIndicatorView : LoadingIndicatorView? = null
+    protected var loadingIndicatorView: LoadingIndicatorView? = null
 
-    protected fun ShowLoadingIndicator(rootViewGroup : ViewGroup) {
+    protected fun ShowLoadingIndicator(rootViewGroup: ViewGroup) {
         runOnUiThread {
             val topView = rootViewGroup
             loadingIndicatorView = LoadingIndicatorView(this)
@@ -40,7 +40,7 @@ open class PiaproboxBaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun HideLoadingIndicator(rootViewGroup : ViewGroup) {
+    protected fun HideLoadingIndicator(rootViewGroup: ViewGroup) {
         runOnUiThread {
             val topView = rootViewGroup
             if (loadingIndicatorView != null) {
@@ -49,19 +49,16 @@ open class PiaproboxBaseActivity : AppCompatActivity() {
             loadingIndicatorView = null
         }
     }
+
     fun LoadFailedTips(code: Int, message: String) {
         runOnUiThread {
-            Toast.makeText(
-                this,
-                "$message ($code)",
-                Toast.LENGTH_SHORT
-            ).show()
+            showToastHint("$message ($code)")
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
-        when(item?.itemId) {
+        when (item?.itemId) {
             android.R.id.home -> {
                 finish()
             }
@@ -70,8 +67,12 @@ open class PiaproboxBaseActivity : AppCompatActivity() {
         return true
     }
 
-    fun ShowToolbarBackIcon(toolbar : Toolbar) {
+    fun ShowToolbarBackIcon(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    fun showToastHint(hintText: String) {
+        runOnUiThread { Toast.makeText(this, hintText, Toast.LENGTH_SHORT).show() }
     }
 }

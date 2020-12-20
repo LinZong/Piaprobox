@@ -20,5 +20,10 @@ enum class LoginResult {
     /**
      * 未知错误
      */
-    UNKNOWN_ERR
+    UNKNOWN_ERR,
+
+    /**
+     * 被用户取消
+     */
+    CANCELED_BY_USER
 }

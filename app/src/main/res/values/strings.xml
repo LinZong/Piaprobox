@@ -40,19 +40,15 @@
 
     <string name="AudioFocusFailedHint">Play music failed. Please check whether another app is using your playback device.</string>
 
-
-    <!--    In-App use flags-->
-
-    <string name="ImageViewTransitionName">ImageViewTransitionName</string>
     <string name="RecyclerViewNoMoreItem">Nothing more >_&lt; </string>
-    <string name="title_activity_login">Sign in</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="not_login">Not Login</string>
+    <string name="login_failed_network_error">Login failed, Network error.</string>
+    <string name="login_failed_unknown_error">Login failed, Unknown error occurred.</string>
+    <string name="login_failed_username_or_password_wrong">Login failed, Username or password is wrong.</string>
+    <string name="login_username_or_password_cannot_be_empty">Username or password cannot be empty.</string>
+    <string name="login_title">Login</string>
+    <!--    In-App use flags-->
+    <string name="ImageViewTransitionName">ImageViewTransitionName</string>
 
 </resources>

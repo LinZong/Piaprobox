@@ -6,6 +6,7 @@ import com.nemesiss.dev.piaprobox.Activity.Common.LoginActivity
 import com.nemesiss.dev.piaprobox.Activity.Common.LoginCallbackActivity
 import com.nemesiss.dev.piaprobox.Model.Resources.Constants
 import com.nemesiss.dev.piaprobox.Model.User.*
+import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
@@ -33,7 +34,17 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
         private val log = LoggerFactory.getLogger(CookieUserLoginServiceImpl::class.java)
     }
 
-    override fun getUserInfo(): UserInfo = Persistence.GetUserInfo() ?: throw NotLoginException()
+    override fun getUserInfo(): UserInfo {
+        var userInfo: UserInfo? = Persistence.GetUserInfo()
+        if (userInfo != null) {
+            return userInfo
+        }
+        if (checkLogin() == LoginStatus.LOGIN) {
+            userInfo = getUserInfoFromPiapro()
+            Persistence.SaveUserInfo(userInfo)
+        }
+        throw NotLoginException()
+    }
 
     private fun saveUserInfo(userInfo: UserInfo): Boolean {
         return Persistence.SaveUserInfo(userInfo)
@@ -95,7 +106,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
     }
 
     override fun logout() {
-        if (checkCachedLoginStatusValid()) {
+        if (checkCachedLoginStatus() == LoginStatus.LOGIN) {
             // cookie exists, need to do actual logout operations.
             val logoutRequest = buildLogoutRequest()
             try {
@@ -236,8 +247,10 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
             // to avoid re-authentication.
             val expires =
                 piapro_r.expires?.time ?: Date().time + Constants.Login.LOGIN_CACHE_VALID_TIME_INTERVAL_SEC * 1000L
-
             return LoginCookie(piapro_s, piapro_r.value!!, expires)
+        } catch (le: LoginFailedException) {
+            // 用户名密码错误，直接抛出
+            throw le
         } catch (ioe: IOException) {
             log.error("Do login execution IOE error.", ioe)
             throw LoginFailedException(
@@ -247,7 +260,7 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
         } catch (e: Exception) {
             log.error("Do login execution error.", e)
             throw LoginFailedException(
-                LoginResult.NETWORK_ERR,
+                LoginResult.UNKNOWN_ERR,
                 "Cannot get the 'piapro_r' cookie due to unknown exception."
             )
         }
@@ -289,19 +302,16 @@ class CookieUserLoginServiceImpl @Inject constructor(val httpClient: OkHttpClien
 
     override fun checkLogin(useCache: Boolean): LoginStatus {
         if (useCache) {
-            // 如果loginTimeStamp == 0 或者当前时间已经超过Cache有效期，则尝试强制发出网络请求，查询登录态
-            if (checkCachedLoginStatusValid()) {
-                return LoginStatus.LOGIN
-            }
+            return checkCachedLoginStatus()
         }
         return forceCheckLogin()
     }
 
-    private fun checkCachedLoginStatusValid(): Boolean {
+    private fun checkCachedLoginStatus(): LoginStatus {
         // in milliseconds
         val now = Date().time
-        val cookie = Persistence.GetLoginCookie() ?: return false
-        return cookie.expires > now
+        val cookie = Persistence.GetLoginCookie() ?: return LoginStatus.NOT_LOGIN
+        return if (cookie.expires > now) LoginStatus.LOGIN else LoginStatus.LOGIN_EXPIRED
     }
 
     private fun forceCheckLogin(): LoginStatus {
