@@ -99,7 +99,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
             isFirstResource: Boolean
         ): Boolean {
             IS_CURRENT_BIG_SIZE_IMAGE_LOADED = true
-            Illustrator2_View_ItemImageView.setImageDrawable( resource )
+            Illustrator2_View_ItemImageView.setImageDrawable(resource)
             return false
         }
     }
@@ -204,7 +204,11 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
             startActivityForResult(
                 intent,
                 PREVIEW_IMAGE_REQ_CODE,
-                ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), Illustrator2_View_ItemImageView, resources.getString(R.string.ImageViewTransitionName)).toBundle()
+                ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    requireActivity(),
+                    Illustrator2_View_ItemImageView,
+                    resources.getString(R.string.ImageViewTransitionName)
+                ).toBundle()
             )
         } else {
             TellImageIsStillPreparing()
@@ -214,17 +218,19 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun HandleDragAndCloseAlphaChanged(event: SharedElementBackEvent) {
-        if(event.sender == "PreviewActivity") {
+        if (event.sender == "PreviewActivity") {
             Illustrator2_View_ItemImageView.alpha = 1f
         }
     }
 
     private fun HandleDownloadImage() {
         // Call activity method.
-        (activity as? IllustratorImageProviderActivity)?.HandleDownloadImage(
-            CurrentViewModel!!.ItemImageUrl,
-            CurrentViewModel!!.Title
-        )
+        CurrentViewModel?.let { vm ->
+            (activity as? IllustratorImageProviderActivity)?.HandleDownloadImage(
+                vm.ItemImageUrl,
+                vm.Title
+            )
+        }
     }
 
     private fun BindButtons() {

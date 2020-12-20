@@ -171,12 +171,12 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
 
     // 供给Fragment调用
     override fun HandleDownloadImage(ImageURL: String, Title: String) {
-        var Ext = ImageURL.substring(ImageURL.lastIndexOf('.'))
-        if (Ext.isEmpty()) {
-            Ext = ".png"
+        var ext = ImageURL.substring(ImageURL.lastIndexOf('.'))
+        if (ext.isEmpty()) {
+            ext = ".png"
         }
         downloader.DownloadImage(
-            Title + Ext,
+            Title + ext,
             ImageURL,
             CheckPermissionModel(this)
         ) { absPath ->
