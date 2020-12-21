@@ -48,6 +48,9 @@
     <string name="login_failed_username_or_password_wrong">Login failed, Username or password is wrong.</string>
     <string name="login_username_or_password_cannot_be_empty">Username or password cannot be empty.</string>
     <string name="login_title">Login</string>
+    <string name="logout_title">Logout</string>
+    <string name="user_action_open_userinfo_in_browser">Open profile page in browser</string>
+
     <!--    In-App use flags-->
     <string name="ImageViewTransitionName">ImageViewTransitionName</string>
 

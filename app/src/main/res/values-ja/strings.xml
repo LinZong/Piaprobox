@@ -40,4 +40,7 @@
     <string name="login_failed_unknown_error">ログイン失敗、意想外エラーが発生しました。</string>
     <string name="login_failed_username_or_password_wrong">ログイン失敗、入力されたピアプロID、登録Eメール、またはパスワードが正しくありません。</string>
 
+    <string name="logout_title">ログアウト</string>
+    <string name="user_action_open_userinfo_in_browser">ブラウザでユーザープロファイルを開く</string>
+
 </resources>
