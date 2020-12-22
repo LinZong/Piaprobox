@@ -20,8 +20,28 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".Activity.Common.AppLinkRecognizeActivity">
+            <intent-filter android:label="@string/OpenPiaproboxFromUrlLink">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <!-- Match https://piapro.jp/t/AGfI -->
+                <data
+                        android:host="piapro.jp"
+                        android:pathPrefix="/t"
+                        android:scheme="https"/>
+            </intent-filter>
+            <intent-filter android:label="@string/OpenPiaproboxFromInnerShareLink">
+                <action android:name="android.intent.action.VIEW"/>
+                <!-- Match piaprobox://share/music/AGfI, piaprobox://share/illustration/abcd, etc-->
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                        android:host="share"
+                        android:scheme="piaprobox"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".Activity.Common.LoginActivity">
-
         </activity>
         <activity
                 android:name=".Activity.Common.SplashActivity"
@@ -41,7 +61,6 @@
                 android:parentActivityName=".Activity.Common.MainActivity">
         </activity>
         <activity android:name=".Activity.TestSkeletonActivity">
-
         </activity>
 
         <service android:name=".Service.Player.MusicPlayerService"/>

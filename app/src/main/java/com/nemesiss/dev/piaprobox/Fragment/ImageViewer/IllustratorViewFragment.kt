@@ -186,7 +186,7 @@ class IllustratorViewFragment : BaseIllustratorViewFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         VIEW_CREATED = true
-        if (FETCH_DRAWABLE) {
+        if (FETCH_DRAWABLE && PRE_SHOWN_IMAGE != null) {
             Illustrator2_View_ItemImageView.setImageDrawable(PRE_SHOWN_IMAGE)
         }
         BindButtons()

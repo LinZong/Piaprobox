@@ -17,6 +17,7 @@ import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendTextCategoryFragment
+import com.nemesiss.dev.piaprobox.Model.Resources.Constants
 import com.nemesiss.dev.piaprobox.R
 import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.recommand_main_fragment.*
@@ -37,8 +38,7 @@ class MainRecommendFragment : BaseMainFragment() {
     private var CurrentDisplayFragmentIndex = 0
 
     companion object {
-        @JvmStatic
-        val DefaultTagUrl = "https://piapro.jp"
+        const val DefaultTagUrl = Constants.Url.MAIN_DOMAIN
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

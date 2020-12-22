@@ -117,10 +117,10 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             CurrentPlayItemIndex = intent.getIntExtra(CLICK_ITEM_INDEX, -1)
             val ClickToolbarIcon = intent.getBooleanExtra(CLICK_TOOLBAR_ICON, false)
 
-            val Cond1 = (ClickToolbarIcon || MusicContentUrl == LAST_LOAD_CONTENT_URL)
-            val Cond2 = RECOVER_STATUS_RESOURCE_IS_OK
+            val cond1 = (ClickToolbarIcon || MusicContentUrl == LAST_LOAD_CONTENT_URL)
+            val cond2 = RECOVER_STATUS_RESOURCE_IS_OK
 
-            if (Cond1 && Cond2) {
+            if (cond1 && cond2) {
                 // 点击的和上次是一样的，恢复.
                 RecoverActivityStatusFromPersistObject(LAST_MUSIC_PLAYER_ACTIVITY_STATUS!!)
             } else {
@@ -132,17 +132,13 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     }
 
     private fun HandleSwitchMusicIntent(intent: Intent?) {
-        if (intent?.action == "NEXT") {
-            Log.d("MusicPlayer", "感知到下一曲Intent")
-            NextMusic()
-        } else if (intent?.action == "PREV") {
-            Log.d("MusicPlayer", "感知到上一曲Intent")
-            PrevMusic()
+        when (intent?.action) {
+            "NEXT" -> NextMusic()
+            "PREV" -> PrevMusic()
         }
     }
 
     private fun RecoverActivityStatusFromPersistObject(activityStatus: MusicPlayerActivityStatus) {
-        Log.d("MusicPlayerActivity", "MusicPlayerActivity  开始恢复上一次的Activity状态")
         relatedMusicListData = activityStatus.relatedMusicListData
         lyricListData = activityStatus.lyrics
         CurrentMusicPlayInfo = activityStatus.currentPlayMusicInfo

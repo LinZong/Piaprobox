@@ -26,4 +26,15 @@ object Constants {
 
         fun getUserProfileUrl(username: String) = "${MAIN_DOMAIN}/${username}"
     }
+
+    object Share {
+        const val MUSIC = "music"
+        const val ILLUSTRATION = "illustration"
+        const val TEXT = "text"
+        const val APP_SCHEMA = "piaprobox"
+
+        fun getShareLink(type: String, hash: String): String = "${APP_SCHEMA}://${type}/${hash}"
+
+        fun getWebsiteLink(hash: String): String = Url.MAIN_DOMAIN + "/t/$hash"
+    }
 }

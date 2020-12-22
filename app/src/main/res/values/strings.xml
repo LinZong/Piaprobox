@@ -51,7 +51,9 @@
     <string name="logout_title">Logout</string>
     <string name="user_action_open_userinfo_in_browser">Open profile page in browser</string>
 
-    <!--    In-App use flags-->
+    <!--    In-App use flags, no need to translate-->
     <string name="ImageViewTransitionName">ImageViewTransitionName</string>
+    <string name="OpenPiaproboxFromUrlLink">OpenPiaproboxFromUrlLink</string>
+    <string name="OpenPiaproboxFromInnerShareLink">OpenPiaproboxFromInnerShareLink</string>
 
 </resources>

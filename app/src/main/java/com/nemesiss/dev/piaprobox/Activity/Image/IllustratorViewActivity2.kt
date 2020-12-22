@@ -121,18 +121,15 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
     }
 
     private fun InitFragmentPager(FirstShowIndex: Int) {
-        if (CAN_VIEW_ITEM_LIST != null) {
-            IntRange(0, CAN_VIEW_ITEM_LIST!!.size - 1).forEach {
-                val frag = IllustratorViewFragment().apply {
-                    val bundle = Bundle()
-                    bundle.putInt(IllustratorViewFragment.CLICKED_ITEM_INDEX, it)
-                    if (it == FirstShowIndex) {
-                        bundle.putBoolean(IllustratorViewFragment.SHOULD_FETCH_DRAWABLE, true) //放置可获取Drawable标记
-                    }
-                    arguments = bundle
+        CAN_VIEW_ITEM_LIST?.indices?.forEach {
+            ItemPages.add(IllustratorViewFragment().apply {
+                val bundle = Bundle()
+                bundle.putInt(IllustratorViewFragment.CLICKED_ITEM_INDEX, it)
+                if (it == FirstShowIndex) {
+                    bundle.putBoolean(IllustratorViewFragment.SHOULD_FETCH_DRAWABLE, true) //放置可获取Drawable标记
                 }
-                ItemPages.add(frag)
-            }
+                arguments = bundle
+            })
         }
         Illustrator2_Item_Pager.addOnPageChangeListener(object : BaseOnPageChangeListener() {
             override fun onPageSelected(page: Int) {
@@ -228,21 +225,22 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
         val model = LoadingItemPageViewModel[needFragmentIndex]
 
         val root = Jsoup.parse(HTMLString)
-        val StepsImageContent = htmlParser.Rules.getJSONObject("ImageContent").getJSONArray("Steps")
-        val StepsRelatedImage = htmlParser.Rules.getJSONObject("RelatedImage").getJSONArray("Steps")
+        val parseImageInfoSteps = htmlParser.Rules.getJSONObject("ImageContent").getJSONArray("Steps")
+        val parseRelatedImageSteps = htmlParser.Rules.getJSONObject("RelatedImage").getJSONArray("Steps")
 
         runWhenAlive {
             try {
-                val ImageContents = htmlParser.Parser.GoSteps(root, StepsImageContent) as ImageContentInfo
+                val imageInfo = htmlParser.Parser.GoSteps(root, parseImageInfoSteps) as ImageContentInfo
                 val relatedItems =
-                    (htmlParser.Parser.GoSteps(root, StepsRelatedImage) as Array<*>).map { it as RelatedImageInfo }
+                    (htmlParser.Parser.GoSteps(root, parseRelatedImageSteps) as Array<*>).map { it as RelatedImageInfo }
 
                 model.apply {
-                    ArtistAvatarUrl = HTMLParser.GetAlbumThumb(ImageContents.ArtistAvatar)
-                    Title = ImageContents.Title
-                    CreateDescription = ImageContents.CreateDescription.replace("<br>".toRegex(), "\n")
-                    CreateDetailRaw = ImageContents.CreateDetail
-                    ItemImageUrl = HTMLParser.GetAlbumThumb(ImageContents.URL)
+                    ArtistName = imageInfo.Artist
+                    ArtistAvatarUrl = HTMLParser.GetAlbumThumb(imageInfo.ArtistAvatar)
+                    Title = imageInfo.Title
+                    CreateDescription = imageInfo.CreateDescription.replace("<br>".toRegex(), "\n")
+                    CreateDetailRaw = imageInfo.CreateDetail
+                    ItemImageUrl = HTMLParser.GetAlbumThumb(imageInfo.URL)
                     RelatedItems = relatedItems
                 }
                 synchronized(ItemPages) {
