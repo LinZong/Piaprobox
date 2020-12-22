@@ -1,43 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:padding="4dp"
-              android:layout_height="64dp">
+                android:layout_width="match_parent"
+                android:padding="4dp"
+                android:layout_height="64dp">
 
-    <ImageView android:layout_width="56dp"
-               android:layout_height="56dp"
-               android:src="@drawable/thumb_miku"
-               android:id="@+id/MusicPlayer_Noti_Thumb_Normal"
-               android:scaleType="fitCenter"/>
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_toEndOf="@id/MusicPlayer_Noti_Thumb_Normal"
-                  android:layout_toStartOf="@id/MusicPlayer_NOti_Stop_Normal"
-                  android:layout_marginStart="6dp"
-                  android:orientation="vertical"
-                  android:layout_height="match_parent">
+    <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/thumb_miku"
+            android:id="@+id/MusicPlayer_Noti_Thumb_Normal"
+            android:scaleType="fitCenter"/>
 
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  style="@style/GenericTextView"
-                  android:maxLines="1"
-                  android:ellipsize="end"
-                  android:textColor="#4D4D4D"
-                  android:id="@+id/MusicPlayer_Noti_SongName_Normal"
-                  android:text="Song Name"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_toEndOf="@id/MusicPlayer_Noti_Thumb_Normal"
+            android:layout_toStartOf="@id/MusicPlayer_NOti_Stop_Normal"
+            android:layout_marginStart="6dp"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
 
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  style="@style/SmallTextView"
-                  android:maxLines="1"
-                  android:id="@+id/MusicPlayer_Noti_SongArtist_Normal"
-                  android:textColor="#828282"
-                  android:ellipsize="end"
-                  android:text="Artist"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/GenericTextView"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="#4D4D4D"
+                android:id="@+id/MusicPlayer_Noti_SongName_Normal"
+                android:layout_marginEnd="8dp"
+                android:text="Song Name"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/SmallTextView"
+                android:maxLines="1"
+                android:layout_marginEnd="8dp"
+                android:id="@+id/MusicPlayer_Noti_SongArtist_Normal"
+                android:textColor="#828282"
+                android:ellipsize="end"
+                android:text="Artist"/>
 
     </LinearLayout>
-    <ImageButton android:layout_width="22dp" android:layout_height="22dp"
-                 android:src="@drawable/ic_close_grey_700_18dp"
-                 android:layout_alignParentEnd="true"
-                 android:layout_centerVertical="true"
-                 android:scaleType="centerCrop"
-                 android:id="@+id/MusicPlayer_NOti_Stop_Normal"
-                 android:background="@android:color/transparent"/>
+
+    <ImageButton
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_close_grey_700_18dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:id="@+id/MusicPlayer_NOti_Stop_Normal"
+            android:background="@android:color/transparent"/>
 </RelativeLayout>

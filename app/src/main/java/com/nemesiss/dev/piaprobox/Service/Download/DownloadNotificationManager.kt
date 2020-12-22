@@ -21,7 +21,7 @@ class DownloadNotificationManager(context: Context) : BaseNotificationManager(co
 
 
     fun SendDownloadNotification(fileName: String, progress: Int) {
-        val downloadProgress = GetDefualtNotificationBuilder()
+        val downloadProgress = getDefaultNotificationBuilder()
             .setAutoCancel(true)
             .setContentTitle("Downloading $fileName")
             .setProgress(100, progress, false)
@@ -31,7 +31,7 @@ class DownloadNotificationManager(context: Context) : BaseNotificationManager(co
     }
 
     fun SendDownloadFinishNotification(fileName: String) {
-        val downloadProgress = GetDefualtNotificationBuilder()
+        val downloadProgress = getDefaultNotificationBuilder()
             .setAutoCancel(true)
             .setContentTitle("Download $fileName finished!")
             .build()
@@ -40,7 +40,7 @@ class DownloadNotificationManager(context: Context) : BaseNotificationManager(co
     }
 
     fun SendDownloadFailedNotification(fileName: String) {
-        val downloadProgress = GetDefualtNotificationBuilder()
+        val downloadProgress = getDefaultNotificationBuilder()
             .setAutoCancel(true)
             .setContentTitle("Download $fileName failed!")
             .build()

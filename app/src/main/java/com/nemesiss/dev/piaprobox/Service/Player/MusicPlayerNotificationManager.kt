@@ -1,13 +1,12 @@
 package com.nemesiss.dev.piaprobox.Service.Player
 
-import android.app.*
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-
 import android.widget.RemoteViews
 import com.nemesiss.dev.piaprobox.Activity.Common.MainActivity
 import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
-import com.nemesiss.dev.piaprobox.Model.MusicStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.BaseNotificationManager
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
@@ -37,17 +36,17 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
 
     fun prepareNotificationInstance(model: MusicNotificationModel): Notification {
 
-        val NormalNotiView = RemoteViews(context.packageName, R.layout.player_noti_normal)
-        val BigNotiView = RemoteViews(context.packageName, R.layout.player_noti_big)
+        val normalNotificationRv = RemoteViews(context.packageName, R.layout.player_noti_normal)
+        val bigNotificationRv = RemoteViews(context.packageName, R.layout.player_noti_big)
 
-        NormalNotiView.setTextViewText(R.id.MusicPlayer_Noti_SongName_Normal, model.SongName)
-        NormalNotiView.setTextViewText(R.id.MusicPlayer_Noti_SongArtist_Normal, model.ArtistName)
+        normalNotificationRv.setTextViewText(R.id.MusicPlayer_Noti_SongName_Normal, model.SongName)
+        normalNotificationRv.setTextViewText(R.id.MusicPlayer_Noti_SongArtist_Normal, model.ArtistName)
 
-        BigNotiView.setTextViewText(R.id.MusicPlayer_Noti_SongName, model.SongName)
-        BigNotiView.setTextViewText(R.id.MusicPlayer_Noti_SongArtist, model.ArtistName)
+        bigNotificationRv.setTextViewText(R.id.MusicPlayer_Noti_SongName, model.SongName)
+        bigNotificationRv.setTextViewText(R.id.MusicPlayer_Noti_SongArtist, model.ArtistName)
 
 
-        val IntentMaps = arrayOf("DESTROY", "PAUSE", "PLAY").associate { actionText ->
+        val intentMaps = arrayOf("DESTROY", "PAUSE", "PLAY").associate { actionText ->
             Pair(
                 actionText,
                 PendingIntent.getService(
@@ -60,28 +59,34 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
         }
 
         when (model.CurrAction) {
-            PlayerAction.PREPARING -> {}
+            PlayerAction.PREPARING -> {
+            }
             PlayerAction.PLAYING -> {
-                BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_pause_red_600_24dp)
-                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, IntentMaps["PAUSE"])
+                bigNotificationRv.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_pause_red_600_24dp)
+                bigNotificationRv.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, intentMaps["PAUSE"])
             }
             PlayerAction.PAUSED -> {
-                BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_play_arrow_red_600_24dp)
-                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, IntentMaps["PLAY"])
+                bigNotificationRv.setImageViewResource(
+                    R.id.MusicPlayer_Noti_Play,
+                    R.drawable.ic_play_arrow_red_600_24dp
+                )
+                bigNotificationRv.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, intentMaps["PLAY"])
             }
             PlayerAction.STOPPED -> {
-                BigNotiView.setImageViewResource(R.id.MusicPlayer_Noti_Play, R.drawable.ic_play_arrow_red_600_24dp)
-                BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, IntentMaps["PLAY"])
+                bigNotificationRv.setImageViewResource(
+                    R.id.MusicPlayer_Noti_Play,
+                    R.drawable.ic_play_arrow_red_600_24dp
+                )
+                bigNotificationRv.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Play, intentMaps["PLAY"])
             }
-            PlayerAction.NO_ACTION -> {}
+            PlayerAction.NO_ACTION -> {
+            }
         }
 
-        BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop, IntentMaps["DESTROY"])
-        NormalNotiView.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop_Normal, IntentMaps["DESTROY"])
+        bigNotificationRv.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop, intentMaps["DESTROY"])
+        normalNotificationRv.setOnClickPendingIntent(R.id.MusicPlayer_NOti_Stop_Normal, intentMaps["DESTROY"])
 
-
-
-        CheckAndBuildChannel()
+        checkAndBuildChannel()
 
 
         activityIntent.action = Intent.ACTION_MAIN
@@ -108,7 +113,12 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
 
 
         val OpenMusicPlayerActivityPendingContentIntent =
-            PendingIntent.getActivities(context, 0, ClickNotificationToOpenMusicPlayerIntents.toTypedArray(), PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivities(
+                context,
+                0,
+                ClickNotificationToOpenMusicPlayerIntents.toTypedArray(),
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
 
         val NextMusicPlayerActivityPendingContentIntent =
@@ -118,16 +128,24 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
             PendingIntent.getActivities(context, 0, PrevMusicIntents.toTypedArray(), PendingIntent.FLAG_UPDATE_CURRENT)
 
 
-        BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Next, NextMusicPlayerActivityPendingContentIntent)
-        BigNotiView.setOnClickPendingIntent(R.id.MusicPlayer_Noti_Previous, PrevMusicPlayerActivityPendingContentIntent)
+        bigNotificationRv.setOnClickPendingIntent(
+            R.id.MusicPlayer_Noti_Next,
+            NextMusicPlayerActivityPendingContentIntent
+        )
+        bigNotificationRv.setOnClickPendingIntent(
+            R.id.MusicPlayer_Noti_Previous,
+            PrevMusicPlayerActivityPendingContentIntent
+        )
 
-        val notification = GetDefualtNotificationBuilder()
+        val notification = getDefaultNotificationBuilder()
             .setContentIntent(OpenMusicPlayerActivityPendingContentIntent)
+            .setCustomContentView(normalNotificationRv)
+            .setCustomBigContentView(bigNotificationRv)
             .build()
 
-        notification.contentView = NormalNotiView
-        notification.bigContentView = BigNotiView
-        notification.flags = notification.flags or Notification.FLAG_ONGOING_EVENT
+//        notification.contentView = normalNotificationRv
+//        notification.cu = bigNotificationRv
+        notification.flags = notification.flags or Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR
         notification.`when` = System.currentTimeMillis()
         return notification
     }

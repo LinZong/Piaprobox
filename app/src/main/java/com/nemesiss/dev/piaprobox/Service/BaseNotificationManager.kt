@@ -15,15 +15,19 @@ open class BaseNotificationManager(val context: Context) {
 
 
 
-    protected fun GetDefualtNotificationBuilder(): NotificationCompat.Builder {
+    protected fun getDefaultNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, MusicPlayerNotificationManager.ChannelID)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setDefaults(Notification.DEFAULT_LIGHTS.or(Notification.DEFAULT_SOUND))
-            .setPriority(Notification.PRIORITY_MAX)
-            .setVibrate(null)
+            .setVibrate(null).apply {
+                priority = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                    NotificationManager.IMPORTANCE_MAX
+                } else {
+                    Notification.PRIORITY_MAX
+                }
+            }
     }
 
-    protected fun CheckAndBuildChannel() {
+    protected fun checkAndBuildChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (notificationManager.getNotificationChannel(MusicPlayerNotificationManager.ChannelID) == null) {
                 val mChannel = NotificationChannel(
@@ -33,5 +37,4 @@ open class BaseNotificationManager(val context: Context) {
             }
         }
     }
-
 }
