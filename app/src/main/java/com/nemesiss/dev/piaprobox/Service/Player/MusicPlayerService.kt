@@ -70,6 +70,7 @@ class MusicPlayerService : Service() {
                 PiaproboxApplication.Self.applicationContext,
                 Intent(this, MusicControlActivity::class.java)
             )
+        setServiceAvailable(true)
     }
 
 
@@ -114,35 +115,28 @@ class MusicPlayerService : Service() {
     }
 
     override fun onBind(p0: Intent?): IBinder? {
-        Log.d("MusicPlayerService", "初次启动, 对象HashCode: ${this.hashCode()}")
-        NotifyServiceIsOK()
+        IS_BINDED = true
         return MusicPlayerBinder()
     }
 
     override fun onRebind(intent: Intent?) {
         super.onRebind(intent)
-        NotifyServiceIsOK()
-        Log.d("MusicPlayerService", "重新绑定, 对象HashCode: ${this.hashCode()}")
+        IS_BINDED = true
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        SERVICE_AVAILABLE.onNext(false)
         IS_BINDED = false
         return super.onUnbind(intent)
     }
 
-    private fun NotifyServiceIsOK() {
-        IS_BINDED = true
-        SERVICE_AVAILABLE.onNext(true)
+    private fun setServiceAvailable(available: Boolean) {
+        SERVICE_AVAILABLE.onNext(available)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        Log.d("MusicPlayerService", "即将onStartCommand, 对象HashCode: ${this.hashCode()}")
-        SERVICE_AVAILABLE.onNext(true)
         when (intent?.action) {
             "DESTROY" -> {
-                Log.d("MusicPlayerService", "即将停止, 对象HashCode: ${this.hashCode()}")
                 stopPlaying()
                 EventBus.getDefault().post(MusicPlayerClosedEvent("MusicPlayerService"))
             }
@@ -156,6 +150,7 @@ class MusicPlayerService : Service() {
                 player.stop()
             }
             "UPDATE_INFO" -> {
+                setServiceAvailable(true)
                 PlayingMusicContentInfo = intent.getSerializableExtra("UpdateMusicContentInfo") as MusicContentInfo?
                 if (PlayingMusicContentInfo != null) {
                     player.stop()
@@ -167,7 +162,7 @@ class MusicPlayerService : Service() {
     }
 
     private fun stopPlaying() {
-        SERVICE_AVAILABLE.onNext(false)
+        setServiceAvailable(false)
         player.stop()
         stopForeground(true)
         IS_FOREGROUND = false
@@ -177,14 +172,15 @@ class MusicPlayerService : Service() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        setServiceAvailable(false)
         Log.d("MusicPlayerService", "MusicPlayerService onDestroy")
-        SERVICE_AVAILABLE.onNext(false)
+        IS_BINDED = false
         player.destroy()
         stopForeground(true)
         IS_FOREGROUND = false
         musicPlayerNotificationManager.ClearNotification()
         stopSelf()
         MusicPlayerActivity.CleanStaticResources()
+        super.onDestroy()
     }
 }

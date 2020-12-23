@@ -170,8 +170,6 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             // 直接在这里更新.
             MusicPlayer_Toolbar.title = item.ItemName
         }
-//        重置播放变量:
-//        CurrentMusicPlayInfo = null
 
         LAST_LOAD_CONTENT_URL = Url
         ShowLoadingIndicator(MusicPlayer_ContentContainer)
