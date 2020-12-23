@@ -109,18 +109,13 @@ class AppLinkRecognizeActivity : PiaproboxBaseActivity() {
      */
     private fun matchPiaproboxShareLink(uri: Uri) {
         val segments = uri.pathSegments
-        val endIndex = segments.size - 1
-        val shareSegIndex = segments.indexOf("share")
-        if (shareSegIndex == -1) {
-            // match failed.
-            handleBrokenLink(uri)
-        }
-        if (shareSegIndex + 2 > endIndex) {
+        if (segments.size < 2) {
             // lack of parts, match failed.
             handleBrokenLink(uri)
+            return
         }
-        val type = segments[shareSegIndex + 1]
-        val hash = segments[shareSegIndex + 2]
+        val type = segments[0]
+        val hash = segments[1]
         val websiteLink = Constants.Share.getWebsiteLink(hash)
         when (type) {
             Constants.Share.MUSIC -> handleMusic(websiteLink)

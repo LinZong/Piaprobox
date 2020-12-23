@@ -2,6 +2,10 @@ package com.nemesiss.dev.piaprobox.Activity.Music
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
@@ -33,6 +37,7 @@ import com.nemesiss.dev.piaprobox.Service.GlideApp
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
+import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayer
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
@@ -80,9 +85,15 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             dataSource: DataSource?,
             isFirstResource: Boolean
         ): Boolean {
-            LAST_MUSIC_BITMAP = resource
+            if (resource != null) {
+                keepLastMusicBitmap(resource)
+            }
             return false
         }
+    }
+
+    private fun keepLastMusicBitmap(drawable: Drawable) {
+        LAST_MUSIC_BITMAP = drawable.constantState?.newDrawable()?.mutate()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -147,11 +158,13 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         CurrentPlayItemIndex = activityStatus.currentPlayItemIndex
         PLAY_LISTS = activityStatus.playLists
 
-        if (LAST_MUSIC_BITMAP != null) {
+        val lastThumbBitmap = LAST_MUSIC_BITMAP
+        if (lastThumbBitmap != null) {
             GlideApp.with(this)
-                .load(LAST_MUSIC_BITMAP)
+                .load(lastThumbBitmap)
                 .priority(Priority.HIGH)
                 .into(MusicPlayer_ThumbBackground)
+            keepLastMusicBitmap(lastThumbBitmap)
         } else {
             GlideLoadThumbToImageView(CurrentMusicPlayInfo?.Thumb ?: "")
         }
@@ -420,6 +433,10 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         @JvmStatic
         fun CleanStaticResources() {
             LAST_MUSIC_PLAYER_ACTIVITY_STATUS = null
+            val bitmap = (LAST_MUSIC_BITMAP as? BitmapDrawable)?.bitmap
+            if (bitmap?.isRecycled == false) {
+                bitmap.recycle()
+            }
             LAST_MUSIC_BITMAP = null
             PLAY_LISTS = null
         }
