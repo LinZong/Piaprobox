@@ -2,9 +2,6 @@ package com.nemesiss.dev.piaprobox.Activity.Music
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -37,15 +34,17 @@ import com.nemesiss.dev.piaprobox.Service.GlideApp
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
-import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayer
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import kotlinx.android.synthetic.main.music_player_layout.*
 import org.jsoup.Jsoup
+import org.slf4j.getLogger
 import javax.inject.Inject
 
 open class MusicPlayerActivity : PiaproboxBaseActivity() {
+
+    private val log = getLogger<MusicPlayerActivity>()
 
     @Inject
     lateinit var downloadService: DownloadService
@@ -160,12 +159,14 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
         val lastThumbBitmap = LAST_MUSIC_BITMAP
         if (lastThumbBitmap != null) {
+            log.info("Find valid lastThumbBitmap, reload.")
             GlideApp.with(this)
                 .load(lastThumbBitmap)
                 .priority(Priority.HIGH)
                 .into(MusicPlayer_ThumbBackground)
             keepLastMusicBitmap(lastThumbBitmap)
         } else {
+            log.info("No valid lastThumbBitmap, load thumb from network. {}.", CurrentMusicPlayInfo?.Thumb)
             GlideLoadThumbToImageView(CurrentMusicPlayInfo?.Thumb ?: "")
         }
         ActivateLyricRecyclerViewAdapter()
