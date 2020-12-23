@@ -53,7 +53,7 @@
 
     <!--    In-App use flags, no need to translate-->
     <string name="ImageViewTransitionName">ImageViewTransitionName</string>
-    <string name="OpenPiaproboxFromUrlLink">OpenPiaproboxFromUrlLink</string>
-    <string name="OpenPiaproboxFromInnerShareLink">OpenPiaproboxFromInnerShareLink</string>
+    <string name="OpenPiaproboxFromUrlLink">Open with Piaprobox</string>
+    <string name="OpenPiaproboxFromInnerShareLink">Open with Piaprobox</string>
 
 </resources>

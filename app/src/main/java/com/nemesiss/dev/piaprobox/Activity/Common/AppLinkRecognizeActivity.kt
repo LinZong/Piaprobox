@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
@@ -41,6 +42,7 @@ class AppLinkRecognizeActivity : PiaproboxBaseActivity() {
     }
 
     private fun matchAppLink(uri: Uri) {
+        showMatchingUri(uri)
         when (uri.scheme) {
             "https" -> {
                 matchWebsiteLink(uri)
@@ -131,8 +133,9 @@ class AppLinkRecognizeActivity : PiaproboxBaseActivity() {
     private fun handleMusic(websiteLink: String) {
         val intent = Intent(this, MusicControlActivity::class.java)
         intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, websiteLink)
-        MusicPlayerActivity.PLAY_LISTS = null
+        MusicPlayerActivity.PLAY_LISTS = listOf(RecommendItemModel().apply { URL = websiteLink })
         startActivity(intent)
+        finish()
     }
 
     private fun handleIllustration(websiteLink: String) {
@@ -140,34 +143,45 @@ class AppLinkRecognizeActivity : PiaproboxBaseActivity() {
         intent.putExtra(IllustratorViewActivity2.CLICKED_ITEM_INDEX, 0)
         IllustratorImageProviderActivity.SetItemList(listOf(RecommendItemModelImage().apply { URL = websiteLink }))
         startActivity(intent)
+        finish()
     }
 
     private fun handleText(websiteLink: String) {
         val intent = Intent(this, TextDetailActivity::class.java)
         intent.putExtra(TextDetailActivity.SHOWN_TEXT_INTENT_KEY, RecommendItemModelText().apply { URL = websiteLink })
         startActivity(intent)
+        finish()
+    }
+
+    private fun showMatchingUri(uri: Uri) {
+        applink_recognize_link.text = uri.toString()
     }
 
     // match error handlers.
 
     private fun handleInvalidDataAndExit() {
         log.error("Invalid data found!")
-        applink_recognize_hint.text =
-            "Cannot determinate app link. Invalid action or data.\nThis activity will exit in 3 seconds."
-        closeInSeconds(3)
+        runOnUiThread {
+            applink_recognize_hint.text =
+                "Cannot determinate app link. Invalid action or data.\nThis activity will exit in 3 seconds."
+            closeInSeconds(3)
+        }
     }
 
     private fun handleMatchError(err: String) {
         log.error("Match error: {}", err)
-        applink_recognize_hint.text = "Cannot determinate app link due to error.\nThis activity will exit in 3 seconds."
-        applink_recognize_link.text = err
-        closeInSeconds(3)
+        runOnUiThread {
+            applink_recognize_hint.text =
+                "Cannot determinate app link due to error.\nThis activity will exit in 3 seconds."
+            applink_recognize_link.text = err
+            closeInSeconds(3)
+        }
     }
 
     private fun handleBrokenLink(uri: Uri) {
         log.warn("Broken link: {}", uri)
         handleInvalidDataAndExit()
-        applink_recognize_link.text = uri.toString()
+        runOnUiThread { applink_recognize_link.text = uri.toString() }
     }
 
     private fun closeInSeconds(sec: Int) {

@@ -188,10 +188,6 @@ class IllustratorViewActivity2 : IllustratorImageProviderActivity() {
         // 第一阶段创建ViewModel， 放到正在Loading的Cache中。
         val model = IllustratorViewFragmentViewModel()
 
-        model.apply {
-            ArtistName = content.ArtistName
-        }
-
         val url = HTMLParser.wrapDomain(content.URL)
 
         model.BrowserPageUrl = url
