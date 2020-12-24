@@ -36,6 +36,7 @@ import com.nemesiss.dev.piaprobox.Service.User.UserLoginService
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.View.Common.UserInfoActionsSheet
 import de.hdodenhof.circleimageview.CircleImageView
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -80,17 +81,22 @@ class MainActivity : LoginCallbackActivity() {
 
     private var navHeaderUserAvatarIv: CircleImageView? = null
     private var navHeaderNickNameTv: TextView? = null
+    private lateinit var musicPlayerStatusDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        EventBus.getDefault().register(this)
         DaggerUserLoginServiceFactory.builder().htmlParserModules(HtmlParserModules(this)).build().inject(this)
         InitView()
+        musicPlayerStatusDisposable =
+            MusicPlayerService.SERVICE_AVAILABLE.subscribe(this::handleMusicPlayerClosedByNotificationBtn)
     }
 
     override fun onDestroy() {
         MainFragmentsCollection.clear()
+        if (!musicPlayerStatusDisposable.isDisposed) {
+            musicPlayerStatusDisposable.dispose()
+        }
         super.onDestroy()
     }
 
@@ -293,8 +299,7 @@ class MainActivity : LoginCallbackActivity() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun handleMusicPlayerClosedByNotificationBtn(event: MusicPlayerClosedEvent) {
+    private fun handleMusicPlayerClosedByNotificationBtn(available: Boolean) {
         invalidateOptionsMenu()
     }
 }
