@@ -59,6 +59,7 @@ open class SimpleMusicPlayerImpl(
         private set
 
 
+    private var pendingPlay = false
     private val headphoneConnectIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
     private val headPhoneConnectReceiver = HeadPhoneConnectReceiver()
 
@@ -104,25 +105,32 @@ open class SimpleMusicPlayerImpl(
             when (grantCode) {
                 AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
                     Log.d("SimpleMusicPlayerImpl", "AudioFocus is granted!")
-                    player.start()
+                    if (pendingPlay) {
+                        player.start()
+                        pendingPlay = false
+                    }
                 }
                 AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> Toast.makeText(
                     context,
                     context.getString(R.string.AudioFocusDelayHint),
                     Toast.LENGTH_SHORT
                 ).show()
-                AudioManager.AUDIOFOCUS_REQUEST_FAILED -> Toast.makeText(
-                    context,
-                    context.getString(R.string.AudioFocusFailedHint),
-                    Toast.LENGTH_SHORT
-                ).show()
+                AudioManager.AUDIOFOCUS_REQUEST_FAILED -> {
+                    pendingPlay = false
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.AudioFocusFailedHint),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
 
-        audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager = context.getSystemService(AudioManager::class.java)
     }
 
     private fun requestPlay() {
+        pendingPlay = true
         val responseCode = audioManager.requestAudioFocus(
             audioFocusChangedListener,
             AudioManager.STREAM_MUSIC,
