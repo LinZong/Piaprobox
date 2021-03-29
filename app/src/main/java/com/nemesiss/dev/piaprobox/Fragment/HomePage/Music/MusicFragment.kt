@@ -17,8 +17,8 @@ import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.View.Common.isLoadMoreIndicator
 import com.nemesiss.dev.piaprobox.View.Common.isNoMoreIndicator
-import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.category_fragment.*
+import kotlinx.android.synthetic.main.fragment_header.*
 import org.jsoup.Jsoup
 
 class MusicFragment : BaseSubmissionWorkCategoryFragment() {

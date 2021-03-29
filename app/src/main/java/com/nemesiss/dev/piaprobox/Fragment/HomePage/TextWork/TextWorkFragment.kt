@@ -3,9 +3,7 @@ package com.nemesiss.dev.piaprobox.Fragment.HomePage.TextWork
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Activity.Text.TextDetailActivity
@@ -14,8 +12,8 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.BaseSubmissionWorkCategoryFr
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.R
-import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.category_fragment.*
+import kotlinx.android.synthetic.main.fragment_header.*
 import org.jsoup.Jsoup
 
 class TextWorkFragment : BaseSubmissionWorkCategoryFragment() {

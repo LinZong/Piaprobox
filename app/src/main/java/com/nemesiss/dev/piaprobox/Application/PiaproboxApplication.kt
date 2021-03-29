@@ -2,7 +2,6 @@ package com.nemesiss.dev.piaprobox.Application
 
 import android.app.Application
 import android.content.Context
-import com.nemesiss.dev.piaprobox.Model.User.UserInfo
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import me.weishu.reflection.Reflection
 import org.slf4j.Logger

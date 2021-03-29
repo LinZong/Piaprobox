@@ -4,10 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.Log
-import dagger.Component
 import java.util.concurrent.*
-import javax.inject.Inject
-import javax.inject.Singleton
 
 class AsyncExecutor {
 

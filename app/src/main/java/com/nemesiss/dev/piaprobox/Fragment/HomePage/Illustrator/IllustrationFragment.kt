@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.GridLayoutManager
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
@@ -19,8 +17,8 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.View.Common.GridLayoutManagerWithBottomIndicator
 import com.nemesiss.dev.piaprobox.View.Common.handleSharedElementReenter
-import kotlinx.android.synthetic.main.fragment_header.*
 import kotlinx.android.synthetic.main.category_fragment.*
+import kotlinx.android.synthetic.main.fragment_header.*
 import org.jsoup.Jsoup
 
 class IllustrationFragment : BaseSubmissionWorkCategoryFragment() {

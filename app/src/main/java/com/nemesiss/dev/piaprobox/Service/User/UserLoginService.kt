@@ -1,7 +1,10 @@
 package com.nemesiss.dev.piaprobox.Service.User
 
 import com.nemesiss.dev.piaprobox.Activity.Common.LoginCallbackActivity
-import com.nemesiss.dev.piaprobox.Model.User.*
+import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
+import com.nemesiss.dev.piaprobox.Model.User.LoginResult
+import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
+import com.nemesiss.dev.piaprobox.Model.User.UserInfo
 
 /**
  * This service is used to maintain user login status,

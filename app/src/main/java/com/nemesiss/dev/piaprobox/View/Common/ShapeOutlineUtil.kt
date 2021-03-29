@@ -2,7 +2,6 @@ package com.nemesiss.dev.piaprobox.View.Common
 
 import android.annotation.SuppressLint
 import android.graphics.Outline
-import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable

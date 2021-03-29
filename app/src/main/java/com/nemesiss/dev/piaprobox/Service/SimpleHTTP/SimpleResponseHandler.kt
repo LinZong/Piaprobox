@@ -2,7 +2,6 @@ package com.nemesiss.dev.piaprobox.Service.SimpleHTTP
 
 import okhttp3.Response
 import java.io.InputStream
-import java.lang.IllegalArgumentException
 import kotlin.reflect.KClass
 
 @Suppress("UNCHECKED_CAST")

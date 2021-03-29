@@ -14,7 +14,6 @@ import android.widget.Toast
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.*
 import java.io.FileInputStream
-import java.lang.IllegalStateException
 import java.lang.ref.SoftReference
 
 /**

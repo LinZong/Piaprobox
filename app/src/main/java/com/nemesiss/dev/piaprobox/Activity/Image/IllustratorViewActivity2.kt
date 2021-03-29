@@ -34,7 +34,6 @@ import com.nemesiss.dev.piaprobox.View.SharedElements.SharedElementUtils
 import kotlinx.android.synthetic.main.illustrator_view_activity2.*
 import org.jsoup.Jsoup
 import java.io.File
-import java.lang.Exception
 import javax.inject.Inject
 
 class IllustratorViewActivity2 : IllustratorImageProviderActivity() {

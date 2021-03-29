@@ -2,11 +2,9 @@ package com.nemesiss.dev.piaprobox.View.Common
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.RelativeLayout
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.R
 
 class LoadingIndicatorView : RelativeLayout {
