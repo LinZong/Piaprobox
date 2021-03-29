@@ -17,7 +17,7 @@
                     <pattern>%logger{12}</pattern>
                 </tagEncoder>
                 <encoder>
-                    <pattern>[%thread] %msg</pattern>
+                    <pattern>[%thread] [%logger{36}] %msg</pattern>
                 </encoder>
             </appender>
         </then>
@@ -45,7 +45,7 @@
             <pattern>%logger{12}</pattern>
         </tagEncoder>
         <encoder>
-            <pattern>[%date{yyyy-M-d HH:mm:ss.SSS}] [%level] [%thread] %msg%n</pattern>
+            <pattern>[%date{yyyy-M-d HH:mm:ss.SSS}] [%logger{36}] [%level] [%thread] %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -61,7 +61,7 @@
             <pattern>%logger{12}</pattern>
         </tagEncoder>
         <encoder>
-            <pattern>[%date{yyyy-M-d HH:mm:ss.SSS}] [%level] [%thread] %msg%n</pattern>
+            <pattern>[%date{yyyy-M-d HH:mm:ss.SSS}] [%logger{36}] [%level] [%thread] %msg%n</pattern>
         </encoder>
     </appender>
 
