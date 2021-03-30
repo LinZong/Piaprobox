@@ -258,7 +258,9 @@ class MusicControlActivity : MusicPlayerActivity() {
                         if (PendingPrepareURL.isNotEmpty()) {
                             player.play(Uri.parse(PendingPrepareURL))
                         }
+                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
                     }
+                    else -> {}
                 }
             }
 
@@ -267,6 +269,7 @@ class MusicControlActivity : MusicPlayerActivity() {
             }
 
             override fun onPlaying(player: MusicPlayer) {
+                MusicPlayer_Seekbar.isEnabled = true
                 CurrentMusicTotalDuration = player.duration().toInt()
                 player.looping(isEnableLooping)
                 MusicPlayer_TotalTime.text = Duration2Time(CurrentMusicTotalDuration)
@@ -289,6 +292,12 @@ class MusicControlActivity : MusicPlayerActivity() {
             override fun onStopping(player: MusicPlayer) {
                 stopQueryTimeStamp()
                 repeat(10) { ResetTimeIndicator() }
+                MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
+            }
+
+            override fun onPlayFinished(player: MusicPlayer) {
+                MusicPlayer_Seekbar.isEnabled = false
+                MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
             }
 
             override fun onBuffering(player: MusicPlayer) {

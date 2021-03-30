@@ -234,7 +234,7 @@ open class SimpleMusicPlayerImpl(
                     player.pause()
                 }
                 PlayerAction.STOPPED -> {
-                    player.stop()
+//                    player.stop()
                 }
                 PlayerAction.NO_ACTION -> {
 
