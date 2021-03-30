@@ -3,6 +3,7 @@ package com.nemesiss.dev.piaprobox.Application
 import android.app.Application
 import android.content.Context
 import com.nemesiss.dev.piaprobox.Service.Persistence
+import com.zzm.android_basic_library.CUGEAndroidSDK
 import me.weishu.reflection.Reflection
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,7 +22,7 @@ class PiaproboxApplication : Application() {
         crashLog = LoggerFactory.getLogger("crash")
 
         Persistence.Init(applicationContext)
-        TrustAllCetificates()
+        trustAllCertificates()
         setCrashLogHandler()
     }
 
@@ -40,7 +41,7 @@ class PiaproboxApplication : Application() {
         Reflection.unseal(base)
     }
 
-    private fun TrustAllCetificates() {
+    private fun trustAllCertificates() {
         val sslContext = SSLContext.getInstance("TLS")
         val trustManager: X509TrustManager = object : X509TrustManager {
             @Throws(CertificateException::class)
