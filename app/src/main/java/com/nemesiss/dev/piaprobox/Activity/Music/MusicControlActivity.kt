@@ -24,6 +24,25 @@ import kotlinx.android.synthetic.main.music_player_layout.*
 
 class MusicControlActivity : MusicPlayerActivity() {
 
+
+    companion object {
+        @JvmStatic
+        private var LAST_PLAYER_STATUS: PlayerAction? = null
+
+        @JvmStatic
+        private fun Duration2Time(duration: Int): String {
+            val min = duration / 1000 / 60
+            val sec = duration / 1000 % 60
+            return (if (min < 10) "0$min" else min.toString() + "") + ":" + if (sec < 10) "0$sec" else sec.toString() + ""
+        }
+
+        @JvmStatic
+        private fun Progress2Duration(progress: Int, totalDuration: Int): Int {
+            return (progress.toFloat() / 100 * totalDuration).toInt()
+        }
+    }
+
+
     private var fromNotificationIntent = false
     private var newMusicLoaded = false
     private var isSeeking = false
@@ -46,6 +65,21 @@ class MusicControlActivity : MusicPlayerActivity() {
     private var CurrentMusicTotalDuration = 0
     private val timeElapsedUpdater = Handler(this::handleQueryTimeStamp)
 
+    private val PlayerServiceConnection = object : ServiceConnection {
+        override fun onServiceDisconnected(componentName: ComponentName?) {
+            Log.d("MusicControlActivity", "音乐播放器服务取消绑定.")
+            PlayerService = null
+        }
+
+        override fun onServiceConnected(componentName: ComponentName?, service: IBinder?) {
+            PlayerService = (service as MusicPlayerService.MusicPlayerBinder).getService()
+            Log.d("MusicControlActivity", "音乐播放器服务Bind完成  ${PlayerService.hashCode()}")
+            PlayerService?.let { ps -> player = ps.player }
+            SubscribeMusicPlayerStatus()
+        }
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,26 +88,43 @@ class MusicControlActivity : MusicPlayerActivity() {
         PrepareActivityStatus()
     }
 
-    private fun handleQueryTimeStamp(message: Message): Boolean {
-        MusicPlayer_CurrentTime.text = Duration2Time(player?.currentTimestamp()?.toInt() ?: 0)
-        player?.let { player ->
-            MusicPlayer_Seekbar.progress = (player.currentTimestamp() * 100 / player.duration()).toInt()
-        }
-        timeElapsedUpdater.sendEmptyMessageDelayed(100, 200)
-        return true
-    }
-
-    private fun beginQueryTimeStamp() {
-        timeElapsedUpdater.sendEmptyMessage(100)
-    }
-
-    private fun stopQueryTimeStamp() {
-        timeElapsedUpdater.removeMessages(100)
-    }
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         LoadUserPreferenceSetup()
+    }
+
+    private fun InitView() {
+        listOf(
+            MusicPlayer_Control_Play,
+            MusicPlayer_Control_MoreInfo,
+            MusicPlayer_Control_Repeat,
+            MusicPlayer_Control_Next,
+            MusicPlayer_Control_Previous
+        )
+            .whenClicks({
+                if (MusicPlayerService.SERVICE_AVAILABLE.value == true) {
+                    when (player?.state()) {
+                        PlayerAction.PLAYING -> { player?.pause() }
+                        PlayerAction.PAUSED -> { player?.resume() }
+                        PlayerAction.STOPPED -> { player?.resume() }
+                        else -> {}
+                    }
+                } else {
+                    PendingPrepareURL = CurrentMusicPlayInfo?.URL ?: ""
+                    StartMusicPlayService(true)
+                }
+            }, {
+                val intent = Intent(this, MusicDetailActivity::class.java)
+                intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, CurrentMusicContentInfo)
+                startActivity(intent)
+            }, {
+                isEnableLooping = !isEnableLooping
+            }, {
+                NextMusic()
+            }, {
+                PrevMusic()
+            })
+        InitSeekbarController()
     }
 
     private fun LoadUserPreferenceSetup() {
@@ -102,6 +153,23 @@ class MusicControlActivity : MusicPlayerActivity() {
         }
     }
 
+    private fun handleQueryTimeStamp(message: Message): Boolean {
+        MusicPlayer_CurrentTime.text = Duration2Time(player?.currentTimestamp()?.toInt() ?: 0)
+        player?.let { player ->
+            MusicPlayer_Seekbar.progress = (player.currentTimestamp() * 100 / player.duration()).toInt()
+        }
+        timeElapsedUpdater.sendEmptyMessageDelayed(100, 200)
+        return true
+    }
+
+    private fun beginQueryTimeStamp() {
+        timeElapsedUpdater.sendEmptyMessage(100)
+    }
+
+    private fun stopQueryTimeStamp() {
+        timeElapsedUpdater.removeMessages(100)
+    }
+
     private fun InitSeekbarController() {
         MusicPlayer_Seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -124,73 +192,15 @@ class MusicControlActivity : MusicPlayerActivity() {
         })
     }
 
-    private fun InitView() {
-        listOf(
-                MusicPlayer_Control_Play,
-                MusicPlayer_Control_MoreInfo,
-                MusicPlayer_Control_Repeat,
-                MusicPlayer_Control_Next,
-                MusicPlayer_Control_Previous
-        )
-                .whenClicks({
-                    if (MusicPlayerService.SERVICE_AVAILABLE.value == true) {
-                        when (player?.state()) {
-                            PlayerAction.PREPARING -> {
-
-                            }
-                            PlayerAction.PLAYING -> {
-                                player?.pause()
-                            }
-                            PlayerAction.PAUSED -> {
-                                player?.resume()
-                            }
-                            PlayerAction.STOPPED -> {
-                                player?.resume()
-                            }
-                            PlayerAction.NO_ACTION -> {
-                            }
-                        }
-                    } else {
-                        PendingPrepareURL = CurrentMusicPlayInfo?.URL ?: ""
-                        StartMusicPlayService(true)
-                    }
-                }, {
-                    val intent = Intent(this, MusicDetailActivity::class.java)
-                    intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, CurrentMusicContentInfo)
-                    startActivity(intent)
-                }, {
-                    isEnableLooping = !isEnableLooping
-                }, {
-                    NextMusic()
-                }, {
-                    PrevMusic()
-                })
-        InitSeekbarController()
-    }
-
     private fun RecoverActivityStatusFromPersistObject(activityStatus: MusicPlayerActivityStatus) {
         Log.d("MusicControlActivity", "MusicControlActivity  开始恢复上一次的Activity状态")
         CurrentMusicTotalDuration = activityStatus.musicTotalDuration
         MusicPlayer_Seekbar.progress = activityStatus.seekbarProgress
         MusicPlayer_CurrentTime.text = Duration2Time(
-                Progress2Duration(activityStatus.seekbarProgress, activityStatus.musicTotalDuration)
+            Progress2Duration(activityStatus.seekbarProgress, activityStatus.musicTotalDuration)
         )
         MusicPlayer_TotalTime.text = Duration2Time(CurrentMusicTotalDuration)
         MusicPlayer_Seekbar.secondaryProgress = activityStatus.bufferBarProgress
-    }
-
-    private val PlayerServiceConnection = object : ServiceConnection {
-        override fun onServiceDisconnected(componentName: ComponentName?) {
-            Log.d("MusicControlActivity", "音乐播放器服务取消绑定.")
-            PlayerService = null
-        }
-
-        override fun onServiceConnected(componentName: ComponentName?, service: IBinder?) {
-            PlayerService = (service as MusicPlayerService.MusicPlayerBinder).getService()
-            Log.d("MusicControlActivity", "音乐播放器服务Bind完成  ${PlayerService.hashCode()}")
-            PlayerService?.let { ps -> player = ps.player }
-            SubscribeMusicPlayerStatus()
-        }
     }
 
     private fun CanPersistMusicPlayerActivityStatus() =
@@ -221,22 +231,6 @@ class MusicControlActivity : MusicPlayerActivity() {
     }
 
 
-    companion object {
-        @JvmStatic
-        private var LAST_PLAYER_STATUS: PlayerAction? = null
-
-        @JvmStatic
-        private fun Duration2Time(duration: Int): String? {
-            val min = duration / 1000 / 60
-            val sec = duration / 1000 % 60
-            return (if (min < 10) "0$min" else min.toString() + "") + ":" + if (sec < 10) "0$sec" else sec.toString() + ""
-        }
-
-        @JvmStatic
-        private fun Progress2Duration(progress: Int, totalDuration: Int): Int {
-            return (progress.toFloat() / 100 * totalDuration).toInt()
-        }
-    }
 
 
     private fun SubscribeMusicPlayerStatus() {
@@ -245,23 +239,7 @@ class MusicControlActivity : MusicPlayerActivity() {
 
             override fun onRegistered(player: MusicPlayer) {
                 // 尝试必要的状态恢复。
-                when (player.state()) {
-                    PlayerAction.PLAYING -> {
-                        PendingPrepareURL = ""
-                        beginQueryTimeStamp()
-                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_pause_red_600_24dp)
-                    }
-                    PlayerAction.PAUSED -> {
-                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
-                    }
-                    PlayerAction.STOPPED -> {
-                        if (PendingPrepareURL.isNotEmpty()) {
-                            player.play(Uri.parse(PendingPrepareURL))
-                        }
-                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
-                    }
-                    else -> {}
-                }
+                recoverState(player)
             }
 
             override fun onLoading(player: MusicPlayer) {
@@ -308,6 +286,26 @@ class MusicControlActivity : MusicPlayerActivity() {
                 stopQueryTimeStamp()
                 ResetTimeIndicator()
                 MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
+            }
+
+            private fun recoverState(player: MusicPlayer) {
+                when (player.state()) {
+                    PlayerAction.PLAYING -> {
+                        PendingPrepareURL = ""
+                        beginQueryTimeStamp()
+                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_pause_red_600_24dp)
+                    }
+                    PlayerAction.PAUSED -> {
+                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
+                    }
+                    PlayerAction.STOPPED -> {
+                        if (PendingPrepareURL.isNotEmpty()) {
+                            player.play(Uri.parse(PendingPrepareURL))
+                        }
+                        MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
+                    }
+                    else -> {}
+                }
             }
         })
     }

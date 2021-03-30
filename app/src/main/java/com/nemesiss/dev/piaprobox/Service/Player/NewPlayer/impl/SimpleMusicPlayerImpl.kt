@@ -24,43 +24,6 @@ open class SimpleMusicPlayerImpl(
     private var isLooping: Boolean = false
 ) : MusicPlayer {
 
-    private var player: MediaPlayer = MediaPlayer()
-
-    private var isDestroyed: Boolean = false
-
-    private var listeners: LinkedHashSet<MusicPlayerStateChangedListener> = LinkedHashSet(3)
-
-    private var playingMediaReference: SoftReference<Any>? = null
-
-    private var audioManager: AudioManager
-
-    private var prepareFailedHandler = Handler {
-        handlePlayerNextState(PlayerAction.STOPPED) {
-            listeners.forEach { one -> one.onLoadFailed(this) }
-        }
-        true
-    }
-
-    private fun countDownForPrepareFailed() {
-        prepareFailedHandler.sendEmptyMessageDelayed(101, 10 * 1000)
-    }
-
-    private fun indicatePrepareFinished() {
-        prepareFailedHandler.removeMessages(101)
-    }
-
-    var currentAction = PlayerAction.STOPPED
-        private set
-
-    private var isPrepared = false
-
-    var bufferedPercent = 0
-        private set
-
-
-    private var pendingPlay = false
-    private val headphoneConnectIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
-    private val headPhoneConnectReceiver = HeadPhoneConnectReceiver()
 
     private inner class HeadPhoneConnectReceiver : BroadcastReceiver() {
 
@@ -75,7 +38,37 @@ open class SimpleMusicPlayerImpl(
         }
     }
 
+
+    private var player: MediaPlayer = MediaPlayer()
+
+    private var isDestroyed: Boolean = false
+
+    private var listeners: LinkedHashSet<MusicPlayerStateChangedListener> = LinkedHashSet(3)
+
+    private var playingMediaReference: SoftReference<Any>? = null
+
+    private var audioManager: AudioManager
+
+    var currentAction = PlayerAction.STOPPED
+        private set
+
+    private var isPrepared = false
+
+    var bufferedPercent = 0
+        private set
+
+    private var pendingPlay = false
+    private val headphoneConnectIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+    private val headPhoneConnectReceiver = HeadPhoneConnectReceiver()
     private var audioFocusChangedListener: AudioManager.OnAudioFocusChangeListener
+
+    private var prepareFailedHandler = Handler {
+        handlePlayerNextState(PlayerAction.STOPPED) {
+            listeners.forEach { one -> one.onLoadFailed(this) }
+        }
+        true
+    }
+
 
     init {
         player.setOnPreparedListener {
@@ -126,170 +119,6 @@ open class SimpleMusicPlayerImpl(
         }
 
         audioManager = context.getSystemService(AudioManager::class.java)
-    }
-
-    private fun requestPlay() {
-        pendingPlay = true
-        val responseCode = audioManager.requestAudioFocus(
-            audioFocusChangedListener,
-            AudioManager.STREAM_MUSIC,
-            AudioManager.AUDIOFOCUS_GAIN
-        )
-        audioFocusChangedListener.onAudioFocusChange(responseCode)
-    }
-
-    private fun setCurrentPlayingMediaReference(source: Any) {
-        playingMediaReference?.clear()
-        playingMediaReference = SoftReference(source)
-    }
-
-    private fun detectPlayerNextStateByApplyingNewPlaying(source: Any): PlayerAction {
-        if (playingMediaReference == null) {
-            setCurrentPlayingMediaReference(source)
-            return PlayerAction.PREPARING
-        }
-        val nextAction = if (true == playingMediaReference?.get()?.equals(source)) {
-            when (currentAction) {
-                PlayerAction.PLAYING -> PlayerAction.NO_ACTION
-                PlayerAction.PREPARING -> PlayerAction.NO_ACTION
-                PlayerAction.STOPPED -> PlayerAction.PLAYING
-                PlayerAction.PAUSED -> PlayerAction.PLAYING
-                else -> PlayerAction.PREPARING
-            }
-        } else {
-            PlayerAction.PREPARING
-        }
-        setCurrentPlayingMediaReference(source)
-        return nextAction
-    }
-
-    private fun resetFlags() {
-        isPrepared = false
-        bufferedPercent = 0
-    }
-
-    private fun prepareSource(source: Any) {
-        when (source) {
-            is AssetFileDescriptor -> doPreparing(source)
-            is Uri -> doPreparing(source)
-            is FileInputStream -> doPreparing(source)
-        }
-        countDownForPrepareFailed()
-    }
-
-    private fun doPreparing(source: AssetFileDescriptor) {
-        resetFlags()
-        resetPlayerState()
-        player.setDataSource(source.fileDescriptor)
-        player.prepareAsync()
-    }
-
-    private fun doPreparing(source: Uri) {
-        resetFlags()
-        resetPlayerState()
-        player.setDataSource(context, source)
-        player.prepareAsync()
-    }
-
-    private fun doPreparing(source: FileInputStream) {
-        resetFlags()
-        resetPlayerState()
-        player.setDataSource(source.fd)
-        player.prepareAsync()
-    }
-
-    private fun handlePlayerNextState(nextAction: PlayerAction, callbackIfStateChanged: () -> Unit = {}) {
-        if (nextAction == PlayerAction.NO_ACTION) {
-            return
-        }
-        when (currentAction) {
-            PlayerAction.PREPARING -> when (nextAction) {
-                PlayerAction.PREPARING -> {
-                }
-                PlayerAction.PLAYING -> {
-                    if (isPrepared) requestPlay()
-                }
-                PlayerAction.PAUSED -> {
-                    throw IllegalStateException("Cannot pause a preparing player.")
-                }
-                PlayerAction.STOPPED -> {
-                    resetFlags()
-                    resetPlayerState()
-                }
-                PlayerAction.NO_ACTION -> {
-                }
-            }
-            PlayerAction.PLAYING -> when (nextAction) {
-                PlayerAction.PREPARING -> {
-                    resetFlags()
-                    resetPlayerState()
-                    playingMediaReference?.get()?.let { source ->
-                        prepareSource(source)
-                    }
-                }
-                PlayerAction.PLAYING -> {
-
-                }
-                PlayerAction.PAUSED -> {
-                    player.pause()
-                }
-                PlayerAction.STOPPED -> {
-//                    player.stop()
-                }
-                PlayerAction.NO_ACTION -> {
-
-                }
-            }
-            PlayerAction.PAUSED -> when (nextAction) {
-                PlayerAction.PREPARING -> {
-                    resetFlags()
-                    resetPlayerState()
-                    playingMediaReference?.get()?.let { source ->
-                        prepareSource(source)
-                    }
-                }
-                PlayerAction.PLAYING -> {
-                    requestPlay()
-                }
-                PlayerAction.PAUSED -> {
-                }
-                PlayerAction.STOPPED -> {
-                    player.stop()
-                }
-                PlayerAction.NO_ACTION -> {
-                }
-            }
-            PlayerAction.STOPPED -> when (nextAction) {
-                PlayerAction.PREPARING -> {
-                    resetFlags()
-                    resetPlayerState()
-                    playingMediaReference?.get()?.let { source ->
-                        prepareSource(source)
-                    }
-                }
-                PlayerAction.PLAYING -> {
-                    requestPlay()
-                }
-                PlayerAction.PAUSED -> {
-                    throw IllegalStateException("Cannot pause a stopped player.")
-                }
-                PlayerAction.STOPPED -> {
-                }
-                PlayerAction.NO_ACTION -> {
-                }
-            }
-            PlayerAction.NO_ACTION -> {
-            }
-        }
-        val shouldExecuteCallback = currentAction != nextAction
-        currentAction = nextAction
-        if (shouldExecuteCallback) {
-            try {
-                callbackIfStateChanged()
-            } catch (thr: Throwable) {
-                Log.e("SimpleMusicPlayerImpl", "error occurred!", thr)
-            }
-        }
     }
 
     override fun play(source: AssetFileDescriptor): PlayerAction {
@@ -402,7 +231,88 @@ open class SimpleMusicPlayerImpl(
     override fun isDestroyed(): Boolean = isDestroyed
 
     override fun state(): PlayerAction = currentAction
+
     override fun buffered(): Int = bufferedPercent
+
+    private fun countDownForPrepareFailed() {
+        prepareFailedHandler.sendEmptyMessageDelayed(101, 10 * 1000)
+    }
+
+    private fun indicatePrepareFinished() {
+        prepareFailedHandler.removeMessages(101)
+    }
+
+    private fun requestPlay() {
+        pendingPlay = true
+        val responseCode = audioManager.requestAudioFocus(
+            audioFocusChangedListener,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN
+        )
+        audioFocusChangedListener.onAudioFocusChange(responseCode)
+    }
+
+    private fun setCurrentPlayingMediaReference(source: Any) {
+        playingMediaReference?.clear()
+        playingMediaReference = SoftReference(source)
+    }
+
+    private fun detectPlayerNextStateByApplyingNewPlaying(source: Any): PlayerAction {
+        if (playingMediaReference == null) {
+            setCurrentPlayingMediaReference(source)
+            return PlayerAction.PREPARING
+        }
+        val nextAction = if (true == playingMediaReference?.get()?.equals(source)) {
+            when (currentAction) {
+                PlayerAction.PLAYING -> PlayerAction.NO_ACTION
+                PlayerAction.PREPARING -> PlayerAction.NO_ACTION
+                PlayerAction.STOPPED -> PlayerAction.PLAYING
+                PlayerAction.PAUSED -> PlayerAction.PLAYING
+                else -> PlayerAction.PREPARING
+            }
+        } else {
+            PlayerAction.PREPARING
+        }
+        setCurrentPlayingMediaReference(source)
+        return nextAction
+    }
+
+
+    private fun resetFlags() {
+        isPrepared = false
+        bufferedPercent = 0
+    }
+
+    private fun prepareSource(source: Any) {
+        when (source) {
+            is AssetFileDescriptor -> doPreparing(source)
+            is Uri -> doPreparing(source)
+            is FileInputStream -> doPreparing(source)
+        }
+        countDownForPrepareFailed()
+    }
+
+    private fun doPreparing(source: AssetFileDescriptor) {
+        resetFlags()
+        resetPlayerState()
+        player.setDataSource(source.fileDescriptor)
+        player.prepareAsync()
+    }
+
+    private fun doPreparing(source: Uri) {
+        resetFlags()
+        resetPlayerState()
+        player.setDataSource(context, source)
+        player.prepareAsync()
+    }
+
+    private fun doPreparing(source: FileInputStream) {
+        resetFlags()
+        resetPlayerState()
+        player.setDataSource(source.fd)
+        player.prepareAsync()
+    }
+
 
     private fun checkStatus() {
         if (isDestroyed) {
@@ -420,5 +330,88 @@ open class SimpleMusicPlayerImpl(
         } catch (thr: Throwable) {
         }
         player.reset()
+    }
+
+    private fun handlePlayerNextState(nextAction: PlayerAction, callbackIfStateChanged: () -> Unit = {}) {
+        if (nextAction == PlayerAction.NO_ACTION) {
+            return
+        }
+        when (currentAction) {
+            PlayerAction.PREPARING -> when (nextAction) {
+                PlayerAction.PREPARING -> {
+                }
+                PlayerAction.PLAYING -> {
+                    if (isPrepared) requestPlay()
+                }
+                PlayerAction.PAUSED -> {
+                    throw IllegalStateException("Cannot pause a preparing player.")
+                }
+                PlayerAction.STOPPED -> {
+                    resetFlags()
+                    resetPlayerState()
+                }
+                else -> {
+                }
+            }
+            PlayerAction.PLAYING -> when (nextAction) {
+                PlayerAction.PREPARING -> {
+                    resetFlags()
+                    resetPlayerState()
+                    playingMediaReference?.get()?.let { source ->
+                        prepareSource(source)
+                    }
+                }
+                PlayerAction.PAUSED -> {
+                    player.pause()
+                }
+                else -> {
+                }
+            }
+            PlayerAction.PAUSED -> when (nextAction) {
+                PlayerAction.PREPARING -> {
+                    resetFlags()
+                    resetPlayerState()
+                    playingMediaReference?.get()?.let { source ->
+                        prepareSource(source)
+                    }
+                }
+                PlayerAction.PLAYING -> {
+                    requestPlay()
+                }
+                PlayerAction.STOPPED -> {
+                    player.stop()
+                }
+                else -> {
+                }
+            }
+            PlayerAction.STOPPED -> when (nextAction) {
+                PlayerAction.PREPARING -> {
+                    resetFlags()
+                    resetPlayerState()
+                    playingMediaReference?.get()?.let { source ->
+                        prepareSource(source)
+                    }
+                }
+                PlayerAction.PLAYING -> {
+                    requestPlay()
+                }
+                PlayerAction.PAUSED -> {
+                    throw IllegalStateException("Cannot pause a stopped player.")
+                }
+                else -> {
+                }
+            }
+            PlayerAction.NO_ACTION -> {
+            }
+        }
+        val shouldExecuteCallback = currentAction != nextAction
+        currentAction = nextAction
+        if (shouldExecuteCallback) {
+            try {
+                callbackIfStateChanged()
+            } catch (thr: Throwable) {
+                Log.e("SimpleMusicPlayerImpl", "error occurred!", thr)
+            }
+        }
     }
 }
