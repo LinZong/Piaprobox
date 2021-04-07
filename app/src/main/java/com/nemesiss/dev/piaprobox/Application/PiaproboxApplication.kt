@@ -3,7 +3,13 @@ package com.nemesiss.dev.piaprobox.Application
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.Persistence
+import com.zzm.android_basic_library.CUGEAndroidSDK
+import com.zzm.android_basic_library.util.CryptoUtil
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import me.weishu.reflection.Reflection
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -24,9 +30,16 @@ class PiaproboxApplication : Application() {
         Persistence.Init(applicationContext)
         trustAllCertificates()
         setCrashLogHandler()
+        scope.launch {
+            CUGEAndroidSDK.init(
+                applicationContext, 13,
+                CryptoUtil.loadPubKeyFromImage(applicationContext, R.raw.piaprobox_demo), "piaprobox_demo"
+            )
+        }
     }
 
     companion object {
+        val scope = MainScope()
         lateinit var Self: PiaproboxApplication
             private set
         init {
@@ -80,5 +93,11 @@ class PiaproboxApplication : Application() {
             defaultCrashHandler.uncaughtException(t, e)
         }
         crashLog.info("Crash log handler is initialized!")
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        CUGEAndroidSDK.destroy()
+        scope.cancel()
     }
 }

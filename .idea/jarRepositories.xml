@@ -29,17 +29,17 @@
     <remote-repository>
       <option name="id" value="D:\android-sdk\extras\android\m2repository" />
       <option name="name" value="D:\android-sdk\extras\android\m2repository" />
-      <option name="url" value="file:/$PROJECT_DIR$/../../../android-sdk/extras/android/m2repository" />
+      <option name="url" value="file:/D:/android-sdk/extras/android/m2repository" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="D:\android-sdk\extras\m2repository" />
       <option name="name" value="D:\android-sdk\extras\m2repository" />
-      <option name="url" value="file:/$PROJECT_DIR$/../../../android-sdk/extras/m2repository" />
+      <option name="url" value="file:/D:/android-sdk/extras/m2repository" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="D:\android-sdk\extras\google\m2repository" />
       <option name="name" value="D:\android-sdk\extras\google\m2repository" />
-      <option name="url" value="file:/$PROJECT_DIR$/../../../android-sdk/extras/google/m2repository" />
+      <option name="url" value="file:/D:/android-sdk/extras/google/m2repository" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="$USER_HOME$/android-sdk/extras/google/m2repository" />
@@ -90,6 +90,31 @@
       <option name="id" value="maven4" />
       <option name="name" value="maven4" />
       <option name="url" value="http://47.107.119.93:8090/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven5" />
+      <option name="name" value="maven5" />
+      <option name="url" value="http://47.107.119.93:8090/repository/maven-snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="MavenLocal" />
+      <option name="name" value="MavenLocal" />
+      <option name="url" value="file:/D:/Maven/repo/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="D:\AndroidSDK\extras\android\m2repository" />
+      <option name="name" value="D:\AndroidSDK\extras\android\m2repository" />
+      <option name="url" value="file:/D:/AndroidSDK/extras/android/m2repository/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="D:\AndroidSDK\extras\m2repository" />
+      <option name="name" value="D:\AndroidSDK\extras\m2repository" />
+      <option name="url" value="file:/D:/AndroidSDK/extras/m2repository/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="D:\AndroidSDK\extras\google\m2repository" />
+      <option name="name" value="D:\AndroidSDK\extras\google\m2repository" />
+      <option name="url" value="file:/D:/AndroidSDK/extras/google/m2repository/" />
     </remote-repository>
   </component>
 </project>

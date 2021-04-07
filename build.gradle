@@ -8,6 +8,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
         maven { url 'http://47.107.119.93:8090/repository/maven-public/' }
         mavenLocal()
+        maven { url 'http://47.107.119.93:8090/repository/maven-snapshots/'}
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.0'
@@ -24,6 +25,7 @@ allprojects {
         maven { url 'https://jitpack.io' }
         maven { url 'http://47.107.119.93:8090/repository/maven-public/' }
         mavenLocal()
+        maven { url 'http://47.107.119.93:8090/repository/maven-snapshots/'}
     }
 }
 
