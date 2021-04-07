@@ -47,15 +47,12 @@ class MusicPlayerNotificationManager(context: Context, var activityIntent: Inten
 
 
         val intentMaps = arrayOf("DESTROY", "PAUSE", "PLAY").associate { actionText ->
-            Pair(
-                actionText,
-                PendingIntent.getService(
+                actionText to PendingIntent.getService(
                     context,
                     55,
                     Intent(context, MusicPlayerService::class.java).apply { action = actionText },
                     0
                 )
-            )
         }
 
         when (model.CurrAction) {

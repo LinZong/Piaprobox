@@ -1,4 +1,3 @@
-Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
 
 > Configure project :app
 Trying to resolve resources layers...
@@ -273,13 +272,13 @@ debugAndroidTestCompileClasspath - Compile classpath for compilation 'debugAndro
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -358,9 +357,9 @@ debugAndroidTestCompileClasspath - Compile classpath for compilation 'debugAndro
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -381,7 +380,7 @@ debugAndroidTestCompileClasspath - Compile classpath for compilation 'debugAndro
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -400,7 +399,7 @@ debugAndroidTestCompileClasspath - Compile classpath for compilation 'debugAndro
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -411,12 +410,11 @@ debugAndroidTestCompileClasspath - Compile classpath for compilation 'debugAndro
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
      +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-     +--- androidx.core:core-ktx:1.3.2
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-     |    \--- androidx.annotation:annotation:1.1.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+     +--- com.android.support:appcompat-v7:28.0.0 (*)
+     +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
      +--- org.slf4j:slf4j-api:1.7.25
      +--- io.apisense:rhino-android:1.1.1 (*)
      +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -431,12 +429,12 @@ debugAndroidTestCompileClasspath - Compile classpath for compilation 'debugAndro
      +--- com.squareup.retrofit2:converter-gson:2.6.1
      |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
      |    \--- com.google.code.gson:gson:2.8.5
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+     |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
      +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
      \--- com.tomgibara.bits:bits:2.1.0
           +--- com.tomgibara.fundament:fundament:1.1.1
@@ -539,13 +537,13 @@ debugAndroidTestRuntimeClasspath - Runtime classpath of compilation 'debugAndroi
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -624,9 +622,9 @@ debugAndroidTestRuntimeClasspath - Runtime classpath of compilation 'debugAndroi
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -647,7 +645,7 @@ debugAndroidTestRuntimeClasspath - Runtime classpath of compilation 'debugAndroi
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -666,7 +664,7 @@ debugAndroidTestRuntimeClasspath - Runtime classpath of compilation 'debugAndroi
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -677,12 +675,11 @@ debugAndroidTestRuntimeClasspath - Runtime classpath of compilation 'debugAndroi
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
      +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-     +--- androidx.core:core-ktx:1.3.2
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-     |    \--- androidx.annotation:annotation:1.1.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+     +--- com.android.support:appcompat-v7:28.0.0 (*)
+     +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
      +--- org.slf4j:slf4j-api:1.7.25
      +--- io.apisense:rhino-android:1.1.1 (*)
      +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -697,12 +694,12 @@ debugAndroidTestRuntimeClasspath - Runtime classpath of compilation 'debugAndroi
      +--- com.squareup.retrofit2:converter-gson:2.6.1
      |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
      |    \--- com.google.code.gson:gson:2.8.5
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+     |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
      +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
      \--- com.tomgibara.bits:bits:2.1.0
           +--- com.tomgibara.fundament:fundament:1.1.1
@@ -829,13 +826,13 @@ debugCompileClasspath - Compile classpath for compilation 'debug' (target  (andr
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -914,9 +911,9 @@ debugCompileClasspath - Compile classpath for compilation 'debug' (target  (andr
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -937,7 +934,7 @@ debugCompileClasspath - Compile classpath for compilation 'debug' (target  (andr
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -956,7 +953,7 @@ debugCompileClasspath - Compile classpath for compilation 'debug' (target  (andr
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -967,12 +964,11 @@ debugCompileClasspath - Compile classpath for compilation 'debug' (target  (andr
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
      +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-     +--- androidx.core:core-ktx:1.3.2
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-     |    \--- androidx.annotation:annotation:1.1.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+     +--- com.android.support:appcompat-v7:28.0.0 (*)
+     +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
      +--- org.slf4j:slf4j-api:1.7.25
      +--- io.apisense:rhino-android:1.1.1 (*)
      +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -987,12 +983,12 @@ debugCompileClasspath - Compile classpath for compilation 'debug' (target  (andr
      +--- com.squareup.retrofit2:converter-gson:2.6.1
      |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
      |    \--- com.google.code.gson:gson:2.8.5
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+     |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
      +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
      \--- com.tomgibara.bits:bits:2.1.0
           +--- com.tomgibara.fundament:fundament:1.1.1
@@ -1056,13 +1052,13 @@ debugImplementationDependenciesMetadata
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -1141,9 +1137,9 @@ debugImplementationDependenciesMetadata
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -1164,7 +1160,7 @@ debugImplementationDependenciesMetadata
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -1183,7 +1179,7 @@ debugImplementationDependenciesMetadata
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -1194,12 +1190,11 @@ debugImplementationDependenciesMetadata
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
      +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-     +--- androidx.core:core-ktx:1.3.2
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-     |    \--- androidx.annotation:annotation:1.1.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+     +--- com.android.support:appcompat-v7:28.0.0 (*)
+     +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
      +--- org.slf4j:slf4j-api:1.7.25
      +--- io.apisense:rhino-android:1.1.1 (*)
      +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -1214,12 +1209,12 @@ debugImplementationDependenciesMetadata
      +--- com.squareup.retrofit2:converter-gson:2.6.1
      |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
      |    \--- com.google.code.gson:gson:2.8.5
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+     |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
      +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
      \--- com.tomgibara.bits:bits:2.1.0
           +--- com.tomgibara.fundament:fundament:1.1.1
@@ -1283,13 +1278,13 @@ debugRuntimeClasspath - Runtime classpath of compilation 'debug' (target  (andro
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -1368,9 +1363,9 @@ debugRuntimeClasspath - Runtime classpath of compilation 'debug' (target  (andro
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -1391,7 +1386,7 @@ debugRuntimeClasspath - Runtime classpath of compilation 'debug' (target  (andro
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -1410,7 +1405,7 @@ debugRuntimeClasspath - Runtime classpath of compilation 'debug' (target  (andro
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -1421,12 +1416,11 @@ debugRuntimeClasspath - Runtime classpath of compilation 'debug' (target  (andro
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
      +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-     +--- androidx.core:core-ktx:1.3.2
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-     |    \--- androidx.annotation:annotation:1.1.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+     +--- com.android.support:appcompat-v7:28.0.0 (*)
+     +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
      +--- org.slf4j:slf4j-api:1.7.25
      +--- io.apisense:rhino-android:1.1.1 (*)
      +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -1441,12 +1435,12 @@ debugRuntimeClasspath - Runtime classpath of compilation 'debug' (target  (andro
      +--- com.squareup.retrofit2:converter-gson:2.6.1
      |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
      |    \--- com.google.code.gson:gson:2.8.5
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+     |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
      +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
      \--- com.tomgibara.bits:bits:2.1.0
           +--- com.tomgibara.fundament:fundament:1.1.1
@@ -1522,13 +1516,13 @@ debugUnitTestCompileClasspath - Compile classpath for compilation 'debugUnitTest
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -1607,9 +1601,9 @@ debugUnitTestCompileClasspath - Compile classpath for compilation 'debugUnitTest
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -1630,7 +1624,7 @@ debugUnitTestCompileClasspath - Compile classpath for compilation 'debugUnitTest
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -1649,7 +1643,7 @@ debugUnitTestCompileClasspath - Compile classpath for compilation 'debugUnitTest
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -1660,12 +1654,11 @@ debugUnitTestCompileClasspath - Compile classpath for compilation 'debugUnitTest
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-+--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
++--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
 |    +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-|    +--- androidx.core:core-ktx:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-|    |    \--- androidx.annotation:annotation:1.1.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+|    +--- com.android.support:appcompat-v7:28.0.0 (*)
+|    +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
 |    +--- org.slf4j:slf4j-api:1.7.25
 |    +--- io.apisense:rhino-android:1.1.1 (*)
 |    +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -1680,12 +1673,12 @@ debugUnitTestCompileClasspath - Compile classpath for compilation 'debugUnitTest
 |    +--- com.squareup.retrofit2:converter-gson:2.6.1
 |    |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
 |    |    \--- com.google.code.gson:gson:2.8.5
-|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
 |    +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
 |    \--- com.tomgibara.bits:bits:2.1.0
 |         +--- com.tomgibara.fundament:fundament:1.1.1
@@ -1758,13 +1751,13 @@ debugUnitTestRuntimeClasspath - Runtime classpath of compilation 'debugUnitTest'
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -1843,9 +1836,9 @@ debugUnitTestRuntimeClasspath - Runtime classpath of compilation 'debugUnitTest'
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -1866,7 +1859,7 @@ debugUnitTestRuntimeClasspath - Runtime classpath of compilation 'debugUnitTest'
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -1885,7 +1878,7 @@ debugUnitTestRuntimeClasspath - Runtime classpath of compilation 'debugUnitTest'
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -1896,12 +1889,11 @@ debugUnitTestRuntimeClasspath - Runtime classpath of compilation 'debugUnitTest'
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-+--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
++--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
 |    +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-|    +--- androidx.core:core-ktx:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-|    |    \--- androidx.annotation:annotation:1.1.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+|    +--- com.android.support:appcompat-v7:28.0.0 (*)
+|    +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
 |    +--- org.slf4j:slf4j-api:1.7.25
 |    +--- io.apisense:rhino-android:1.1.1 (*)
 |    +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -1916,12 +1908,12 @@ debugUnitTestRuntimeClasspath - Runtime classpath of compilation 'debugUnitTest'
 |    +--- com.squareup.retrofit2:converter-gson:2.6.1
 |    |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
 |    |    \--- com.google.code.gson:gson:2.8.5
-|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
 |    +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
 |    \--- com.tomgibara.bits:bits:2.1.0
 |         +--- com.tomgibara.fundament:fundament:1.1.1
@@ -1975,7 +1967,7 @@ implementation - Implementation only dependencies for 'main' sources. (n)
 +--- com.nemesiss.dev:logback-android-logviewer:1.0.0-SNAPSHOT (n)
 +--- org.greenrobot:eventbus:3.2.0 (n)
 +--- me.weishu:free_reflection:3.0.1 (n)
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT (n)
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT (n)
 
 implementationDependenciesMetadata
 +--- com.google.dagger:dagger:2.28
@@ -2023,13 +2015,13 @@ implementationDependenciesMetadata
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -2108,9 +2100,9 @@ implementationDependenciesMetadata
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -2131,7 +2123,7 @@ implementationDependenciesMetadata
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -2150,7 +2142,7 @@ implementationDependenciesMetadata
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -2161,12 +2153,11 @@ implementationDependenciesMetadata
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
      +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-     +--- androidx.core:core-ktx:1.3.2
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-     |    \--- androidx.annotation:annotation:1.1.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+     +--- com.android.support:appcompat-v7:28.0.0 (*)
+     +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
      +--- org.slf4j:slf4j-api:1.7.25
      +--- io.apisense:rhino-android:1.1.1 (*)
      +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -2181,12 +2172,12 @@ implementationDependenciesMetadata
      +--- com.squareup.retrofit2:converter-gson:2.6.1
      |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
      |    \--- com.google.code.gson:gson:2.8.5
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+     |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
      +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
      \--- com.tomgibara.bits:bits:2.1.0
           +--- com.tomgibara.fundament:fundament:1.1.1
@@ -3020,13 +3011,13 @@ releaseCompileClasspath - Compile classpath for compilation 'release' (target  (
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -3105,9 +3096,9 @@ releaseCompileClasspath - Compile classpath for compilation 'release' (target  (
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -3128,7 +3119,7 @@ releaseCompileClasspath - Compile classpath for compilation 'release' (target  (
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -3147,7 +3138,7 @@ releaseCompileClasspath - Compile classpath for compilation 'release' (target  (
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -3158,12 +3149,11 @@ releaseCompileClasspath - Compile classpath for compilation 'release' (target  (
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
      +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-     +--- androidx.core:core-ktx:1.3.2
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-     |    \--- androidx.annotation:annotation:1.1.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+     +--- com.android.support:appcompat-v7:28.0.0 (*)
+     +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
      +--- org.slf4j:slf4j-api:1.7.25
      +--- io.apisense:rhino-android:1.1.1 (*)
      +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -3178,12 +3168,12 @@ releaseCompileClasspath - Compile classpath for compilation 'release' (target  (
      +--- com.squareup.retrofit2:converter-gson:2.6.1
      |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
      |    \--- com.google.code.gson:gson:2.8.5
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+     |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
      +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
      \--- com.tomgibara.bits:bits:2.1.0
           +--- com.tomgibara.fundament:fundament:1.1.1
@@ -3247,13 +3237,13 @@ releaseImplementationDependenciesMetadata
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -3332,9 +3322,9 @@ releaseImplementationDependenciesMetadata
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -3355,7 +3345,7 @@ releaseImplementationDependenciesMetadata
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -3374,7 +3364,7 @@ releaseImplementationDependenciesMetadata
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -3385,12 +3375,11 @@ releaseImplementationDependenciesMetadata
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
      +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-     +--- androidx.core:core-ktx:1.3.2
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-     |    \--- androidx.annotation:annotation:1.1.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+     +--- com.android.support:appcompat-v7:28.0.0 (*)
+     +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
      +--- org.slf4j:slf4j-api:1.7.25
      +--- io.apisense:rhino-android:1.1.1 (*)
      +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -3405,12 +3394,12 @@ releaseImplementationDependenciesMetadata
      +--- com.squareup.retrofit2:converter-gson:2.6.1
      |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
      |    \--- com.google.code.gson:gson:2.8.5
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+     |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
      +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
      \--- com.tomgibara.bits:bits:2.1.0
           +--- com.tomgibara.fundament:fundament:1.1.1
@@ -3474,13 +3463,13 @@ releaseRuntimeClasspath - Runtime classpath of compilation 'release' (target  (a
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -3559,9 +3548,9 @@ releaseRuntimeClasspath - Runtime classpath of compilation 'release' (target  (a
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -3582,7 +3571,7 @@ releaseRuntimeClasspath - Runtime classpath of compilation 'release' (target  (a
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -3601,7 +3590,7 @@ releaseRuntimeClasspath - Runtime classpath of compilation 'release' (target  (a
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -3612,12 +3601,11 @@ releaseRuntimeClasspath - Runtime classpath of compilation 'release' (target  (a
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
+\--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
      +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-     +--- androidx.core:core-ktx:1.3.2
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-     |    \--- androidx.annotation:annotation:1.1.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+     +--- com.android.support:appcompat-v7:28.0.0 (*)
+     +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
      +--- org.slf4j:slf4j-api:1.7.25
      +--- io.apisense:rhino-android:1.1.1 (*)
      +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -3632,12 +3620,12 @@ releaseRuntimeClasspath - Runtime classpath of compilation 'release' (target  (a
      +--- com.squareup.retrofit2:converter-gson:2.6.1
      |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
      |    \--- com.google.code.gson:gson:2.8.5
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+     |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
      +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
      \--- com.tomgibara.bits:bits:2.1.0
           +--- com.tomgibara.fundament:fundament:1.1.1
@@ -3713,13 +3701,13 @@ releaseUnitTestCompileClasspath - Compile classpath for compilation 'releaseUnit
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -3798,9 +3786,9 @@ releaseUnitTestCompileClasspath - Compile classpath for compilation 'releaseUnit
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -3821,7 +3809,7 @@ releaseUnitTestCompileClasspath - Compile classpath for compilation 'releaseUnit
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -3840,7 +3828,7 @@ releaseUnitTestCompileClasspath - Compile classpath for compilation 'releaseUnit
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -3851,12 +3839,11 @@ releaseUnitTestCompileClasspath - Compile classpath for compilation 'releaseUnit
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-+--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
++--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
 |    +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-|    +--- androidx.core:core-ktx:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-|    |    \--- androidx.annotation:annotation:1.1.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+|    +--- com.android.support:appcompat-v7:28.0.0 (*)
+|    +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
 |    +--- org.slf4j:slf4j-api:1.7.25
 |    +--- io.apisense:rhino-android:1.1.1 (*)
 |    +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -3871,12 +3858,12 @@ releaseUnitTestCompileClasspath - Compile classpath for compilation 'releaseUnit
 |    +--- com.squareup.retrofit2:converter-gson:2.6.1
 |    |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
 |    |    \--- com.google.code.gson:gson:2.8.5
-|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
 |    +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
 |    \--- com.tomgibara.bits:bits:2.1.0
 |         +--- com.tomgibara.fundament:fundament:1.1.1
@@ -3949,13 +3936,13 @@ releaseUnitTestRuntimeClasspath - Runtime classpath of compilation 'releaseUnitT
 |    +--- com.android.databinding:baseLibrary:3.1.0
 |    \--- com.android.databinding:library:3.1.0 (*)
 +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72
-|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
 |         \--- org.jetbrains:annotations:13.0
 +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
 +--- org.jetbrains.kotlin:kotlin-reflect:1.3.61
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.android.support:appcompat-v7:28.0.0
 |    +--- com.android.support:support-annotations:28.0.0
 |    +--- com.android.support:support-compat:28.0.0 (*)
@@ -4034,9 +4021,9 @@ releaseUnitTestRuntimeClasspath - Runtime classpath of compilation 'releaseUnitT
 +--- com.alibaba:fastjson:1.1.71.android
 +--- com.squareup.okhttp3:okhttp:4.3.1
 |    +--- com.squareup.okio:okio:2.4.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.4.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.4.0 (*)
 +--- com.github.bumptech.glide:glide:4.8.0
 |    +--- com.github.bumptech.glide:gifdecoder:4.8.0
 |    |    \--- com.android.support:support-annotations:27.1.1 -> 28.0.0
@@ -4057,7 +4044,7 @@ releaseUnitTestRuntimeClasspath - Runtime classpath of compilation 'releaseUnitT
 |    \--- com.android.support:design:27.1.1 -> 28.0.0 (*)
 +--- de.hdodenhof:circleimageview:2.2.0
 +--- com.jaredrummler:material-spinner:1.3.1
-|    \--- androidx.annotation:annotation:1.0.0 -> 1.1.0
+|    \--- androidx.annotation:annotation:1.0.0
 +--- com.liulishuo.okdownload:okdownload:1.0.7
 +--- com.liulishuo.okdownload:ktx:1.0.7
 +--- io.reactivex.rxjava2:rxandroid:2.1.1
@@ -4076,7 +4063,7 @@ releaseUnitTestRuntimeClasspath - Runtime classpath of compilation 'releaseUnitT
 |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    +--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.github.kbiakov:CodeView-Android:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.3.72 (*)
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.11 -> 1.4.0 (*)
 |    |    +--- com.android.support:appcompat-v7:28.0.0 (*)
 |    |    \--- com.android.support:recyclerview-v7:28.0.0 (*)
 |    +--- com.weiwangcn.betterspinner:library-material:1.1.1-SNAPSHOT
@@ -4087,12 +4074,11 @@ releaseUnitTestRuntimeClasspath - Runtime classpath of compilation 'releaseUnitT
 |         \--- pl.droidsonroids.relinker:relinker:1.3.1
 +--- org.greenrobot:eventbus:3.2.0
 +--- me.weishu:free_reflection:3.0.1
-+--- com.zzm.android_basic_library:cuge_android_sdk:1.0.7-SNAPSHOT
++--- com.zzm.android_basic_library:cuge_android_sdk:1.0.8-support-SNAPSHOT
 |    +--- org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72 (*)
-|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 (*)
-|    +--- androidx.core:core-ktx:1.3.2
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.3.72 (*)
-|    |    \--- androidx.annotation:annotation:1.1.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.0 (*)
+|    +--- com.android.support:appcompat-v7:28.0.0 (*)
+|    +--- com.android.support.constraint:constraint-layout:2.0.4 (*)
 |    +--- org.slf4j:slf4j-api:1.7.25
 |    +--- io.apisense:rhino-android:1.1.1 (*)
 |    +--- com.github.tony19:logback-android:2.0.2-SNAPSHOT (*)
@@ -4107,12 +4093,12 @@ releaseUnitTestRuntimeClasspath - Runtime classpath of compilation 'releaseUnitT
 |    +--- com.squareup.retrofit2:converter-gson:2.6.1
 |    |    +--- com.squareup.retrofit2:retrofit:2.6.1 (*)
 |    |    \--- com.google.code.gson:gson:2.8.5
-|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50 -> 1.3.72
-|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1
-|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.20 -> 1.3.72 (*)
-|    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1 -> 1.3.0 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 (*)
 |    +--- com.zzm.dev:version-compare:1.0.2-SNAPSHOT
 |    \--- com.tomgibara.bits:bits:2.1.0
 |         +--- com.tomgibara.fundament:fundament:1.1.1
@@ -4268,5 +4254,5 @@ No dependencies
 
 A web-based, searchable dependency report is available by adding the --scan option.
 
-BUILD SUCCESSFUL in 6s
+BUILD SUCCESSFUL in 1s
 1 actionable task: 1 executed
