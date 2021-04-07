@@ -1,5 +1,6 @@
 package com.nemesiss.dev.piaprobox.Application
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import com.nemesiss.dev.piaprobox.Service.Persistence
@@ -43,6 +44,7 @@ class PiaproboxApplication : Application() {
     private fun trustAllCertificates() {
         val sslContext = SSLContext.getInstance("TLS")
         val trustManager: X509TrustManager = object : X509TrustManager {
+            @SuppressLint("TrustAllX509TrustManager")
             @Throws(CertificateException::class)
             override fun checkClientTrusted(
                 x509Certificates: Array<X509Certificate>,
@@ -50,6 +52,7 @@ class PiaproboxApplication : Application() {
             ) {
             }
 
+            @SuppressLint("TrustAllX509TrustManager")
             @Throws(CertificateException::class)
             override fun checkServerTrusted(
                 x509Certificates: Array<X509Certificate>,
