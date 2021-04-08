@@ -30,6 +30,7 @@ class PiaproboxApplication : Application() {
         Persistence.Init(applicationContext)
         trustAllCertificates()
         setCrashLogHandler()
+        // 初始化CUGE SDK
         scope.launch {
             CUGEAndroidSDK.init(
                 applicationContext, 13,

@@ -142,7 +142,7 @@ dependencies {
 
 
     // CUGE
-    implementation('com.zzm.android_basic_library:cuge_android_sdk:1.0.13-support-SNAPSHOT') {
+    implementation('com.zzm.android_basic_library:cuge_android_sdk:1.0.16-support-SNAPSHOT') {
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.appcompat', module: 'appcompat'
         exclude group: 'androidx.test.ext', module: 'junit'

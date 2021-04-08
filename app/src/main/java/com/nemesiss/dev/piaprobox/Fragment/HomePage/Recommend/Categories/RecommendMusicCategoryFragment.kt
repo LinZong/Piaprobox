@@ -9,6 +9,7 @@ import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.MusicRecommendItemAdapter
+import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.MusicRecommendItemTrackParamAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment.Companion.DefaultTagUrl
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType
@@ -18,7 +19,7 @@ import org.jsoup.Jsoup
 
 class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
 
-    private var recommendListAdapter: MusicRecommendItemAdapter? = null
+    private var recommendListAdapter: MusicRecommendItemTrackParamAdapter? = null
     private var recommendItemLayoutManager: LinearLayoutManager? = null
     private var recommendListData: List<RecommendItemModel>? = null
 
@@ -60,10 +61,12 @@ class RecommendMusicCategoryFragment : BaseRecommendCategoryFragment() {
                 Recommend_Frag_Common_RecyclerView?.layoutManager = recommendItemLayoutManager
                 if (recommendListAdapter == null) {
                     recommendListAdapter =
-                        MusicRecommendItemAdapter(recommendListData!!, context!!, this::OnRecommendItemSelected)
-                    Recommend_Frag_Common_RecyclerView?.adapter = recommendListAdapter
+                        MusicRecommendItemTrackParamAdapter(recommendListData!!, context!!, this::OnRecommendItemSelected)
+                    recommendListAdapter?.adaptWith(Recommend_Frag_Common_RecyclerView)
+
                 } else {
-                    Recommend_Frag_Common_RecyclerView?.adapter = recommendListAdapter
+                    //  Recommend_Frag_Common_RecyclerView?.adapter = recommendListAdapter
+                    // 已经adaptWith过了。
                     recommendListAdapter?.items = recommendListData!!
                     recommendListAdapter?.notifyDataSetChanged()
                 }
