@@ -265,6 +265,7 @@ class MusicControlActivity : MusicPlayerActivity() {
             override fun onLoadFailed(player: MusicPlayer) {
                 stopQueryTimeStamp()
                 ResetTimeIndicator()
+                MusicPlayer_Control_Play.setImageResource(R.drawable.ic_play_arrow_red_600_24dp)
             }
 
             override fun onStopping(player: MusicPlayer) {
