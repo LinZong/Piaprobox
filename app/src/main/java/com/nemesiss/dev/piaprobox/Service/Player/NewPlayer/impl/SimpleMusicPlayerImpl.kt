@@ -31,7 +31,7 @@ open class SimpleMusicPlayerImpl(
             if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
                 Log.d("SimpleMusicPlayerImpl", "Headset unplugged! Pause!")
                 // Pause the playback
-                handlePlayerNextState(PlayerAction.PAUSED) {
+                playerNextStateMap(PlayerAction.PAUSED) {
                     listeners.forEach { one -> one.onPausing(this@SimpleMusicPlayerImpl) }
                 }
             }
@@ -63,7 +63,7 @@ open class SimpleMusicPlayerImpl(
     private var audioFocusChangedListener: AudioManager.OnAudioFocusChangeListener
 
     private var prepareFailedHandler = Handler {
-        handlePlayerNextState(PlayerAction.STOPPED) {
+        playerNextStateMap(PlayerAction.STOPPED) {
             listeners.forEach { one -> one.onLoadFailed(this) }
         }
         true
@@ -74,7 +74,7 @@ open class SimpleMusicPlayerImpl(
         player.setOnPreparedListener {
             isPrepared = true
             indicatePrepareFinished()
-            handlePlayerNextState(PlayerAction.PLAYING) {
+            playerNextStateMap(PlayerAction.PLAYING) {
                 listeners.forEach { one -> one.onPlaying(this) }
             }
         }
@@ -83,7 +83,7 @@ open class SimpleMusicPlayerImpl(
             listeners.forEach { one -> one.onBuffering(this) }
         }
         player.setOnCompletionListener {
-            handlePlayerNextState(PlayerAction.STOPPED) {
+            playerNextStateMap(PlayerAction.STOPPED) {
                 listeners.forEach { one ->
                     one.onStopping(this)
                     one.onPlayFinished(this)
@@ -123,7 +123,7 @@ open class SimpleMusicPlayerImpl(
 
     override fun play(source: AssetFileDescriptor): PlayerAction {
         checkStatus()
-        handlePlayerNextState(
+        playerNextStateMap(
             detectPlayerNextStateByApplyingNewPlaying(source)
         ) {
             listeners.forEach { one -> one.onLoading(this) }
@@ -133,7 +133,7 @@ open class SimpleMusicPlayerImpl(
 
     override fun play(source: Uri): PlayerAction {
         checkStatus()
-        handlePlayerNextState(
+        playerNextStateMap(
             detectPlayerNextStateByApplyingNewPlaying(source)
         ) {
             listeners.forEach { one -> one.onLoading(this) }
@@ -143,7 +143,7 @@ open class SimpleMusicPlayerImpl(
 
     override fun play(source: FileInputStream): PlayerAction {
         checkStatus()
-        handlePlayerNextState(
+        playerNextStateMap(
             detectPlayerNextStateByApplyingNewPlaying(source)
         ) {
             listeners.forEach { one -> one.onLoading(this) }
@@ -155,7 +155,7 @@ open class SimpleMusicPlayerImpl(
         if (!isPrepared) {
             val source = playingMediaReference?.get()
             if (source != null) {
-                handlePlayerNextState(PlayerAction.PREPARING) {
+                playerNextStateMap(PlayerAction.PREPARING) {
                     listeners.forEach { one -> one.onLoading(this) }
                 }
                 return currentAction
@@ -163,21 +163,21 @@ open class SimpleMusicPlayerImpl(
             Toast.makeText(context, "Cannot prepare an empty source!", Toast.LENGTH_SHORT).show()
             return PlayerAction.STOPPED
         }
-        handlePlayerNextState(PlayerAction.PLAYING) {
+        playerNextStateMap(PlayerAction.PLAYING) {
             listeners.forEach { one -> one.onPlaying(this) }
         }
         return currentAction
     }
 
     override fun pause(): PlayerAction {
-        handlePlayerNextState(PlayerAction.PAUSED) {
+        playerNextStateMap(PlayerAction.PAUSED) {
             listeners.forEach { one -> one.onPausing(this) }
         }
         return currentAction
     }
 
     override fun stop(): PlayerAction {
-        handlePlayerNextState(PlayerAction.STOPPED) {
+        playerNextStateMap(PlayerAction.STOPPED) {
             listeners.forEach { one -> one.onStopping(this) }
         }
         return currentAction
@@ -275,10 +275,13 @@ open class SimpleMusicPlayerImpl(
         }
 
         val nextAction: PlayerAction
-        // 如果没有缓冲完，无论是什么URL都要求重新缓冲。
+        // 如果没有缓冲完
         if (!isPrepared) {
+            // 当前不再缓冲，就缓冲新的URL，否则无视此URL。
+            if (currentAction != PlayerAction.PREPARING) {
+                setCurrentPlayingMediaReference(source)
+            }
             nextAction = PlayerAction.PREPARING
-            setCurrentPlayingMediaReference(source)
             return nextAction
         } else {
             // 缓冲完了，如果是同一首歌就决定歌曲状态
@@ -292,6 +295,7 @@ open class SimpleMusicPlayerImpl(
                 }
             } else {
                 // 不同一首歌，切歌，PREPARING
+                setCurrentPlayingMediaReference(source)
                 PlayerAction.PREPARING
             }
         }
@@ -349,7 +353,7 @@ open class SimpleMusicPlayerImpl(
         prepareSource(source)
     }
 
-    private fun handlePlayerNextState(nextAction: PlayerAction, callbackIfStateChanged: () -> Unit = {}) {
+    private fun playerNextStateMap(nextAction: PlayerAction, callbackIfStateChanged: () -> Unit = {}) {
         if (nextAction == PlayerAction.NO_ACTION) {
             return
         }
