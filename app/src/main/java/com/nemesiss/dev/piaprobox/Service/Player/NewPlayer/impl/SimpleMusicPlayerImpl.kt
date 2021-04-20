@@ -31,7 +31,7 @@ open class SimpleMusicPlayerImpl(
             if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
                 Log.d("SimpleMusicPlayerImpl", "Headset unplugged! Pause!")
                 // Pause the playback
-                handlePlayerNextState(PlayerAction.PAUSED) {
+                playerNextStateMap(PlayerAction.PAUSED) {
                     listeners.forEach { one -> one.onPausing(this@SimpleMusicPlayerImpl) }
                 }
             }
@@ -63,7 +63,7 @@ open class SimpleMusicPlayerImpl(
     private var audioFocusChangedListener: AudioManager.OnAudioFocusChangeListener
 
     private var prepareFailedHandler = Handler {
-        handlePlayerNextState(PlayerAction.STOPPED) {
+        playerNextStateMap(PlayerAction.STOPPED) {
             listeners.forEach { one -> one.onLoadFailed(this) }
         }
         true
@@ -74,7 +74,7 @@ open class SimpleMusicPlayerImpl(
         player.setOnPreparedListener {
             isPrepared = true
             indicatePrepareFinished()
-            handlePlayerNextState(PlayerAction.PLAYING) {
+            playerNextStateMap(PlayerAction.PLAYING) {
                 listeners.forEach { one -> one.onPlaying(this) }
             }
         }
@@ -83,7 +83,7 @@ open class SimpleMusicPlayerImpl(
             listeners.forEach { one -> one.onBuffering(this) }
         }
         player.setOnCompletionListener {
-            handlePlayerNextState(PlayerAction.STOPPED) {
+            playerNextStateMap(PlayerAction.STOPPED) {
                 listeners.forEach { one ->
                     one.onStopping(this)
                     one.onPlayFinished(this)
@@ -123,7 +123,7 @@ open class SimpleMusicPlayerImpl(
 
     override fun play(source: AssetFileDescriptor): PlayerAction {
         checkStatus()
-        handlePlayerNextState(
+        playerNextStateMap(
             detectPlayerNextStateByApplyingNewPlaying(source)
         ) {
             listeners.forEach { one -> one.onLoading(this) }
@@ -133,7 +133,7 @@ open class SimpleMusicPlayerImpl(
 
     override fun play(source: Uri): PlayerAction {
         checkStatus()
-        handlePlayerNextState(
+        playerNextStateMap(
             detectPlayerNextStateByApplyingNewPlaying(source)
         ) {
             listeners.forEach { one -> one.onLoading(this) }
@@ -143,7 +143,7 @@ open class SimpleMusicPlayerImpl(
 
     override fun play(source: FileInputStream): PlayerAction {
         checkStatus()
-        handlePlayerNextState(
+        playerNextStateMap(
             detectPlayerNextStateByApplyingNewPlaying(source)
         ) {
             listeners.forEach { one -> one.onLoading(this) }
@@ -152,21 +152,32 @@ open class SimpleMusicPlayerImpl(
     }
 
     override fun resume(): PlayerAction {
-        handlePlayerNextState(PlayerAction.PLAYING) {
+        if (!isPrepared) {
+            val source = playingMediaReference?.get()
+            if (source != null) {
+                playerNextStateMap(PlayerAction.PREPARING) {
+                    listeners.forEach { one -> one.onLoading(this) }
+                }
+                return currentAction
+            }
+            Toast.makeText(context, "Cannot prepare an empty source!", Toast.LENGTH_SHORT).show()
+            return PlayerAction.STOPPED
+        }
+        playerNextStateMap(PlayerAction.PLAYING) {
             listeners.forEach { one -> one.onPlaying(this) }
         }
         return currentAction
     }
 
     override fun pause(): PlayerAction {
-        handlePlayerNextState(PlayerAction.PAUSED) {
+        playerNextStateMap(PlayerAction.PAUSED) {
             listeners.forEach { one -> one.onPausing(this) }
         }
         return currentAction
     }
 
     override fun stop(): PlayerAction {
-        handlePlayerNextState(PlayerAction.STOPPED) {
+        playerNextStateMap(PlayerAction.STOPPED) {
             listeners.forEach { one -> one.onStopping(this) }
         }
         return currentAction
@@ -235,7 +246,7 @@ open class SimpleMusicPlayerImpl(
     override fun buffered(): Int = bufferedPercent
 
     private fun countDownForPrepareFailed() {
-        prepareFailedHandler.sendEmptyMessageDelayed(101, 10 * 1000)
+        prepareFailedHandler.sendEmptyMessageDelayed(101, 15 * 1000)
     }
 
     private fun indicatePrepareFinished() {
@@ -262,18 +273,32 @@ open class SimpleMusicPlayerImpl(
             setCurrentPlayingMediaReference(source)
             return PlayerAction.PREPARING
         }
-        val nextAction = if (true == playingMediaReference?.get()?.equals(source)) {
-            when (currentAction) {
-                PlayerAction.PLAYING -> PlayerAction.NO_ACTION
-                PlayerAction.PREPARING -> PlayerAction.NO_ACTION
-                PlayerAction.STOPPED -> PlayerAction.PLAYING
-                PlayerAction.PAUSED -> PlayerAction.PLAYING
-                else -> PlayerAction.PREPARING
+
+        val nextAction: PlayerAction
+        // 如果没有缓冲完
+        if (!isPrepared) {
+            // 当前不再缓冲，就缓冲新的URL，否则无视此URL。
+            if (currentAction != PlayerAction.PREPARING) {
+                setCurrentPlayingMediaReference(source)
             }
+            nextAction = PlayerAction.PREPARING
+            return nextAction
         } else {
-            PlayerAction.PREPARING
+            // 缓冲完了，如果是同一首歌就决定歌曲状态
+            nextAction = if (playingMediaReference?.get() == source) {
+                when (currentAction) {
+                    PlayerAction.PLAYING -> PlayerAction.NO_ACTION
+                    PlayerAction.PREPARING -> PlayerAction.NO_ACTION
+                    PlayerAction.STOPPED -> PlayerAction.PLAYING
+                    PlayerAction.PAUSED -> PlayerAction.PLAYING
+                    else -> PlayerAction.PREPARING
+                }
+            } else {
+                // 不同一首歌，切歌，PREPARING
+                setCurrentPlayingMediaReference(source)
+                PlayerAction.PREPARING
+            }
         }
-        setCurrentPlayingMediaReference(source)
         return nextAction
     }
 
@@ -287,7 +312,6 @@ open class SimpleMusicPlayerImpl(
         when (source) {
             is AssetFileDescriptor -> doPreparing(source)
             is Uri -> doPreparing(source)
-            is FileInputStream -> doPreparing(source)
         }
         countDownForPrepareFailed()
     }
@@ -305,14 +329,6 @@ open class SimpleMusicPlayerImpl(
         player.setDataSource(context, source)
         player.prepareAsync()
     }
-
-    private fun doPreparing(source: FileInputStream) {
-        resetFlags()
-        resetPlayerState()
-        player.setDataSource(source.fd)
-        player.prepareAsync()
-    }
-
 
     private fun checkStatus() {
         if (isDestroyed) {
@@ -332,7 +348,12 @@ open class SimpleMusicPlayerImpl(
         player.reset()
     }
 
-    private fun handlePlayerNextState(nextAction: PlayerAction, callbackIfStateChanged: () -> Unit = {}) {
+    private fun forcePrepareMediaSourceReference() {
+        val source = playingMediaReference?.get() ?: throw IllegalArgumentException("PlayingMediaReference is empty!")
+        prepareSource(source)
+    }
+
+    private fun playerNextStateMap(nextAction: PlayerAction, callbackIfStateChanged: () -> Unit = {}) {
         if (nextAction == PlayerAction.NO_ACTION) {
             return
         }
@@ -357,9 +378,7 @@ open class SimpleMusicPlayerImpl(
                 PlayerAction.PREPARING -> {
                     resetFlags()
                     resetPlayerState()
-                    playingMediaReference?.get()?.let { source ->
-                        prepareSource(source)
-                    }
+                    forcePrepareMediaSourceReference()
                 }
                 PlayerAction.PAUSED -> {
                     player.pause()
@@ -371,9 +390,7 @@ open class SimpleMusicPlayerImpl(
                 PlayerAction.PREPARING -> {
                     resetFlags()
                     resetPlayerState()
-                    playingMediaReference?.get()?.let { source ->
-                        prepareSource(source)
-                    }
+                    forcePrepareMediaSourceReference()
                 }
                 PlayerAction.PLAYING -> {
                     requestPlay()
@@ -388,9 +405,7 @@ open class SimpleMusicPlayerImpl(
                 PlayerAction.PREPARING -> {
                     resetFlags()
                     resetPlayerState()
-                    playingMediaReference?.get()?.let { source ->
-                        prepareSource(source)
-                    }
+                    forcePrepareMediaSourceReference()
                 }
                 PlayerAction.PLAYING -> {
                     requestPlay()
