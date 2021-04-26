@@ -558,6 +558,11 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         }
     }
 
+    override fun onDestroy() {
+        cacheFetcherAsync.shutdownNow()
+        super.onDestroy()
+    }
+
     companion object {
         @JvmStatic
         val MUSIC_CONTENT_URL = "MUSIC_CONTENT_URL"

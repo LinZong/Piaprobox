@@ -78,4 +78,12 @@ class AsyncExecutor {
         message.obj = Task
         mainThreadHandler.sendMessageDelayed(message, Delay)
     }
+
+    fun shutdown() {
+        taskPool.shutdown()
+    }
+
+    fun shutdownNow() {
+        taskPool.shutdownNow()
+    }
 }
