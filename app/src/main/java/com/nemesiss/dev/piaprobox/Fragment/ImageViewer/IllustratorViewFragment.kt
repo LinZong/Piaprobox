@@ -24,8 +24,8 @@ import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.RelatedImageListAdap
 import com.nemesiss.dev.piaprobox.model.Events.SharedElementBackEvent
 import com.nemesiss.dev.piaprobox.model.image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback
+import com.nemesiss.dev.piaprobox.util.AppUtil
+import com.nemesiss.dev.piaprobox.util.MediaSharedElementCallback
 import com.nemesiss.dev.piaprobox.view.common.whenClicks
 import com.nemesiss.dev.piaprobox.databinding.IllustratorViewFragmentBinding
 import kotlinx.android.synthetic.main.illustrator_view_fragment.*

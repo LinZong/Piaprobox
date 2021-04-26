@@ -21,8 +21,8 @@ import com.nemesiss.dev.piaprobox.model.Events.SharedElementBackEvent
 import com.nemesiss.dev.piaprobox.model.resources.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.model.resources.StaticResourcesMap
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Util.BaseTransitionCallback
-import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback
+import com.nemesiss.dev.piaprobox.util.BaseTransitionCallback
+import com.nemesiss.dev.piaprobox.util.MediaSharedElementCallback
 import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
 import org.greenrobot.eventbus.EventBus
 import kotlin.math.abs

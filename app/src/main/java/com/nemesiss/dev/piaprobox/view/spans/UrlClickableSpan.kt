@@ -5,7 +5,7 @@ import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.view.View
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.util.AppUtil
 
 class UrlClickableSpan(
     private val context: Context,

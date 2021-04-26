@@ -1,6 +1,6 @@
-package com.nemesiss.dev.piaprobox.Util
+package com.nemesiss.dev.piaprobox.util
 
-import com.nemesiss.dev.piaprobox.Util.CookieUtil.parseCookies
+import com.nemesiss.dev.piaprobox.util.CookieUtil.parseCookies
 import okhttp3.Response
 import java.text.SimpleDateFormat
 import java.util.*

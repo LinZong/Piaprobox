@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import com.nemesiss.dev.piaprobox.model.resources.CryptonCharacterColorDefinition
-import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.util.AppUtil
 
 
 class LoadingLineIndicator : View {

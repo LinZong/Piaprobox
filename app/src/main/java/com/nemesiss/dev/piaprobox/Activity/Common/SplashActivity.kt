@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
-import com.nemesiss.dev.piaprobox.Util.AnimatorListenerBuilder
-import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.util.AnimatorListenerBuilder
+import com.nemesiss.dev.piaprobox.util.AppUtil
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : PiaproboxBaseActivity() {

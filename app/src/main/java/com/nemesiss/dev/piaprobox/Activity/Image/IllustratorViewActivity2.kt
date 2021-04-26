@@ -26,9 +26,9 @@ import com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler.ParseContentErrorHa
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
-import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.Util.BaseOnPageChangeListener
-import com.nemesiss.dev.piaprobox.Util.runWhenAlive
+import com.nemesiss.dev.piaprobox.util.AppUtil
+import com.nemesiss.dev.piaprobox.util.BaseOnPageChangeListener
+import com.nemesiss.dev.piaprobox.util.runWhenAlive
 import com.nemesiss.dev.piaprobox.view.common.LoadingLineIndicator
 import com.nemesiss.dev.piaprobox.view.sharedelements.SharedElementUtils
 import kotlinx.android.synthetic.main.illustrator_view_activity2.*

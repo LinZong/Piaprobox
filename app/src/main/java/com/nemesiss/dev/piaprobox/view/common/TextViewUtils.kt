@@ -4,7 +4,7 @@ import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
-import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.util.AppUtil
 import com.nemesiss.dev.piaprobox.view.spans.UrlClickableSpan
 
 private fun <T> ConfirmListNotNull(list: List<T>, vararg indexes: Int): Boolean {

@@ -15,8 +15,8 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.Util.SimpleAnimationListener
+import com.nemesiss.dev.piaprobox.util.AppUtil
+import com.nemesiss.dev.piaprobox.util.SimpleAnimationListener
 import kotlinx.android.synthetic.main.loading_button.view.*
 
 class LoadingButton @JvmOverloads constructor(

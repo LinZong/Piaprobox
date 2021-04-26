@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.model.HTMLParser
+package com.nemesiss.dev.piaprobox.model.htmlparser
 
 class RuleVersion(versionStr : String) : Comparable<RuleVersion> {
     var A = 0

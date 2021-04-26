@@ -9,7 +9,7 @@ import com.nemesiss.dev.piaprobox.model.user.*
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
-import com.nemesiss.dev.piaprobox.Util.serverSetCookies
+import com.nemesiss.dev.piaprobox.util.serverSetCookies
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request

@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Util
+package com.nemesiss.dev.piaprobox.util
 
 import android.app.Activity
 

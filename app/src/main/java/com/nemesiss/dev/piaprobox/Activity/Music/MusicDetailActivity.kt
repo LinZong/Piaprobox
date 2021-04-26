@@ -14,7 +14,7 @@ import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Bindings.IllustratorViewBindings
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
-import com.nemesiss.dev.piaprobox.Util.AppUtil
+import com.nemesiss.dev.piaprobox.util.AppUtil
 import com.nemesiss.dev.piaprobox.view.common.AutoWrapLayout
 import com.nemesiss.dev.piaprobox.view.common.SetTextWithClickableUrl
 import kotlinx.android.synthetic.main.activity_music_detail.*

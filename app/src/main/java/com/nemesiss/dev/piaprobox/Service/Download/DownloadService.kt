@@ -14,7 +14,7 @@ import com.liulishuo.okdownload.core.listener.assist.Listener1Assist
 import com.nemesiss.dev.piaprobox.model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
-import com.nemesiss.dev.piaprobox.Util.PermissionUtil
+import com.nemesiss.dev.piaprobox.util.PermissionUtil
 import java.io.File
 import javax.inject.Inject
 
