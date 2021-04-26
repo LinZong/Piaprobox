@@ -6,8 +6,8 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import android.widget.ImageView
-import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
+import com.nemesiss.dev.contentparser.InvalidStepExecutorException
+import com.nemesiss.dev.contentparser.model.RecommendItemModelImage
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Adapter.SubmissionWorkCategory.Illustration.IllustrationCategoryItemDatabindingAdapter
@@ -15,8 +15,8 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.BaseSubmissionWorkCategoryFr
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.View.Common.GridLayoutManagerWithBottomIndicator
-import com.nemesiss.dev.piaprobox.View.Common.handleSharedElementReenter
+import com.nemesiss.dev.piaprobox.view.common.GridLayoutManagerWithBottomIndicator
+import com.nemesiss.dev.piaprobox.view.common.handleSharedElementReenter
 import kotlinx.android.synthetic.main.category_fragment.*
 import kotlinx.android.synthetic.main.fragment_header.*
 import org.jsoup.Jsoup

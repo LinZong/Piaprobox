@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
+import com.nemesiss.dev.contentparser.model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb

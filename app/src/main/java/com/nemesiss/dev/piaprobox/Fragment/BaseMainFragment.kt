@@ -9,7 +9,7 @@ import android.widget.Toast
 import com.nemesiss.dev.piaprobox.Activity.Common.MainActivity
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.View.Common.LoadingIndicatorView
+import com.nemesiss.dev.piaprobox.view.common.LoadingIndicatorView
 
 abstract class BaseMainFragment : Fragment() {
     open fun Refresh() {

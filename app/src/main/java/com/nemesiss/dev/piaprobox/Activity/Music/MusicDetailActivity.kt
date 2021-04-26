@@ -9,14 +9,14 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
+import com.nemesiss.dev.contentparser.model.MusicContentInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Bindings.IllustratorViewBindings
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
 import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
-import com.nemesiss.dev.piaprobox.View.Common.SetTextWithClickableUrl
+import com.nemesiss.dev.piaprobox.view.common.AutoWrapLayout
+import com.nemesiss.dev.piaprobox.view.common.SetTextWithClickableUrl
 import kotlinx.android.synthetic.main.activity_music_detail.*
 
 class MusicDetailActivity : PiaproboxBaseActivity() {

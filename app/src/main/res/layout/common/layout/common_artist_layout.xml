@@ -16,7 +16,7 @@
                 type="String"/>
     </data>
 
-    <com.nemesiss.dev.piaprobox.View.Common.ArtistInfoLayout
+    <com.nemesiss.dev.piaprobox.view.common.ArtistInfoLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -47,7 +47,7 @@
                     android:text="@{artistName}"/>
 
 
-            <com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
+            <com.nemesiss.dev.piaprobox.view.common.AutoWrapLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="6dp"
@@ -55,5 +55,5 @@
                     android:id="@+id/Illustrator2_View_ItemInfoContainer"/>
 
         </LinearLayout>
-    </com.nemesiss.dev.piaprobox.View.Common.ArtistInfoLayout>
+    </com.nemesiss.dev.piaprobox.view.common.ArtistInfoLayout>
 </layout>

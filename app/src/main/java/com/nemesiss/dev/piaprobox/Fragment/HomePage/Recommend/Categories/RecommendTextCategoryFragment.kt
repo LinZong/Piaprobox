@@ -6,8 +6,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
+import com.nemesiss.dev.contentparser.InvalidStepExecutorException
+import com.nemesiss.dev.contentparser.model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Activity.Text.TextDetailActivity
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.TextRecommendItemDatabindingAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.RecommendListType

@@ -17,10 +17,10 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
-import com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
-import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
+import com.nemesiss.dev.contentparser.model.MusicContentInfo
+import com.nemesiss.dev.contentparser.model.MusicPlayInfo
+import com.nemesiss.dev.contentparser.model.RecommendItemModel
+import com.nemesiss.dev.contentparser.model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.MusicLyricAdapter
 import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.RelatedMusicListAdapter

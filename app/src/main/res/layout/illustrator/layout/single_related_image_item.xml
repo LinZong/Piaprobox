@@ -8,7 +8,7 @@
 
         <variable
                 name="model"
-                type="com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo"/>
+                type="com.nemesiss.dev.contentparser.model.RelatedImageInfo"/>
     </data>
 
     <android.support.constraint.ConstraintLayout

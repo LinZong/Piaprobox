@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
+import com.nemesiss.dev.contentparser.model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.GlideApp
-import com.nemesiss.dev.piaprobox.View.Common.fixThumb
+import com.nemesiss.dev.piaprobox.view.common.fixThumb
 
 class MusicRecommendItemAdapter(
     var items: List<RecommendItemModel>,

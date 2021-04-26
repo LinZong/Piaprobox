@@ -33,7 +33,7 @@ import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.User.NotLoginException
 import com.nemesiss.dev.piaprobox.Service.User.UserLoginService
 import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.View.Common.UserInfoActionsSheet
+import com.nemesiss.dev.piaprobox.view.common.UserInfoActionsSheet
 import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*

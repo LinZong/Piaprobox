@@ -1,7 +1,7 @@
 package com.nemesiss.dev.piaprobox.model.image
 
 import android.graphics.drawable.Drawable
-import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
+import com.nemesiss.dev.contentparser.model.RelatedImageInfo
 
 class IllustratorViewFragmentViewModel {
     lateinit var BrowserPageUrl : String

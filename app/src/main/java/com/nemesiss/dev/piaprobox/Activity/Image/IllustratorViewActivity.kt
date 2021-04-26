@@ -15,9 +15,9 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
-import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
+import com.nemesiss.dev.contentparser.InvalidStepExecutorException
+import com.nemesiss.dev.contentparser.model.ImageContentInfo
+import com.nemesiss.dev.contentparser.model.RecommendItemModelImage
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.model.CheckPermissionModel
@@ -32,8 +32,8 @@ import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.Util.AppUtil
-import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
-import com.nemesiss.dev.piaprobox.View.Common.whenClicks
+import com.nemesiss.dev.piaprobox.view.common.AutoWrapLayout
+import com.nemesiss.dev.piaprobox.view.common.whenClicks
 import kotlinx.android.synthetic.main.illustrator_view_activity.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.View.Common
+package com.nemesiss.dev.piaprobox.view.common
 
 import android.content.Intent
 import android.graphics.Matrix
@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
+import com.nemesiss.dev.contentparser.model.RecommendItemModel
+import com.nemesiss.dev.contentparser.model.RecommendItemModelImage
+import com.nemesiss.dev.contentparser.model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.ImageRecommendItemDatabindingAdapter

@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
+import com.nemesiss.dev.contentparser.model.RecommendItemModelImage
 import com.nemesiss.dev.piaprobox.databinding.SingleRecommendImageItemBinding
 import kotlinx.android.synthetic.main.single_recommend_image_item.view.*
 

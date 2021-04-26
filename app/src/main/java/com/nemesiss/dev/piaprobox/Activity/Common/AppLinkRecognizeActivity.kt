@@ -5,9 +5,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
+import com.nemesiss.dev.contentparser.model.RecommendItemModel
+import com.nemesiss.dev.contentparser.model.RecommendItemModelImage
+import com.nemesiss.dev.contentparser.model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity

@@ -2,10 +2,10 @@ package com.nemesiss.dev.piaprobox.Adapter.SubmissionWorkCategory.Text
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
+import com.nemesiss.dev.contentparser.model.RecommendItemModelText
 import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.TextRecommendItemDatabindingAdapter
-import com.nemesiss.dev.piaprobox.View.Common.detectWhichViewHolderToCreate
+import com.nemesiss.dev.piaprobox.view.common.detectWhichViewHolderToCreate
 
 class TextCategoryItemDatabindingAdapter(
     var items: List<RecommendItemModelText>,

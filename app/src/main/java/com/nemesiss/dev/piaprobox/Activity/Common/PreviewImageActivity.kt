@@ -6,7 +6,7 @@ import com.bumptech.glide.Priority
 import com.nemesiss.dev.piaprobox.Fragment.ImageViewer.IllustratorViewFragment
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.GlideApp
-import com.nemesiss.dev.piaprobox.View.Common.wrapDragAndCloseTouchHandler
+import com.nemesiss.dev.piaprobox.view.common.wrapDragAndCloseTouchHandler
 import kotlinx.android.synthetic.main.activity_preview_image.*
 
 class PreviewImageActivity : PiaproboxBaseActivity() {

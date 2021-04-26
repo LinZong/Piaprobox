@@ -8,7 +8,7 @@
 
         <variable
                 name="model"
-                type="com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage"/>
+                type="com.nemesiss.dev.contentparser.model.RecommendItemModelImage"/>
     </data>
 
 

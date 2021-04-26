@@ -67,7 +67,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     >
 
-                <com.nemesiss.dev.piaprobox.View.Common.FixedRecyclerView
+                <com.nemesiss.dev.piaprobox.view.common.FixedRecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
@@ -222,7 +222,7 @@
                         android:text="@string/RelatedMusicTips"
                         />
 
-                <com.nemesiss.dev.piaprobox.View.Common.FixedRecyclerView
+                <com.nemesiss.dev.piaprobox.view.common.FixedRecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="8dp"

@@ -18,7 +18,7 @@ import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.DefaultMusicPlayerStateChangedCallback
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayer
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
-import com.nemesiss.dev.piaprobox.View.Common.whenClicks
+import com.nemesiss.dev.piaprobox.view.common.whenClicks
 import kotlinx.android.synthetic.main.music_player_layout.*
 
 

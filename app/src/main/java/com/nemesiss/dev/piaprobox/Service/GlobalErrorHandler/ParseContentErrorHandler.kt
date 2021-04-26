@@ -1,6 +1,6 @@
 package com.nemesiss.dev.piaprobox.Service.GlobalErrorHandler
 
-import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
+import com.nemesiss.dev.contentparser.InvalidStepExecutorException
 
 abstract class ParseContentErrorHandler {
 

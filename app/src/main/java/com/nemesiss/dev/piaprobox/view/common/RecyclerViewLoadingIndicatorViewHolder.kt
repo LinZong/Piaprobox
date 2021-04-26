@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.View.Common
+package com.nemesiss.dev.piaprobox.view.common
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

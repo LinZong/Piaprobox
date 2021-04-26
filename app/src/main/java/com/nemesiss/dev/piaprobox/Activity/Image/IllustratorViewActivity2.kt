@@ -6,9 +6,9 @@ import android.util.SparseArray
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
-import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
+import com.nemesiss.dev.contentparser.model.ImageContentInfo
+import com.nemesiss.dev.contentparser.model.RecommendItemModelImage
+import com.nemesiss.dev.contentparser.model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.IllustratorViewPageFragmentAdapter
 import com.nemesiss.dev.piaprobox.Fragment.ImageViewer.IllustratorViewFragment
 import com.nemesiss.dev.piaprobox.model.CheckPermissionModel
@@ -29,8 +29,8 @@ import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.Util.BaseOnPageChangeListener
 import com.nemesiss.dev.piaprobox.Util.runWhenAlive
-import com.nemesiss.dev.piaprobox.View.Common.LoadingLineIndicator
-import com.nemesiss.dev.piaprobox.View.SharedElements.SharedElementUtils
+import com.nemesiss.dev.piaprobox.view.common.LoadingLineIndicator
+import com.nemesiss.dev.piaprobox.view.sharedelements.SharedElementUtils
 import kotlinx.android.synthetic.main.illustrator_view_activity2.*
 import org.jsoup.Jsoup
 import java.io.File

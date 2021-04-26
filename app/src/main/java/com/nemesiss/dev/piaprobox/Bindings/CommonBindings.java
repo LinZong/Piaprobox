@@ -8,8 +8,8 @@ import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.nemesiss.dev.piaprobox.R;
-import com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout;
-import com.nemesiss.dev.piaprobox.View.Common.TextViewUtils;
+import com.nemesiss.dev.piaprobox.view.common.AutoWrapLayout;
+import com.nemesiss.dev.piaprobox.view.common.TextViewUtils;
 
 public class CommonBindings {
     @BindingAdapter({"bind:textWithUrl"})

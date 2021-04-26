@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
+import com.nemesiss.dev.contentparser.model.MusicContentInfo
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity.Companion.PERSIST_STATUS_INTENT_KEY

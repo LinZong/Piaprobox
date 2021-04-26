@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.View.SharedElements;
+package com.nemesiss.dev.piaprobox.view.sharedelements;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

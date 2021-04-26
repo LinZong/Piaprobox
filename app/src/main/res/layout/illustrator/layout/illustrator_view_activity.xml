@@ -95,7 +95,7 @@
                                         android:text=""/>
 
 
-                                <com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout
+                                <com.nemesiss.dev.piaprobox.view.common.AutoWrapLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="6dp"

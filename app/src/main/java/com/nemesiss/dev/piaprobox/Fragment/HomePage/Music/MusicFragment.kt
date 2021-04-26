@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
+import com.nemesiss.dev.contentparser.InvalidStepExecutorException
+import com.nemesiss.dev.contentparser.model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Adapter.SubmissionWorkCategory.Music.MusicCategoryItemDatabindingAdapter
@@ -15,8 +15,8 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
 import com.nemesiss.dev.piaprobox.model.resources.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
-import com.nemesiss.dev.piaprobox.View.Common.isLoadMoreIndicator
-import com.nemesiss.dev.piaprobox.View.Common.isNoMoreIndicator
+import com.nemesiss.dev.piaprobox.view.common.isLoadMoreIndicator
+import com.nemesiss.dev.piaprobox.view.common.isNoMoreIndicator
 import kotlinx.android.synthetic.main.category_fragment.*
 import kotlinx.android.synthetic.main.fragment_header.*
 import org.jsoup.Jsoup

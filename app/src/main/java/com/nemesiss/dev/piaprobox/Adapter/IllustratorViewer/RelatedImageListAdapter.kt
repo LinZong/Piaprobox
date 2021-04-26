@@ -3,7 +3,7 @@ package com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
+import com.nemesiss.dev.contentparser.model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.databinding.SingleRelatedImageItemBinding
 
 class RelatedImageListAdapter(

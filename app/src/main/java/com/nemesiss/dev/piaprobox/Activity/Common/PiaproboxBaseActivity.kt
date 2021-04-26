@@ -8,7 +8,7 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.Toast
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
-import com.nemesiss.dev.piaprobox.View.Common.LoadingIndicatorView
+import com.nemesiss.dev.piaprobox.view.common.LoadingIndicatorView
 
 open class PiaproboxBaseActivity : AppCompatActivity() {
 

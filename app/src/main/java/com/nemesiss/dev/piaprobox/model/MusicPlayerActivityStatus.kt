@@ -1,9 +1,9 @@
 package com.nemesiss.dev.piaprobox.model
 
-import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
-import com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
-import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
+import com.nemesiss.dev.contentparser.model.MusicContentInfo
+import com.nemesiss.dev.contentparser.model.MusicPlayInfo
+import com.nemesiss.dev.contentparser.model.RecommendItemModel
+import com.nemesiss.dev.contentparser.model.RelatedMusicInfo
 import java.io.Serializable
 
 data class MusicPlayerActivityStatus(

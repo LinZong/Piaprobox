@@ -2,8 +2,8 @@ package com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
+import com.nemesiss.dev.contentparser.InvalidStepExecutorException
+import com.nemesiss.dev.contentparser.model.RecommendTagModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.TagItemAdapter
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
 import com.nemesiss.dev.piaprobox.Fragment.BaseMainFragment
@@ -17,7 +17,7 @@ import com.nemesiss.dev.piaprobox.Service.DaggerModules.HtmlParserModules
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
-import com.nemesiss.dev.piaprobox.View.Common.SingleTagView
+import com.nemesiss.dev.piaprobox.view.common.SingleTagView
 import kotlinx.android.synthetic.main.recommend_category_layout.*
 import okhttp3.Response
 import org.jsoup.Jsoup

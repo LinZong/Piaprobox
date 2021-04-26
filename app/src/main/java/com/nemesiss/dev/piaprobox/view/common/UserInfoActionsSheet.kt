@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.View.Common
+package com.nemesiss.dev.piaprobox.view.common
 
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment

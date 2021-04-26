@@ -3,8 +3,8 @@ package com.nemesiss.dev.piaprobox.Activity.Text
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
-import com.nemesiss.dev.HTMLContentParser.Model.TextContentInfo
+import com.nemesiss.dev.contentparser.model.RecommendItemModelText
+import com.nemesiss.dev.contentparser.model.TextContentInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.model.text.TextDetailActivityViewModel
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerErrorHandlerFactory

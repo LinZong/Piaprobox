@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.View.Common
+package com.nemesiss.dev.piaprobox.view.common
 
 import android.content.Context
 import android.content.res.ColorStateList

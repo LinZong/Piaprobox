@@ -16,7 +16,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
+import com.nemesiss.dev.contentparser.model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity.Companion.PRE_SHOWN_IMAGE
@@ -26,7 +26,7 @@ import com.nemesiss.dev.piaprobox.model.image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback
-import com.nemesiss.dev.piaprobox.View.Common.whenClicks
+import com.nemesiss.dev.piaprobox.view.common.whenClicks
 import com.nemesiss.dev.piaprobox.databinding.IllustratorViewFragmentBinding
 import kotlinx.android.synthetic.main.illustrator_view_fragment.*
 import kotlinx.android.synthetic.main.illustrator_view_fragment.view.*

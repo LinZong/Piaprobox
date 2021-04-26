@@ -47,10 +47,11 @@
 
             </RelativeLayout>
 
-            <com.nemesiss.dev.piaprobox.View.Common.AutoWrapLayout android:layout_width="match_parent"
-                                                                   android:layout_margin="8dp"
-                                                                   android:id="@+id/MusicDetail_AutoWrap_Tag_Container"
-                                                                   android:layout_height="wrap_content"/>
+            <com.nemesiss.dev.piaprobox.view.common.AutoWrapLayout
+                    android:layout_width="match_parent"
+                    android:layout_margin="8dp"
+                    android:id="@+id/MusicDetail_AutoWrap_Tag_Container"
+                    android:layout_height="wrap_content"/>
 
 
 

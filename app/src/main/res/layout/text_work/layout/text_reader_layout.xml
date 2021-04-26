@@ -8,7 +8,7 @@
 
     </data>
 
-    <com.nemesiss.dev.piaprobox.View.Common.PinchScaleTextReader
+    <com.nemesiss.dev.piaprobox.view.common.PinchScaleTextReader
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
@@ -27,5 +27,5 @@
                 android:textColor="#808080"
                 android:id="@+id/TextReader_Content"/>
 
-    </com.nemesiss.dev.piaprobox.View.Common.PinchScaleTextReader>
+    </com.nemesiss.dev.piaprobox.view.common.PinchScaleTextReader>
 </layout>

@@ -18,7 +18,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.RecommendTagModel",
           "GenerateOutputRule": {
             "URL": [
               {
@@ -71,7 +71,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.RecommendItemModel",
           "GenerateOutputRule": {
             "Thumb": [
               {
@@ -302,7 +302,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.RecommendItemModelText",
           "GenerateOutputRule": {
             "Thumb": [
               {
@@ -549,7 +549,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.RecommendItemModelImage",
           "GenerateOutputRule": {
             "Thumb": [
               {
@@ -640,7 +640,7 @@
     "Steps": [
       {
         "OutputSingle": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.MusicContentInfo",
           "GenerateOutputRule": {
             "ContentID": [
               {
@@ -757,7 +757,7 @@
     "Steps": [
       {
         "OutputSingle": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.ImageContentInfo",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.ImageContentInfo",
           "GenerateOutputRule": {
             "ContentID": [
               {
@@ -857,7 +857,7 @@
     "Steps": [
       {
         "OutputSingle": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.TextContentInfo",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.TextContentInfo",
           "GenerateOutputRule": {
             "ContentID": [
               {
@@ -948,7 +948,7 @@
     "Steps": [
       {
         "OutputSingle": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.MusicPlayInfo",
           "GenerateOutputRule": {
             "URL": [
               {
@@ -995,7 +995,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.RelatedMusicInfo",
           "GenerateOutputRule": {
             "URL": [
               {
@@ -1064,7 +1064,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.RelatedImageInfo",
           "GenerateOutputRule": {
             "URL": [
               {
@@ -1137,7 +1137,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.RecommendItemModel",
           "GenerateOutputRule": {
             "Thumb": [
               {
@@ -1368,7 +1368,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.RecommendItemModelText",
           "GenerateOutputRule": {
             "Thumb": [
               {
@@ -1615,7 +1615,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.RecommendItemModelImage",
           "GenerateOutputRule": {
             "Thumb": [
               {
@@ -1722,7 +1722,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.SubmissionWorkFilterModel",
           "GenerateOutputRule": {
             "URL": [
               {
@@ -1774,7 +1774,7 @@
       },
       {
         "forEachOutput": {
-          "ElementMapClassName": "com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel",
+          "ElementMapClassName": "com.nemesiss.dev.contentparser.model.SubmissionWorkFilterModel",
           "GenerateOutputRule": {
             "URL": [
               {

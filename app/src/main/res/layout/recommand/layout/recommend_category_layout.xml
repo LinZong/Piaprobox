@@ -5,11 +5,12 @@
 >
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="vertical">
-        <com.nemesiss.dev.piaprobox.View.Common.FixedRecyclerView android:layout_width="wrap_content"
-                                                                  android:layout_height="wrap_content"
-                                                                  android:layout_margin="4dp"
-                                                                  android:nestedScrollingEnabled="false"
-                                                                  android:id="@+id/Recommend_Frag_Common_Tag_RecyclerView"/>
+        <com.nemesiss.dev.piaprobox.view.common.FixedRecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:nestedScrollingEnabled="false"
+                android:id="@+id/Recommend_Frag_Common_Tag_RecyclerView"/>
         <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

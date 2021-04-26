@@ -3,8 +3,8 @@ package com.nemesiss.dev.piaprobox.Service
 import android.content.Context
 import android.util.Log
 import com.alibaba.fastjson.JSONObject
-import com.nemesiss.dev.HTMLContentParser.ContentParserFactory
-import com.nemesiss.dev.HTMLContentParser.Steps.ContentParserImpl
+import com.nemesiss.dev.contentparser.ContentParserFactory
+import com.nemesiss.dev.contentparser.steps.ContentParserImpl
 import com.nemesiss.dev.piaprobox.model.HTMLParser.RuleVersion
 import com.nemesiss.dev.piaprobox.model.resources.Constants
 import com.nemesiss.dev.piaprobox.Util.AppUtil

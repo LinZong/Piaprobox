@@ -5,9 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.nemesiss.dev.HTMLContentParser.Model.RecommendTagModel
+import com.nemesiss.dev.contentparser.model.RecommendTagModel
 import com.nemesiss.dev.piaprobox.R
-import com.nemesiss.dev.piaprobox.View.Common.SingleTagView
+import com.nemesiss.dev.piaprobox.view.common.SingleTagView
 import kotlinx.android.synthetic.main.single_tag.view.*
 
 class TagItemAdapter(var items : List<RecommendTagModel>,val itemSelected : (Int)->Unit) : RecyclerView.Adapter<TagItemAdapter.TagItemVH>() {

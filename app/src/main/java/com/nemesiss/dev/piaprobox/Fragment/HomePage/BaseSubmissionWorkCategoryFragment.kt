@@ -8,15 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinner
-import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
-import com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel
+import com.nemesiss.dev.contentparser.InvalidStepExecutorException
+import com.nemesiss.dev.contentparser.model.SubmissionWorkFilterModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
 import com.nemesiss.dev.piaprobox.model.resources.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
-import com.nemesiss.dev.piaprobox.View.Common.canAddIndicator
-import com.nemesiss.dev.piaprobox.View.Common.removeIndicator
+import com.nemesiss.dev.piaprobox.view.common.canAddIndicator
+import com.nemesiss.dev.piaprobox.view.common.removeIndicator
 import kotlinx.android.synthetic.main.category_filter.*
 import org.jsoup.Jsoup
 

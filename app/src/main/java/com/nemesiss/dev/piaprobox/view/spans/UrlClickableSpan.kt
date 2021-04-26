@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.View.Spans
+package com.nemesiss.dev.piaprobox.view.spans
 
 import android.content.Context
 import android.text.TextPaint
