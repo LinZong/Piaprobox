@@ -8,7 +8,7 @@ import android.view.WindowManager
 import android.widget.TextView
 import com.nemesiss.dev.logback_android_logviewer.activity.LogFileExplorerActivity
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
-import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
+import com.nemesiss.dev.piaprobox.model.user.LoginCredentials
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerUserLoginServiceFactory

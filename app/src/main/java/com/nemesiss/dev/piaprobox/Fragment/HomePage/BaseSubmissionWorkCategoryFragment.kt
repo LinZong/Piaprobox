@@ -12,7 +12,7 @@ import com.nemesiss.dev.HTMLContentParser.InvalidStepExecutorException
 import com.nemesiss.dev.HTMLContentParser.Model.SubmissionWorkFilterModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
-import com.nemesiss.dev.piaprobox.Model.Resources.RecyclerViewInnerIndicator
+import com.nemesiss.dev.piaprobox.model.resources.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.View.Common.canAddIndicator

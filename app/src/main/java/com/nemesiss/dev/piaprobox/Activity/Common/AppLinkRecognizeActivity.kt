@@ -13,7 +13,7 @@ import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Activity.Text.TextDetailActivity
-import com.nemesiss.dev.piaprobox.Model.Resources.Constants
+import com.nemesiss.dev.piaprobox.model.resources.Constants
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle

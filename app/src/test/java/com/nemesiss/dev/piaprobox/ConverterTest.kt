@@ -1,9 +1,9 @@
 package com.nemesiss.dev.piaprobox
 
 import com.alibaba.fastjson.JSON
-import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
-import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
-import com.nemesiss.dev.piaprobox.Model.User.UserInfo
+import com.nemesiss.dev.piaprobox.model.user.LoginCredentials
+import com.nemesiss.dev.piaprobox.model.user.LoginStatus
+import com.nemesiss.dev.piaprobox.model.user.UserInfo
 import org.junit.Assert
 import org.junit.Test
 

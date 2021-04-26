@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Model
+package com.nemesiss.dev.piaprobox.model
 
 import com.nemesiss.dev.HTMLContentParser.Model.MusicContentInfo
 import com.nemesiss.dev.HTMLContentParser.Model.MusicPlayInfo

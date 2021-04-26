@@ -1,3 +1,3 @@
-package com.nemesiss.dev.piaprobox.Model.Events
+package com.nemesiss.dev.piaprobox.model.Events
 
 data class MusicPlayerClosedEvent(val sender: String)

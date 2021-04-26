@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Model.Resources
+package com.nemesiss.dev.piaprobox.model.resources
 
 /**
  * @author <a href="yingyin.lsy@alibaba-inc.com">萤音</a>

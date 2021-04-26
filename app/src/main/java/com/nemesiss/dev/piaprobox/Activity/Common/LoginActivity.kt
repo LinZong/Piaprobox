@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
-import com.nemesiss.dev.piaprobox.Model.Resources.Constants
-import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
-import com.nemesiss.dev.piaprobox.Model.User.LoginResult
-import com.nemesiss.dev.piaprobox.Model.User.UserInfo
+import com.nemesiss.dev.piaprobox.model.resources.Constants
+import com.nemesiss.dev.piaprobox.model.user.LoginCredentials
+import com.nemesiss.dev.piaprobox.model.user.LoginResult
+import com.nemesiss.dev.piaprobox.model.user.UserInfo
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerUserLoginServiceFactory

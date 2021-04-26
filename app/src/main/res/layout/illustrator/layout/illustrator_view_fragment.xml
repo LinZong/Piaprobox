@@ -7,7 +7,7 @@
 
         <variable
                 name="model"
-                type="com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel"/>
+                type="com.nemesiss.dev.piaprobox.model.image.IllustratorViewFragmentViewModel"/>
         <import type="com.nemesiss.dev.piaprobox.Service.HTMLParser"/>
 
     </data>

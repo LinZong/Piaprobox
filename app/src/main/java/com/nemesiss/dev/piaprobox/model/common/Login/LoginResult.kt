@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Model.Common.Login
+package com.nemesiss.dev.piaprobox.model.common.Login
 
 import android.os.Parcel
 import android.os.Parcelable

@@ -19,10 +19,10 @@ import com.nemesiss.dev.piaprobox.Fragment.HomePage.Music.MusicFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.RecommendImageCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.MainRecommendFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.TextWork.TextWorkFragment
-import com.nemesiss.dev.piaprobox.Model.Resources.Constants
-import com.nemesiss.dev.piaprobox.Model.User.LoginResult
-import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
-import com.nemesiss.dev.piaprobox.Model.User.UserInfo
+import com.nemesiss.dev.piaprobox.model.resources.Constants
+import com.nemesiss.dev.piaprobox.model.user.LoginResult
+import com.nemesiss.dev.piaprobox.model.user.LoginStatus
+import com.nemesiss.dev.piaprobox.model.user.UserInfo
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerUserLoginServiceFactory

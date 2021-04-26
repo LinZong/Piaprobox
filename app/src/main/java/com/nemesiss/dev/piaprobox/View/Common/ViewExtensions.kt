@@ -17,9 +17,9 @@ import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorViewActivity2
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.ImageRecommendItemDatabindingAdapter
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.Recommend.Categories.BaseRecommendCategoryFragment
-import com.nemesiss.dev.piaprobox.Model.Events.SharedElementBackEvent
-import com.nemesiss.dev.piaprobox.Model.Resources.RecyclerViewInnerIndicator
-import com.nemesiss.dev.piaprobox.Model.Resources.StaticResourcesMap
+import com.nemesiss.dev.piaprobox.model.Events.SharedElementBackEvent
+import com.nemesiss.dev.piaprobox.model.resources.RecyclerViewInnerIndicator
+import com.nemesiss.dev.piaprobox.model.resources.StaticResourcesMap
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.BaseTransitionCallback
 import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback

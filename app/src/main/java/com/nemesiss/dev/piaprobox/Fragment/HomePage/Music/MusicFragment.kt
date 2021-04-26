@@ -12,7 +12,7 @@ import com.nemesiss.dev.piaprobox.Adapter.SubmissionWorkCategory.Music.MusicCate
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.BaseSubmissionWorkCategoryFragment
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkType
 import com.nemesiss.dev.piaprobox.Fragment.HomePage.SubmissionWorkUrlBuilder
-import com.nemesiss.dev.piaprobox.Model.Resources.RecyclerViewInnerIndicator
+import com.nemesiss.dev.piaprobox.model.resources.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.View.Common.isLoadMoreIndicator

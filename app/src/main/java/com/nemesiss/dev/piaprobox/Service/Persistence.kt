@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
-import com.nemesiss.dev.piaprobox.Model.User.LoginCookie
-import com.nemesiss.dev.piaprobox.Model.User.LoginCredentials
-import com.nemesiss.dev.piaprobox.Model.User.LoginStatus
-import com.nemesiss.dev.piaprobox.Model.User.UserInfo
+import com.nemesiss.dev.piaprobox.model.user.LoginCookie
+import com.nemesiss.dev.piaprobox.model.user.LoginCredentials
+import com.nemesiss.dev.piaprobox.model.user.LoginStatus
+import com.nemesiss.dev.piaprobox.model.user.UserInfo
 import java.util.*
 
 class Persistence {

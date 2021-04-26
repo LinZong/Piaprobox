@@ -4,8 +4,8 @@ import android.content.Intent
 import android.text.TextUtils
 import com.nemesiss.dev.piaprobox.Activity.Common.LoginActivity
 import com.nemesiss.dev.piaprobox.Activity.Common.LoginCallbackActivity
-import com.nemesiss.dev.piaprobox.Model.Resources.Constants
-import com.nemesiss.dev.piaprobox.Model.User.*
+import com.nemesiss.dev.piaprobox.model.resources.Constants
+import com.nemesiss.dev.piaprobox.model.user.*
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory

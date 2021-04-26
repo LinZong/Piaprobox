@@ -6,7 +6,7 @@ import android.widget.Toast
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelText
 import com.nemesiss.dev.HTMLContentParser.Model.TextContentInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
-import com.nemesiss.dev.piaprobox.Model.Text.TextDetailActivityViewModel
+import com.nemesiss.dev.piaprobox.model.text.TextDetailActivityViewModel
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerErrorHandlerFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerHtmlParserFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.ErrorHandlerModules

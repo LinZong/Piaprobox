@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
-import com.nemesiss.dev.piaprobox.Model.Resources.RecyclerViewInnerIndicator
+import com.nemesiss.dev.piaprobox.model.resources.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.View.Common.detectWhichViewHolderToCreate
 import com.nemesiss.dev.piaprobox.databinding.SingleRecommendItemBinding
 

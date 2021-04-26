@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Model.User
+package com.nemesiss.dev.piaprobox.model.user
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.annotation.JSONField

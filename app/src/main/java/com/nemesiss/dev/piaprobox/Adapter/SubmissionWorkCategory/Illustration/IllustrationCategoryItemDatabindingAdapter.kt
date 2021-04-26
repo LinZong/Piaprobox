@@ -6,7 +6,7 @@ import android.widget.ImageView
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.ImageRecommendItemDatabindingAdapter
-import com.nemesiss.dev.piaprobox.Model.Resources.RecyclerViewInnerIndicator
+import com.nemesiss.dev.piaprobox.model.resources.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.View.Common.detectWhichViewHolderToCreate
 
 class IllustrationCategoryItemDatabindingAdapter(

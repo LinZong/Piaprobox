@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Model.Image
+package com.nemesiss.dev.piaprobox.model.image
 
 import android.graphics.drawable.Drawable
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo

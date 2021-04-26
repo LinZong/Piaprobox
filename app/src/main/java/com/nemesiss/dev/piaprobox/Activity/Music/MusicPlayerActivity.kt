@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
@@ -25,8 +24,8 @@ import com.nemesiss.dev.HTMLContentParser.Model.RelatedMusicInfo
 import com.nemesiss.dev.piaprobox.Activity.Common.PiaproboxBaseActivity
 import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.MusicLyricAdapter
 import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.RelatedMusicListAdapter
-import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
-import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
+import com.nemesiss.dev.piaprobox.model.CheckPermissionModel
+import com.nemesiss.dev.piaprobox.model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory

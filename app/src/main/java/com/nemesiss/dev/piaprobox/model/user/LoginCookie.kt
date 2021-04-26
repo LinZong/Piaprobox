@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Model.User
+package com.nemesiss.dev.piaprobox.model.user
 
 import android.text.TextUtils
 import com.alibaba.fastjson.annotation.JSONField

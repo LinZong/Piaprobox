@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Model.Text
+package com.nemesiss.dev.piaprobox.model.text
 
 class TextDetailActivityViewModel {
     lateinit var ArtistName : String

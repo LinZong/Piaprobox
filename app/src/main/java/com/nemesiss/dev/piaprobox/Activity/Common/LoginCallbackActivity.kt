@@ -2,9 +2,9 @@ package com.nemesiss.dev.piaprobox.Activity.Common
 
 import android.content.Intent
 import android.text.TextUtils
-import com.nemesiss.dev.piaprobox.Model.Resources.Constants
-import com.nemesiss.dev.piaprobox.Model.User.LoginResult
-import com.nemesiss.dev.piaprobox.Model.User.UserInfo
+import com.nemesiss.dev.piaprobox.model.resources.Constants
+import com.nemesiss.dev.piaprobox.model.user.LoginResult
+import com.nemesiss.dev.piaprobox.model.user.UserInfo
 
 abstract class LoginCallbackActivity : PiaproboxBaseActivity() {
 

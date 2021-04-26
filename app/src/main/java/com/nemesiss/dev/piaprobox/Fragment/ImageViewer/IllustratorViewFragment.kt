@@ -21,8 +21,8 @@ import com.nemesiss.dev.piaprobox.Activity.Common.PreviewImageActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity
 import com.nemesiss.dev.piaprobox.Activity.Image.IllustratorImageProviderActivity.Companion.PRE_SHOWN_IMAGE
 import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.RelatedImageListAdapter
-import com.nemesiss.dev.piaprobox.Model.Events.SharedElementBackEvent
-import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
+import com.nemesiss.dev.piaprobox.model.Events.SharedElementBackEvent
+import com.nemesiss.dev.piaprobox.model.image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import com.nemesiss.dev.piaprobox.Util.MediaSharedElementCallback

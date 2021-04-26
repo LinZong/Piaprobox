@@ -12,8 +12,8 @@ import com.nemesiss.dev.piaprobox.Activity.Music.MusicControlActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity
 import com.nemesiss.dev.piaprobox.Activity.Music.MusicPlayerActivity.Companion.PERSIST_STATUS_INTENT_KEY
 import com.nemesiss.dev.piaprobox.Application.PiaproboxApplication
-import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
-import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
+import com.nemesiss.dev.piaprobox.model.MusicNotificationModel
+import com.nemesiss.dev.piaprobox.model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerNotificationManager.Companion.NotificationID
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.DefaultMusicPlayerStateChangedCallback
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.MusicPlayer

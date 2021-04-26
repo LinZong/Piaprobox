@@ -5,8 +5,8 @@ import android.util.Log
 import com.alibaba.fastjson.JSONObject
 import com.nemesiss.dev.HTMLContentParser.ContentParserFactory
 import com.nemesiss.dev.HTMLContentParser.Steps.ContentParserImpl
-import com.nemesiss.dev.piaprobox.Model.HTMLParser.RuleVersion
-import com.nemesiss.dev.piaprobox.Model.Resources.Constants
+import com.nemesiss.dev.piaprobox.model.HTMLParser.RuleVersion
+import com.nemesiss.dev.piaprobox.model.resources.Constants
 import com.nemesiss.dev.piaprobox.Util.AppUtil
 import java.io.BufferedReader
 import java.io.File

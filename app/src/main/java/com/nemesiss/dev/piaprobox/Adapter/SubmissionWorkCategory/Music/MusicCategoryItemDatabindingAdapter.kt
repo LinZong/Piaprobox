@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModel
 import com.nemesiss.dev.piaprobox.Adapter.Common.InfinityLoadAdapter
 import com.nemesiss.dev.piaprobox.Adapter.RecommendPage.MusicRecommendItemDatabindingAdapter
-import com.nemesiss.dev.piaprobox.Model.Resources.RecyclerViewInnerIndicator
+import com.nemesiss.dev.piaprobox.model.resources.RecyclerViewInnerIndicator
 import com.nemesiss.dev.piaprobox.View.Common.detectWhichViewHolderToCreate
 
 class MusicCategoryItemDatabindingAdapter(

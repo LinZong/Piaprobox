@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import com.nemesiss.dev.piaprobox.Model.MusicStatus;
+import com.nemesiss.dev.piaprobox.model.MusicStatus;
 import io.reactivex.subjects.BehaviorSubject;
 
 import java.io.FileDescriptor;

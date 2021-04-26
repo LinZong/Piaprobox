@@ -1,4 +1,4 @@
-package com.nemesiss.dev.piaprobox.Model.User
+package com.nemesiss.dev.piaprobox.model.user
 
 /**
  * 登陆调用结果

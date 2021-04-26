@@ -11,7 +11,7 @@ import android.os.IBinder
 import android.os.Message
 import android.util.Log
 import android.widget.SeekBar
-import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
+import com.nemesiss.dev.piaprobox.model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.Persistence
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService

@@ -11,8 +11,8 @@ import com.nemesiss.dev.HTMLContentParser.Model.RecommendItemModelImage
 import com.nemesiss.dev.HTMLContentParser.Model.RelatedImageInfo
 import com.nemesiss.dev.piaprobox.Adapter.IllustratorViewer.IllustratorViewPageFragmentAdapter
 import com.nemesiss.dev.piaprobox.Fragment.ImageViewer.IllustratorViewFragment
-import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
-import com.nemesiss.dev.piaprobox.Model.Image.IllustratorViewFragmentViewModel
+import com.nemesiss.dev.piaprobox.model.CheckPermissionModel
+import com.nemesiss.dev.piaprobox.model.image.IllustratorViewFragmentViewModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory

@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import com.nemesiss.dev.piaprobox.Activity.Common.MainActivity
-import com.nemesiss.dev.piaprobox.Model.MusicNotificationModel
+import com.nemesiss.dev.piaprobox.model.MusicNotificationModel
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.BaseNotificationManager
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
