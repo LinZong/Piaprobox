@@ -386,12 +386,13 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         buildPlayListCacheIfNeeded()
 
         val playListItemHolder = playListCache[playListIndex]
-        ShowLoadingIndicator(MusicPlayer_ContentContainer)
 
         val async = AsyncExecutor.INSTANCE
         async.SendTask {
             try {
                 if (!playListItemHolder.isPrepared) {
+                    // 只有这个MusicInfoHolder没有完全加载的时候，才显示LoadingIndicator，避免闪屏。
+                    ShowLoadingIndicator(MusicPlayer_ContentContainer)
                     playListItemHolder.await(20, TimeUnit.SECONDS)
                 }
                 // 加载成功了
