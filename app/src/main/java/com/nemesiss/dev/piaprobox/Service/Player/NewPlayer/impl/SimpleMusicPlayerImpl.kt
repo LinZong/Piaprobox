@@ -383,6 +383,10 @@ open class SimpleMusicPlayerImpl(
                 PlayerAction.PAUSED -> {
                     player.pause()
                 }
+                PlayerAction.STOPPED -> {
+                    resetFlags()
+                    resetPlayerState()
+                }
                 else -> {
                 }
             }
@@ -396,7 +400,8 @@ open class SimpleMusicPlayerImpl(
                     requestPlay()
                 }
                 PlayerAction.STOPPED -> {
-                    player.stop()
+                    resetFlags()
+                    resetPlayerState()
                 }
                 else -> {
                 }
