@@ -594,13 +594,15 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         @JvmStatic
         fun CleanStaticResources() {
             LAST_MUSIC_PLAYER_ACTIVITY_STATUS = null
-            val bitmap = (LAST_MUSIC_BITMAP as? BitmapDrawable)?.bitmap
-            if (bitmap?.isRecycled == false) {
-                bitmap.recycle()
-            }
-            LAST_MUSIC_BITMAP = null
+
             // 音乐播放器没在播放，删掉当前播放列表
             if (!MusicPlayerService.IS_FOREGROUND) {
+                val bitmap = (LAST_MUSIC_BITMAP as? BitmapDrawable)?.bitmap
+                if (bitmap?.isRecycled == false) {
+                    bitmap.recycle()
+                }
+                LAST_MUSIC_BITMAP = null
+
                 PLAY_LISTS = null
                 playListCache.clear()
             }
