@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
+import com.alibaba.fastjson.JSON
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -27,6 +28,7 @@ import com.nemesiss.dev.piaprobox.Adapter.MusicPlayer.RelatedMusicListAdapter
 import com.nemesiss.dev.piaprobox.Model.CheckPermissionModel
 import com.nemesiss.dev.piaprobox.Model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.R
+import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
 import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
@@ -40,9 +42,185 @@ import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.handle
 import kotlinx.android.synthetic.main.music_player_layout.*
 import org.jsoup.Jsoup
 import org.slf4j.getLogger
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+
+private class MusicInfoHolder(val contentUrl: String, private val htmlParser: HTMLParser) {
+
+    lateinit var contentInfo: MusicContentInfo
+        private set
+
+    lateinit var playInfo: MusicPlayInfo
+        private set
+
+    var relatedMusics = emptyList<RelatedMusicInfo>()
+        private set
+
+    private var cdl = CountDownLatch(2)
+
+    private var error: Throwable? = null
+
+    @Volatile
+    private var loading = false
+
+    private val step get() = (2 - cdl.count).toInt()
+
+    val isPrepared get() = step == 2
+
+    private companion object {
+
+        private val log = getLogger<MusicInfoHolder>()
+
+        val stepName = mapOf(
+            0 to "Load MusicContentInfo",
+            1 to "Load MusicPlayInfo"
+        )
+    }
+
+    constructor(
+        contentUrl: String,
+        htmlParser: HTMLParser,
+        contentInfo: MusicContentInfo,
+        playInfo: MusicPlayInfo
+    ) : this(contentUrl, htmlParser) {
+        this.contentInfo = contentInfo
+        this.playInfo = playInfo
+        // let cdl finished.
+        repeat(2) { cdl.countDown() }
+    }
+
+    fun await() {
+        emitFetchIfNeeded()
+        cdl.await()
+        throwPendingErrorIfExists()
+    }
+
+    fun await(timeout: Long, unit: TimeUnit) {
+        emitFetchIfNeeded()
+        cdl.await(timeout, unit)
+        throwPendingErrorIfExists()
+    }
+
+    fun fetch() = emitFetchIfNeeded()
+
+    private fun emitFetchIfNeeded() {
+        if (!loading && step == 0) {
+             // clean error, go ahead.
+            error = null
+            next()
+        }
+    }
+
+    private fun next() {
+        try {
+            when (step) {
+                0 -> {
+                    loading = true; loadContentInfo()
+                }
+                1 -> loadPlayInfo()
+                2 -> {
+                    loading = false
+                }
+            }
+        } catch (e: Throwable) {
+            log.error("Load $contentUrl failed", e)
+            error = e
+            resetStatus()
+        }
+    }
+
+    private fun resetStatus() {
+        loading = false
+        repeat(2) { cdl.countDown() }
+        cdl = CountDownLatch(2)
+    }
+
+    private fun throwPendingErrorIfExists() {
+        val err = error
+        if (err != null) {
+            error = null
+            throw err
+        }
+    }
+
+    private fun loadContentInfo() {
+        log.info("Loading content info for url: $contentUrl ...")
+
+        val response = DaggerFetchFactory.create()
+            .fetcher()
+            .visit(contentUrl)
+            .go()
+        response.handle<String>(
+            { body -> parseContentInfo(body) },
+            { httpCode, _ -> throw Exception("Invalid response error, HttpCode: $httpCode") })
+    }
+
+    private fun loadPlayInfo() {
+        val url =
+            "https://piapro.jp/html5_player_popup/?id=${contentInfo.ContentID}&cdate=${contentInfo.CreateDate}&p=${contentInfo.Priority}"
+        log.info("Loading play info for url: $url")
+        val response = DaggerFetchFactory.create()
+            .fetcher()
+            .visit(url)
+            .go()
+        response.handle<String>(
+            { body -> parsePlayInfo(body) },
+            { httpCode, _ -> throw Exception("Invalid response error, HttpCode: $httpCode") })
+    }
+
+    private fun parseContentInfo(body: String) {
+        val root = Jsoup.parse(body)
+
+        val parseMusicContentStep = htmlParser
+            .Rules
+            .getJSONObject("MusicContent")
+            .getJSONArray("Steps")
+        this.contentInfo = htmlParser
+            .Parser
+            .GoSteps(root, parseMusicContentStep) as MusicContentInfo
+
+        log.info("MusicContentInfo Loaded: ${JSON.toJSONString(this.contentInfo)}")
+
+        val parseRelatedMusicInfoSteps = htmlParser
+            .Rules
+            .getJSONObject("RelatedMusic")
+            .getJSONArray("Steps")
+
+
+        // 推荐列表拿不到无所谓。
+        try {
+            this.relatedMusics = (htmlParser
+                .Parser
+                .GoSteps(root, parseRelatedMusicInfoSteps) as Array<*>)
+                .map { it as RelatedMusicInfo }
+        } catch (t: Throwable) {
+            log.error("Cannot get related musics for url: $contentUrl", t)
+        }
+        cdl.countDown()
+        next()
+    }
+
+    private fun parsePlayInfo(body: String) {
+        val root = Jsoup.parse(body)
+        val steps = htmlParser.Rules.getJSONObject("MusicPlayInfo").getJSONArray("Steps")
+        val playInfo = htmlParser.Parser.GoSteps(root, steps) as MusicPlayInfo
+        playInfo.Thumb = GetAlbumThumb(playInfo.Thumb)
+        this.playInfo = playInfo
+        log.info("MusicPlayInfo Loaded: ${JSON.toJSONString(playInfo)}")
+        log.warn("Url: $contentUrl finish loading successfully!")
+
+        cdl.countDown()
+        next()
+    }
+}
+
+
 open class MusicPlayerActivity : PiaproboxBaseActivity() {
+
+    // 专门用来缓存Cache的Async，异步任务很多，单独开线程
+    private val cacheFetcherAsync = AsyncExecutor(20, 40)
 
     private val log = getLogger<MusicPlayerActivity>()
 
@@ -91,6 +269,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         }
     }
 
+
     private fun keepLastMusicBitmap(drawable: Drawable) {
         LAST_MUSIC_BITMAP = drawable.constantState?.newDrawable()?.mutate()
     }
@@ -135,7 +314,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
                 RecoverActivityStatusFromPersistObject(LAST_MUSIC_PLAYER_ACTIVITY_STATUS!!)
             } else {
                 LAST_MUSIC_PLAYER_ACTIVITY_STATUS = null
-                LoadMusicContentInfo(MusicContentUrl, true)
+//                LoadMusicContentInfo(MusicContentUrl, true)
+                LoadMusicContentInfo(CurrentPlayItemIndex, true)
             }
         }
         HandleSwitchMusicIntent(intent)
@@ -173,92 +353,176 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         ActivateRelatedMusicRecyclerViewAdapter()
     }
 
-    private fun LoadMusicContentInfo(Url: String, ShouldUpdateRelatedMusicList: Boolean) {
-        if (Url.isEmpty()) {
-            Toast.makeText(this, resources.getString(R.string.MusicContentUrlEmpty), Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (PLAY_LISTS != null && CurrentPlayItemIndex != -1) {
-            val item = PLAY_LISTS!![CurrentPlayItemIndex]
-            // 直接在这里更新.
-            MusicPlayer_Toolbar.title = item.ItemName
-        }
-
-        LAST_LOAD_CONTENT_URL = Url
-        ShowLoadingIndicator(MusicPlayer_ContentContainer)
-        DaggerFetchFactory.create()
-            .fetcher()
-            .visit(Url)
-            .goAsync({ response ->
-                response.handle<String>({
-                    ParseMusicContentInfo(it, ShouldUpdateRelatedMusicList)
-                }, { code, _ ->
-                    HideLoadingIndicator(MusicPlayer_ContentContainer)
-                    LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
-                })
-            }, { e ->
-                runOnUiThread {
-                    HideLoadingIndicator(MusicPlayer_ContentContainer)
-                    LoadFailedTips(-4, e.message ?: "")
-                }
-            })
-    }
-
-    private fun ParseMusicContentInfo(HTMLString: String, ShouldUpdateRelatedMusicList: Boolean) {
-        val root = Jsoup.parse(HTMLString)
-        val parseMusicContentStep = htmlParser
-            .Rules
-            .getJSONObject("MusicContent")
-            .getJSONArray("Steps")
-        val contentInfo = htmlParser
-            .Parser
-            .GoSteps(root, parseMusicContentStep) as MusicContentInfo
-
-        CurrentMusicContentInfo = contentInfo
-
-        if (ShouldUpdateRelatedMusicList) {
-            val parseRelatedMusicInfoSteps = htmlParser
-                .Rules
-                .getJSONObject("RelatedMusic")
-                .getJSONArray("Steps")
-            val relatedMusics = (htmlParser
-                .Parser
-                .GoSteps(root, parseRelatedMusicInfoSteps) as Array<*>)
-                .map { it as RelatedMusicInfo }
-
-            runOnUiThread {
-                LoadRelatedMusicsToView(relatedMusics)
+    @Synchronized
+    private fun buildPlayListCacheIfNeeded(force: Boolean = false) {
+        val playList = PLAY_LISTS ?: return
+        if (playList.isEmpty()) return
+        if (!force) {
+            if (playListCache.isNotEmpty()) {
+                // check if cache is outdated.
+                val firstUrl = HTMLParser.wrapDomain(playList[0].URL)
+                val firstCacheUrl = playListCache[0].contentUrl
+                if (firstUrl == firstCacheUrl) return
             }
         }
+        log.warn("Rebuilding playlist cache...")
+        playListCache.clear()
+        playListCache +=
+            playList
+                .map { v -> HTMLParser.wrapDomain(v.URL) }
+                .map { url -> MusicInfoHolder(url, htmlParser) }
+
+        fetchPlayListCacheInfoAsync()
+        log.warn("Finish rebuild playlist cache!!!")
+    }
+
+    private fun fetchPlayListCacheInfoAsync() {
+        for (item in playListCache) {
+            cacheFetcherAsync.SendTask { item.fetch() }
+        }
+    }
+
+    private fun LoadMusicContentInfo(playListIndex: Int, loadRelatedMusics: Boolean = false) {
+        buildPlayListCacheIfNeeded()
+
+        val playListItemHolder = playListCache[playListIndex]
+        ShowLoadingIndicator(MusicPlayer_ContentContainer)
+
+        val async = AsyncExecutor.INSTANCE
+        async.SendTask {
+            try {
+                if (!playListItemHolder.isPrepared) {
+                    playListItemHolder.await(20, TimeUnit.SECONDS)
+                }
+                // 加载成功了
+                onNewMusicInfoLoaded(playListItemHolder, loadRelatedMusics)
+            } catch (t: Throwable) {
+                // 加载过程中出现异常
+                LoadFailedTips(-10, t.message ?: "Unknown error.")
+            } finally {
+                HideLoadingIndicator(MusicPlayer_ContentContainer)
+            }
+        }
+    }
+
+    private fun onNewMusicInfoLoaded(holder: MusicInfoHolder, refreshRelatedMusics: Boolean = false) {
+        val contentInfo = holder.contentInfo
+        val playInfo = holder.playInfo
+
+        LAST_LOAD_CONTENT_URL = holder.contentUrl
+        CurrentMusicContentInfo = contentInfo
+        CurrentMusicPlayInfo = playInfo
 
         runOnUiThread {
             MusicPlayer_Toolbar.title = contentInfo.Title
             ParseLyrics(contentInfo.Lyrics)
+            GlideLoadThumbToImageView(playInfo.Thumb)
+            if (refreshRelatedMusics) {
+                LoadRelatedMusicsToView(holder.relatedMusics)
+            }
+            playMusic(contentInfo, playInfo)
         }
-        LoadMusicPlayInfo(contentInfo)
     }
 
-    private fun LoadMusicPlayInfo(content: MusicContentInfo) {
-        val Url =
-            "https://piapro.jp/html5_player_popup/?id=${content.ContentID}&cdate=${content.CreateDate}&p=${content.Priority}"
-        DaggerFetchFactory.create()
-            .fetcher()
-            .visit(Url)
-            .goAsync({ response ->
-                response.handle<String>({
-                    ParseMusicPlayInfo(it)
-                }, { code, _ ->
-                    HideLoadingIndicator(MusicPlayer_ContentContainer)
-                    LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
-                })
-            }, { e ->
-                runOnUiThread {
-                    HideLoadingIndicator(MusicPlayer_ContentContainer)
-                    LoadFailedTips(-4, e.message ?: "")
-                }
-            })
-    }
+//    private fun LoadMusicContentInfo(Url: String, ShouldUpdateRelatedMusicList: Boolean) {
+//        if (Url.isEmpty()) {
+//            Toast.makeText(this, resources.getString(R.string.MusicContentUrlEmpty), Toast.LENGTH_SHORT).show()
+//            return
+//        }
+//
+//        if (PLAY_LISTS != null && CurrentPlayItemIndex != -1) {
+//            val item = PLAY_LISTS!![CurrentPlayItemIndex]
+//            // 直接在这里更新.
+//            MusicPlayer_Toolbar.title = item.ItemName
+//        }
+//
+//        LAST_LOAD_CONTENT_URL = Url
+//        ShowLoadingIndicator(MusicPlayer_ContentContainer)
+//        DaggerFetchFactory.create()
+//            .fetcher()
+//            .visit(Url)
+//            .goAsync({ response ->
+//                response.handle<String>({
+//                    ParseMusicContentInfo(it, ShouldUpdateRelatedMusicList)
+//                }, { code, _ ->
+//                    HideLoadingIndicator(MusicPlayer_ContentContainer)
+//                    LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
+//                })
+//            }, { e ->
+//                runOnUiThread {
+//                    HideLoadingIndicator(MusicPlayer_ContentContainer)
+//                    LoadFailedTips(-4, e.message ?: "")
+//                }
+//            })
+//    }
+
+//    private fun ParseMusicContentInfo(HTMLString: String, ShouldUpdateRelatedMusicList: Boolean) {
+//        val root = Jsoup.parse(HTMLString)
+//        val parseMusicContentStep = htmlParser
+//            .Rules
+//            .getJSONObject("MusicContent")
+//            .getJSONArray("Steps")
+//        val contentInfo = htmlParser
+//            .Parser
+//            .GoSteps(root, parseMusicContentStep) as MusicContentInfo
+//
+//        CurrentMusicContentInfo = contentInfo
+//
+//        if (ShouldUpdateRelatedMusicList) {
+//            val parseRelatedMusicInfoSteps = htmlParser
+//                .Rules
+//                .getJSONObject("RelatedMusic")
+//                .getJSONArray("Steps")
+//            val relatedMusics = (htmlParser
+//                .Parser
+//                .GoSteps(root, parseRelatedMusicInfoSteps) as Array<*>)
+//                .map { it as RelatedMusicInfo }
+//
+//            runOnUiThread {
+//                LoadRelatedMusicsToView(relatedMusics)
+//            }
+//        }
+//
+//        runOnUiThread {
+//            MusicPlayer_Toolbar.title = contentInfo.Title
+//            ParseLyrics(contentInfo.Lyrics)
+//        }
+//        LoadMusicPlayInfo(contentInfo)
+//    }
+
+//    private fun LoadMusicPlayInfo(content: MusicContentInfo) {
+//        val Url =
+//            "https://piapro.jp/html5_player_popup/?id=${content.ContentID}&cdate=${content.CreateDate}&p=${content.Priority}"
+//        DaggerFetchFactory.create()
+//            .fetcher()
+//            .visit(Url)
+//            .goAsync({ response ->
+//                response.handle<String>(
+//                    { ParseMusicPlayInfo(it) },
+//                    { code, _ ->
+//                    HideLoadingIndicator(MusicPlayer_ContentContainer)
+//                    LoadFailedTips(code, resources.getString(R.string.Error_Page_Load_Failed))
+//                })
+//            }, { e ->
+//                runOnUiThread {
+//                    HideLoadingIndicator(MusicPlayer_ContentContainer)
+//                    LoadFailedTips(-4, e.message ?: "")
+//                }
+//            })
+//    }
+
+//    private fun ParseMusicPlayInfo(HTMLString: String) {
+//        val root = Jsoup.parse(HTMLString)
+//        val steps = htmlParser.Rules.getJSONObject("MusicPlayInfo").getJSONArray("Steps")
+//        val playInfo = htmlParser.Parser.GoSteps(root, steps) as MusicPlayInfo
+//        val finalThumbUrl: String = GetAlbumThumb(playInfo.Thumb)
+//        runOnUiThread {
+//            Log.d("LoadMusicInfo", finalThumbUrl)
+//            GlideLoadThumbToImageView(finalThumbUrl)
+//        }
+//        CurrentMusicPlayInfo = playInfo
+//        HideLoadingIndicator(MusicPlayer_ContentContainer)
+//    }
 
     private fun GlideLoadThumbToImageView(url: String) {
         try {
@@ -271,26 +535,13 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         }
     }
 
-    private fun ParseMusicPlayInfo(HTMLString: String) {
-        val root = Jsoup.parse(HTMLString)
-        val steps = htmlParser.Rules.getJSONObject("MusicPlayInfo").getJSONArray("Steps")
-        val playInfo = htmlParser.Parser.GoSteps(root, steps) as MusicPlayInfo
-        val finalThumbUrl: String = GetAlbumThumb(playInfo.Thumb)
-        runOnUiThread {
-            Log.d("LoadMusicInfo", finalThumbUrl)
-            GlideLoadThumbToImageView(finalThumbUrl)
-        }
-        CurrentMusicPlayInfo = playInfo
-
+    private fun playMusic(contentInfo: MusicContentInfo, playInfo: MusicPlayInfo) {
         val intent = Intent(this, MusicPlayerService::class.java)
         intent.action = "UPDATE_INFO"
-        intent.putExtra("UpdateMusicContentInfo", CurrentMusicContentInfo)
+        intent.putExtra("UpdateMusicContentInfo", contentInfo)
         intent.putExtra("WillPlayMusicURL", playInfo.URL)
-
         (this as? MusicControlActivity)?.PersistMusicPlayerActivityStatus(PlayerAction.STOPPED, true)
-
         startService(intent)
-        HideLoadingIndicator(MusicPlayer_ContentContainer)
     }
 
     private fun ParseLyrics(LyricStr: String) {
@@ -351,7 +602,9 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             }
         }
         CurrentPlayItemIndex = index
-        LoadMusicContentInfo(item.URL, false)
+        // force rebuild play list cache.
+        buildPlayListCacheIfNeeded(true)
+        LoadMusicContentInfo(index, false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -390,18 +643,16 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     protected fun NextMusic() {
         if (PLAY_LISTS != null && CurrentPlayItemIndex != -1 && CurrentPlayItemIndex + 1 < PLAY_LISTS!!.size) {
-            val nextItem = PLAY_LISTS!![CurrentPlayItemIndex + 1]
-            MusicPlayer_Toolbar.title = nextItem.ItemName
-            LoadMusicContentInfo(HTMLParser.wrapDomain(nextItem.URL), false)
+//            val nextItem = PLAY_LISTS!![CurrentPlayItemIndex + 1]
+//            MusicPlayer_Toolbar.title = nextItem.ItemName
+            LoadMusicContentInfo(CurrentPlayItemIndex + 1, false)
             CurrentPlayItemIndex++
         }
     }
 
     protected fun PrevMusic() {
         if (PLAY_LISTS != null && CurrentPlayItemIndex != -1 && CurrentPlayItemIndex - 1 >= 0) {
-            val nextItem = PLAY_LISTS!![CurrentPlayItemIndex - 1]
-            MusicPlayer_Toolbar.title = nextItem.ItemName
-            LoadMusicContentInfo(HTMLParser.wrapDomain(nextItem.URL), false)
+            LoadMusicContentInfo(CurrentPlayItemIndex - 1, false)
             CurrentPlayItemIndex--
         }
     }
@@ -432,6 +683,10 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         var PLAY_LISTS: List<RecommendItemModel>? = null
 
         @JvmStatic
+        private val playListCache: ArrayList<MusicInfoHolder> = arrayListOf()
+
+
+        @JvmStatic
         fun CleanStaticResources() {
             LAST_MUSIC_PLAYER_ACTIVITY_STATUS = null
             val bitmap = (LAST_MUSIC_BITMAP as? BitmapDrawable)?.bitmap
@@ -439,7 +694,11 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
                 bitmap.recycle()
             }
             LAST_MUSIC_BITMAP = null
-            PLAY_LISTS = null
+            // 音乐播放器没在播放，删掉当前播放列表
+            if (!MusicPlayerService.IS_FOREGROUND) {
+                PLAY_LISTS = null
+                playListCache.clear()
+            }
         }
     }
 }

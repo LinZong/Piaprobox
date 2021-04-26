@@ -4,7 +4,10 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.Log
-import java.util.concurrent.*
+import java.util.concurrent.Future
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 class AsyncExecutor {
 
@@ -16,7 +19,6 @@ class AsyncExecutor {
         private val LOG_TAG = "AsyncExecutorLog"
 
         val INSTANCE: AsyncExecutor = AsyncExecutor()
-
     }
 
     private val mainThreadHandler = object : Handler(Looper.getMainLooper()) {
@@ -29,20 +31,39 @@ class AsyncExecutor {
             }
         }
     }
-    private val asyncTaskQueue: BlockingQueue<Runnable> = LinkedBlockingQueue<Runnable>()
-    private val InnerTaskThreadPool = ThreadPoolExecutor(
-        Runtime.getRuntime().availableProcessors(),       // Initial pool size
-        16,       // Max pool size
-        1,
-        TimeUnit.SECONDS,
-        asyncTaskQueue
-    )
+    private val taskPool: ThreadPoolExecutor
 
-    fun SendTask(Task: () -> Unit) {
-        InnerTaskThreadPool.execute(Task)
+    constructor() {
+        // 默认线程池， CoreSize是CPU Size，最大是CPU+16。CallerRuns
+        val cpuCores = Runtime.getRuntime().availableProcessors()
+        taskPool = ThreadPoolExecutor(
+            cpuCores,  // Initial pool size
+            cpuCores + 16,       // Max pool size
+            15,
+            TimeUnit.SECONDS,
+            LinkedBlockingQueue<Runnable>(cpuCores),
+            ThreadPoolExecutor.CallerRunsPolicy()
+        )
     }
 
-    fun <T> SendTaskWithResult(Task: () -> T): Future<T> = InnerTaskThreadPool.submit(Task)
+    constructor(corePoolSize: Int, maxPoolSize: Int) {
+        // 自定义线程池， 保证MaxSize比Core大，队列长度 CorePoolSize
+        val maxSize = maxPoolSize.coerceAtLeast(corePoolSize + 1)
+        taskPool = ThreadPoolExecutor(
+            corePoolSize,       // Initial pool size
+            maxSize,       // Max pool size
+            15,
+            TimeUnit.SECONDS,
+            LinkedBlockingQueue<Runnable>(corePoolSize),
+            ThreadPoolExecutor.CallerRunsPolicy()
+        )
+    }
+
+    fun SendTask(Task: () -> Unit) {
+        taskPool.execute(Task)
+    }
+
+    fun <T> SendTaskWithResult(Task: () -> T): Future<T> = taskPool.submit(Task)
 
     fun SendTaskMainThread(Task: Runnable) {
         val message = Message()
