@@ -128,6 +128,7 @@ class AppLinkRecognizeActivity : PiaproboxBaseActivity() {
     private fun handleMusic(websiteLink: String) {
         val intent = Intent(this, MusicControlActivity::class.java)
         intent.putExtra(MusicPlayerActivity.MUSIC_CONTENT_URL, websiteLink)
+        intent.putExtra(MusicPlayerActivity.CLICK_ITEM_INDEX, 0)
         MusicPlayerActivity.PLAY_LISTS = listOf(RecommendItemModel().apply { URL = websiteLink })
         startActivity(intent)
         finish()
