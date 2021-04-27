@@ -125,6 +125,9 @@ dependencies {
         exclude group: 'com.android.support.constraint', module: 'constraint-layout'
     }
 
+    // backport Future support
+    implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.3'
+
     implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'me.weishu:free_reflection:3.0.1'
 

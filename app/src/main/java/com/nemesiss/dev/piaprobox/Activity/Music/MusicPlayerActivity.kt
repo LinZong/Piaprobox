@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -29,11 +30,14 @@ import com.nemesiss.dev.piaprobox.model.MusicPlayerActivityStatus
 import com.nemesiss.dev.piaprobox.R
 import com.nemesiss.dev.piaprobox.Service.AsyncExecutor
 import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerDownloadServiceFactory
+import com.nemesiss.dev.piaprobox.Service.DaggerFactory.DaggerImageCacheFactory
 import com.nemesiss.dev.piaprobox.Service.DaggerModules.DownloadServiceModules
+import com.nemesiss.dev.piaprobox.Service.DaggerModules.ImageCacheModules
 import com.nemesiss.dev.piaprobox.Service.Download.DownloadService
 import com.nemesiss.dev.piaprobox.Service.GlideApp
 import com.nemesiss.dev.piaprobox.Service.HTMLParser
 import com.nemesiss.dev.piaprobox.Service.HTMLParser.Companion.GetAlbumThumb
+import com.nemesiss.dev.piaprobox.Service.ImageCache
 import com.nemesiss.dev.piaprobox.Service.Player.MusicPlayerService
 import com.nemesiss.dev.piaprobox.Service.Player.NewPlayer.PlayerAction
 import com.nemesiss.dev.piaprobox.Service.SimpleHTTP.DaggerFetchFactory
@@ -226,6 +230,9 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     @Inject
     lateinit var downloadService: DownloadService
 
+    @Inject
+    lateinit var imageCache: ImageCache
+
     private lateinit var htmlParser: HTMLParser
     protected var relatedMusicListData: List<RelatedMusicInfo>? = null
     private var relatedMusicListAdapter: RelatedMusicListAdapter? = null
@@ -262,16 +269,15 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             isFirstResource: Boolean
         ): Boolean {
             if (resource != null) {
-                keepLastMusicBitmap(resource)
+                val thumbUrl = CurrentMusicPlayInfo?.Thumb ?: return false
+                val fileName = Uri.parse(thumbUrl).lastPathSegment ?: return false
+                imageCache.cache(resource, fileName)
+                log.info("Image $fileName cached!")
             }
             return false
         }
     }
 
-
-    private fun keepLastMusicBitmap(drawable: Drawable) {
-        LAST_MUSIC_BITMAP = drawable.constantState?.newDrawable()?.mutate()
-    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -285,6 +291,12 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         DaggerDownloadServiceFactory
             .builder()
             .downloadServiceModules(DownloadServiceModules(this))
+            .build()
+            .inject(this)
+
+        DaggerImageCacheFactory
+            .builder()
+            .imageCacheModules(ImageCacheModules(this))
             .build()
             .inject(this)
 
@@ -336,18 +348,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         CurrentPlayItemIndex = activityStatus.currentPlayItemIndex
         PLAY_LISTS = activityStatus.playLists
 
-        val lastThumbBitmap = LAST_MUSIC_BITMAP
-        if (lastThumbBitmap != null) {
-            log.info("Find valid lastThumbBitmap, reload.")
-            GlideApp.with(this)
-                .load(lastThumbBitmap)
-                .priority(Priority.HIGH)
-                .into(MusicPlayer_ThumbBackground)
-            keepLastMusicBitmap(lastThumbBitmap)
-        } else {
-            log.info("No valid lastThumbBitmap, load thumb from network. {}.", CurrentMusicPlayInfo?.Thumb)
-            GlideLoadThumbToImageView(CurrentMusicPlayInfo?.Thumb ?: "")
-        }
+        GlideLoadThumbToImageView(CurrentMusicPlayInfo?.Thumb ?: "")
+
         ActivateLyricRecyclerViewAdapter()
         ActivateRelatedMusicRecyclerViewAdapter()
     }
@@ -425,14 +427,29 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     }
 
     private fun GlideLoadThumbToImageView(url: String) {
+
+        // first, touch cache for previous result.
+        val fileName = Uri.parse(url).lastPathSegment
+        if (fileName != null) {
+            val cacheImage = imageCache[fileName]
+            log.warn("Image $fileName hit cache!")
+            if (cacheImage != null) {
+                GlideApp.with(this)
+                    .load(cacheImage)
+                    .priority(Priority.HIGH)
+                    .into(MusicPlayer_ThumbBackground)
+                log.warn("Image $fileName loaded from cache!")
+                return
+            }
+        }
+        log.warn("Image $fileName has no cache, load ahead.")
         try {
             GlideApp.with(this)
                 .load(url)
                 .priority(Priority.HIGH)
                 .addListener(MUSIC_ALBUM_LOAD_LISTENER)
                 .into(MusicPlayer_ThumbBackground)
-        } catch (e: Exception) {
-        }
+        } catch (e: Exception) { }
     }
 
     private fun playMusic(contentInfo: MusicContentInfo, playInfo: MusicPlayInfo) {
@@ -579,9 +596,6 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         var LAST_MUSIC_PLAYER_ACTIVITY_STATUS: MusicPlayerActivityStatus? = null
 
         @JvmStatic
-        private var LAST_MUSIC_BITMAP: Drawable? = null
-
-        @JvmStatic
         var LAST_LOAD_CONTENT_URL = ""
 
         @JvmStatic
@@ -597,11 +611,6 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
             // 音乐播放器没在播放，删掉当前播放列表
             if (!MusicPlayerService.IS_FOREGROUND) {
-                val bitmap = (LAST_MUSIC_BITMAP as? BitmapDrawable)?.bitmap
-                if (bitmap?.isRecycled == false) {
-                    bitmap.recycle()
-                }
-                LAST_MUSIC_BITMAP = null
 
                 PLAY_LISTS = null
                 playListCache.clear()

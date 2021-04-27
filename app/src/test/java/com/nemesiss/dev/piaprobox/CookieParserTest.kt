@@ -35,5 +35,4 @@ class CookieParserTest {
         assertFalse(cookie.isSecure)
         asEquals("/", cookie.path)
     }
-
 }
