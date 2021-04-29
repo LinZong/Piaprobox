@@ -109,12 +109,12 @@ class MusicControlActivity : MusicPlayerActivity() {
                         else -> {}
                     }
                 } else {
-                    pendingPrepareURL = CurrentMusicPlayInfo?.URL ?: ""
+                    pendingPrepareURL = currentMusicPlayInfo?.URL ?: ""
                     startMusicPlayService(true)
                 }
             }, {
                 val intent = Intent(this, MusicDetailActivity::class.java)
-                intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, CurrentMusicContentInfo)
+                intent.putExtra(MusicDetailActivity.MUSIC_CONTENT_INFO_INTENT_KEY, currentMusicContentInfo)
                 startActivity(intent)
             }, {
                 isEnableLooping = !isEnableLooping
@@ -204,16 +204,16 @@ class MusicControlActivity : MusicPlayerActivity() {
     private fun allowPersistMusicPlayerActivityStatus() =
             relatedMusicListData != null &&
                     lyricListData != null &&
-                    CurrentMusicContentInfo != null &&
-                    CurrentMusicPlayInfo != null && PLAY_LISTS != null
+                    currentMusicContentInfo != null &&
+                    currentMusicPlayInfo != null && PLAY_LISTS != null
 
     fun persistMusicPlayerActivityStatus(playerAction: PlayerAction, AlsoUpdateActivityIntent: Boolean) {
         if (allowPersistMusicPlayerActivityStatus()) {
             val statusRecord = MusicPlayerActivityStatus(
                     relatedMusicListData!!,
                     lyricListData!!,
-                    CurrentMusicPlayInfo!!,
-                    CurrentMusicContentInfo!!,
+                    currentMusicPlayInfo!!,
+                    currentMusicContentInfo!!,
                     currentMusicTotalDuration,
                     MusicPlayer_Seekbar.progress,
                     MusicPlayer_Seekbar.secondaryProgress,

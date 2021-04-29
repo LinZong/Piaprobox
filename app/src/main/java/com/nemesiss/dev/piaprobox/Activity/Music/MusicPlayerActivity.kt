@@ -11,7 +11,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
-import com.alibaba.fastjson.JSON
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -233,8 +232,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     protected var currentPlayItemIndex: Int = -1
 
-    protected var CurrentMusicPlayInfo: MusicPlayInfo? = null
-    protected var CurrentMusicContentInfo: MusicContentInfo? = null
+    protected var currentMusicPlayInfo: MusicPlayInfo? = null
+    protected var currentMusicContentInfo: MusicContentInfo? = null
 
 
     private val RECOVER_STATUS_RESOURCE_IS_OK: Boolean
@@ -258,7 +257,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             isFirstResource: Boolean
         ): Boolean {
             if (resource != null) {
-                val thumbUrl = CurrentMusicPlayInfo?.Thumb ?: return false
+                val thumbUrl = currentMusicPlayInfo?.Thumb ?: return false
                 val fileName = Uri.parse(thumbUrl).lastPathSegment ?: return false
                 imageCache.cache(resource, fileName)
                 log.info("Image $fileName cached!")
@@ -331,13 +330,13 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     private fun recoverActivityStatusFromPersistObject(activityStatus: MusicPlayerActivityStatus) {
         relatedMusicListData = activityStatus.relatedMusicListData
         lyricListData = activityStatus.lyrics
-        CurrentMusicPlayInfo = activityStatus.currentPlayMusicInfo
-        CurrentMusicContentInfo = activityStatus.currentPlayMusicContentInfo
+        currentMusicPlayInfo = activityStatus.currentPlayMusicInfo
+        currentMusicContentInfo = activityStatus.currentPlayMusicContentInfo
         MusicPlayer_Toolbar.title = activityStatus.currentPlayMusicContentInfo.Title
         currentPlayItemIndex = activityStatus.currentPlayItemIndex
         PLAY_LISTS = activityStatus.playLists
 
-        val thumbUrl = CurrentMusicPlayInfo?.Thumb
+        val thumbUrl = currentMusicPlayInfo?.Thumb
         if (thumbUrl != null) {
             loadThumbToBackgroundImage(thumbUrl)
         }
@@ -408,8 +407,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         val playInfo = holder.playInfo
 
         LAST_LOAD_CONTENT_URL = holder.contentUrl
-        CurrentMusicContentInfo = contentInfo
-        CurrentMusicPlayInfo = playInfo
+        currentMusicContentInfo = contentInfo
+        currentMusicPlayInfo = playInfo
 
         runOnUiThread {
             MusicPlayer_Toolbar.title = contentInfo.Title
@@ -528,7 +527,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         super.onOptionsItemSelected(item)
         when (item?.itemId) {
             R.id.MusicPlayer_Toolbar_Download -> {
-                if (CurrentMusicPlayInfo == null || CurrentMusicContentInfo == null || CurrentMusicContentInfo!!.Title.isEmpty()) {
+                if (currentMusicPlayInfo == null || currentMusicContentInfo == null || currentMusicContentInfo!!.Title.isEmpty()) {
                     Toast.makeText(this, R.string.MusicPlayInfoIsntPrepared, Toast.LENGTH_SHORT).show()
                 } else {
                     confirmDownloadRequest()
@@ -544,8 +543,8 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             .setMessage(R.string.DownloadMusicRequestDialogMessgae)
             .setPositiveButton("OK") { _, _ ->
                 downloadService.DownloadMusic(
-                    "${CurrentMusicContentInfo?.Title ?: System.currentTimeMillis()}.mp3",
-                    CurrentMusicPlayInfo?.URL!!,
+                    "${currentMusicContentInfo?.Title ?: System.currentTimeMillis()}.mp3",
+                    currentMusicPlayInfo?.URL!!,
                     CheckPermissionModel(this)
                 )
             }
