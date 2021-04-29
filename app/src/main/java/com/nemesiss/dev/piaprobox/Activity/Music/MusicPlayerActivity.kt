@@ -51,6 +51,10 @@ import javax.inject.Inject
 
 private class MusicInfoHolder(val contentUrl: String, private val htmlParser: HTMLParser) {
 
+
+    private val fetcher = DaggerFetchFactory.create().fetcher()
+
+
     lateinit var contentInfo: MusicContentInfo
         private set
 
@@ -93,10 +97,11 @@ private class MusicInfoHolder(val contentUrl: String, private val htmlParser: HT
         throwPendingErrorIfExists()
     }
 
-    fun await(timeout: Long, unit: TimeUnit) {
+    fun await(timeout: Long, unit: TimeUnit): Boolean {
         emitFetchIfNeeded()
-        cdl.await(timeout, unit)
+        val done = cdl.await(timeout, unit)
         throwPendingErrorIfExists()
+        return done
     }
 
     fun fetch() = emitFetchIfNeeded()
@@ -144,26 +149,20 @@ private class MusicInfoHolder(val contentUrl: String, private val htmlParser: HT
     private fun loadContentInfo() {
         log.info("Loading content info for url: $contentUrl ...")
 
-        val response = DaggerFetchFactory.create()
-            .fetcher()
-            .visit(contentUrl)
-            .go()
+        val response = fetcher.visit(contentUrl).go()
         response.handle<String>(
             { body -> parseContentInfo(body) },
-            { httpCode, _ -> throw Exception("Invalid response error, HttpCode: $httpCode") })
+            { httpCode, error -> throw Exception("Invalid response error, HttpCode: $httpCode, Response: ${error.body?.string()}") })
     }
 
     private fun loadPlayInfo() {
         val url =
             "https://piapro.jp/html5_player_popup/?id=${contentInfo.ContentID}&cdate=${contentInfo.CreateDate}&p=${contentInfo.Priority}"
         log.info("Loading play info for url: $url")
-        val response = DaggerFetchFactory.create()
-            .fetcher()
-            .visit(url)
-            .go()
+        val response = fetcher.visit(url).go()
         response.handle<String>(
             { body -> parsePlayInfo(body) },
-            { httpCode, _ -> throw Exception("Invalid response error, HttpCode: $httpCode") })
+            { httpCode, error -> throw Exception("Invalid response error, HttpCode: $httpCode, Response: ${error.body?.string()}") })
     }
 
     private fun parseContentInfo(body: String) {
@@ -176,8 +175,6 @@ private class MusicInfoHolder(val contentUrl: String, private val htmlParser: HT
         this.contentInfo = htmlParser
             .Parser
             .GoSteps(root, parseMusicContentStep) as MusicContentInfo
-
-        log.info("MusicContentInfo Loaded: ${JSON.toJSONString(this.contentInfo)}")
 
         val parseRelatedMusicInfoSteps = htmlParser
             .Rules
@@ -204,7 +201,6 @@ private class MusicInfoHolder(val contentUrl: String, private val htmlParser: HT
         val playInfo = htmlParser.Parser.GoSteps(root, steps) as MusicPlayInfo
         playInfo.Thumb = GetAlbumThumb(playInfo.Thumb)
         this.playInfo = playInfo
-        log.info("MusicPlayInfo Loaded: ${JSON.toJSONString(playInfo)}")
         log.warn("Url: $contentUrl finish loading successfully!")
 
         cdl.countDown()
@@ -385,14 +381,18 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         val playListItemHolder = playListCache[playListIndex]
 
         val async = AsyncExecutor.INSTANCE
-        async.SendTask {
+        async.SendTask awaitTask@{
             try {
                 if (!playListItemHolder.isPrepared) {
                     // 只有这个MusicInfoHolder没有完全加载的时候，才显示LoadingIndicator，避免闪屏。
                     ShowLoadingIndicator(MusicPlayer_ContentContainer)
-                    playListItemHolder.await(20, TimeUnit.SECONDS)
+                    val done = playListItemHolder.await(15, TimeUnit.SECONDS)
+                    if (!done) {
+                        LoadFailedTips(-11, "Load music content failed, timeout after 15 seconds.")
+                        return@awaitTask
+                    }
                 }
-                // 加载成功了
+                // must be prepared.
                 onNewMusicInfoLoaded(playListItemHolder, loadRelatedMusics)
             } catch (t: Throwable) {
                 // 加载过程中出现异常
