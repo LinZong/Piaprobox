@@ -84,7 +84,7 @@ class MusicPlayerService : Service() {
             )
         )
         if (!IS_FOREGROUND) {
-            ActAsForegroundService(pendingNewNotification)
+            bringToForegroundService(pendingNewNotification)
         } else {
             musicPlayerNotificationManager.notificationManager.notify(NotificationID, pendingNewNotification)
         }
@@ -95,10 +95,10 @@ class MusicPlayerService : Service() {
         val intent = Intent(PiaproboxApplication.Self.applicationContext, MusicControlActivity::class.java)
         intent.putExtra(PERSIST_STATUS_INTENT_KEY, musicPlayerActivityStatus)
         musicPlayerNotificationManager.activityIntent = intent
-        PlayingMusicContentInfo?.let { playingMusicContentInfo ->
+        PlayingMusicContentInfo?.let { contentInfo ->
             UpdateNotification(
                 player.state(),
-                playingMusicContentInfo
+                contentInfo
             )
         }
     }
@@ -107,12 +107,12 @@ class MusicPlayerService : Service() {
         fun getService(): MusicPlayerService = this@MusicPlayerService
     }
 
-    private fun ActAsForegroundService(notification: Notification) {
+    private fun bringToForegroundService(notification: Notification) {
         IS_FOREGROUND = true
         startForeground(NotificationID, notification)
     }
 
-    override fun onBind(p0: Intent?): IBinder? {
+    override fun onBind(p0: Intent?): IBinder {
         IS_BINDED = true
         return MusicPlayerBinder()
     }
@@ -159,12 +159,11 @@ class MusicPlayerService : Service() {
     }
 
     private fun stopPlaying() {
-        setServiceAvailable(false)
+//        setServiceAvailable(false)
         player.stop()
         stopForeground(true)
         IS_FOREGROUND = false
         musicPlayerNotificationManager.ClearNotification()
-        MusicPlayerActivity.CleanStaticResources()
         Log.d("MusicPlayerService", "MusicPlayerService stopPlaying")
     }
 

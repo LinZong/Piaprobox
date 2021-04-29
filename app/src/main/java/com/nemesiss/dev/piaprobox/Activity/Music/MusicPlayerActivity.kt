@@ -2,7 +2,6 @@ package com.nemesiss.dev.piaprobox.Activity.Music
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -457,7 +456,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         intent.action = "UPDATE_INFO"
         intent.putExtra("UpdateMusicContentInfo", contentInfo)
         intent.putExtra("WillPlayMusicURL", playInfo.URL)
-        (this as? MusicControlActivity)?.PersistMusicPlayerActivityStatus(PlayerAction.STOPPED, true)
+        (this as? MusicControlActivity)?.persistMusicPlayerActivityStatus(PlayerAction.STOPPED, true)
         startService(intent)
     }
 
