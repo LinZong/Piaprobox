@@ -72,13 +72,7 @@ private class MusicInfoHolder(val contentUrl: String, private val htmlParser: HT
     val isPrepared get() = step == 2
 
     private companion object {
-
         private val log = getLogger<MusicInfoHolder>()
-
-        val stepName = mapOf(
-            0 to "Load MusicContentInfo",
-            1 to "Load MusicPlayInfo"
-        )
     }
 
     constructor(
@@ -241,7 +235,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
     private var lyricListAdapter: MusicLyricAdapter? = null
     private var lyricListLayoutManager: LinearLayoutManager? = null
 
-    protected var CurrentPlayItemIndex: Int = -1
+    protected var currentPlayItemIndex: Int = -1
 
     protected var CurrentMusicPlayInfo: MusicPlayInfo? = null
     protected var CurrentMusicContentInfo: MusicContentInfo? = null
@@ -280,7 +274,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        HandleSwitchMusicIntent(intent)
+        handleSwitchMusicIntent(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -299,7 +293,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             .build()
             .inject(this)
 
-        ShowToolbarBackIcon(MusicPlayer_Toolbar)
+        showToolbarBackIcon(MusicPlayer_Toolbar)
         // 关闭RecyclerView的嵌套滚动
         ViewCompat.setNestedScrollingEnabled(MusicPlayer_Lyric_RecyclerView, false)
         MusicPlayer_Lyric_RecyclerView.isNestedScrollingEnabled = false
@@ -309,48 +303,51 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         val status = intent.getSerializableExtra(PERSIST_STATUS_INTENT_KEY)
         if (status != null) {
             val activityStatus = status as MusicPlayerActivityStatus
-            RecoverActivityStatusFromPersistObject(activityStatus)
+            recoverActivityStatusFromPersistObject(activityStatus)
         } else {
             // 从RecommendItem点击过来
-            val MusicContentUrl = intent.getStringExtra(MUSIC_CONTENT_URL) ?: ""
-            CurrentPlayItemIndex = intent.getIntExtra(CLICK_ITEM_INDEX, -1)
-            val ClickToolbarIcon = intent.getBooleanExtra(CLICK_TOOLBAR_ICON, false)
+            val musicContentUrl = intent.getStringExtra(MUSIC_CONTENT_URL) ?: ""
+            currentPlayItemIndex = intent.getIntExtra(CLICK_ITEM_INDEX, -1)
+            val clickToolbarIcon = intent.getBooleanExtra(CLICK_TOOLBAR_ICON, false)
 
-            val cond1 = (ClickToolbarIcon || MusicContentUrl == LAST_LOAD_CONTENT_URL)
+            val cond1 = (clickToolbarIcon || musicContentUrl == LAST_LOAD_CONTENT_URL)
             val cond2 = RECOVER_STATUS_RESOURCE_IS_OK
 
             if (cond1 && cond2) {
                 // 点击的和上次是一样的，恢复.
-                RecoverActivityStatusFromPersistObject(LAST_MUSIC_PLAYER_ACTIVITY_STATUS!!)
+                recoverActivityStatusFromPersistObject(LAST_MUSIC_PLAYER_ACTIVITY_STATUS!!)
             } else {
                 LAST_MUSIC_PLAYER_ACTIVITY_STATUS = null
 //                LoadMusicContentInfo(MusicContentUrl, true)
-                LoadMusicContentInfo(CurrentPlayItemIndex, true)
+                loadMusicContentInfo(currentPlayItemIndex, true)
             }
         }
-        HandleSwitchMusicIntent(intent)
+        handleSwitchMusicIntent(intent)
     }
 
-    private fun HandleSwitchMusicIntent(intent: Intent?) {
+    private fun handleSwitchMusicIntent(intent: Intent?) {
         when (intent?.action) {
-            "NEXT" -> NextMusic()
-            "PREV" -> PrevMusic()
+            "NEXT" -> nextMusic()
+            "PREV" -> prevMusic()
         }
     }
 
-    private fun RecoverActivityStatusFromPersistObject(activityStatus: MusicPlayerActivityStatus) {
+    private fun recoverActivityStatusFromPersistObject(activityStatus: MusicPlayerActivityStatus) {
         relatedMusicListData = activityStatus.relatedMusicListData
         lyricListData = activityStatus.lyrics
         CurrentMusicPlayInfo = activityStatus.currentPlayMusicInfo
         CurrentMusicContentInfo = activityStatus.currentPlayMusicContentInfo
         MusicPlayer_Toolbar.title = activityStatus.currentPlayMusicContentInfo.Title
-        CurrentPlayItemIndex = activityStatus.currentPlayItemIndex
+        currentPlayItemIndex = activityStatus.currentPlayItemIndex
         PLAY_LISTS = activityStatus.playLists
 
-        GlideLoadThumbToImageView(CurrentMusicPlayInfo?.Thumb ?: "")
+        val thumbUrl = CurrentMusicPlayInfo?.Thumb
+        if (thumbUrl != null) {
+            loadThumbToBackgroundImage(thumbUrl)
+        }
 
-        ActivateLyricRecyclerViewAdapter()
-        ActivateRelatedMusicRecyclerViewAdapter()
+        activateLyricRecyclerViewAdapter()
+        activateRelatedMusicRecyclerViewAdapter()
     }
 
     @Synchronized
@@ -382,7 +379,7 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         }
     }
 
-    private fun LoadMusicContentInfo(playListIndex: Int, loadRelatedMusics: Boolean = false) {
+    private fun loadMusicContentInfo(playListIndex: Int, loadRelatedMusics: Boolean = false) {
         buildPlayListCacheIfNeeded()
 
         val playListItemHolder = playListCache[playListIndex]
@@ -416,16 +413,16 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
         runOnUiThread {
             MusicPlayer_Toolbar.title = contentInfo.Title
-            ParseLyrics(contentInfo.Lyrics)
-            GlideLoadThumbToImageView(playInfo.Thumb)
+            parseLyrics(contentInfo.Lyrics)
+            loadThumbToBackgroundImage(playInfo.Thumb)
             if (refreshRelatedMusics) {
-                LoadRelatedMusicsToView(holder.relatedMusics)
+                loadRelatedMusics(holder.relatedMusics)
             }
             playMusic(contentInfo, playInfo)
         }
     }
 
-    private fun GlideLoadThumbToImageView(url: String) {
+    private fun loadThumbToBackgroundImage(url: String) {
 
         // first, touch cache for previous result.
         val fileName = Uri.parse(url).lastPathSegment
@@ -460,16 +457,16 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         startService(intent)
     }
 
-    private fun ParseLyrics(LyricStr: String) {
-        lyricListData = if (LyricStr.isEmpty()) {
+    private fun parseLyrics(rawLyrics: String) {
+        lyricListData = if (rawLyrics.isEmpty()) {
             MusicLyricAdapter.BuildNoLyricList()
         } else {
-            LyricStr.split(" ")
+            rawLyrics.split(" ")
         }
-        ActivateLyricRecyclerViewAdapter()
+        activateLyricRecyclerViewAdapter()
     }
 
-    private fun ActivateLyricRecyclerViewAdapter() {
+    private fun activateLyricRecyclerViewAdapter() {
         if (lyricListAdapter == null) {
             lyricListAdapter = MusicLyricAdapter(lyricListData!!)
             MusicPlayer_Lyric_RecyclerView.adapter = lyricListAdapter
@@ -487,9 +484,9 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         }
     }
 
-    private fun ActivateRelatedMusicRecyclerViewAdapter() {
+    private fun activateRelatedMusicRecyclerViewAdapter() {
         if (relatedMusicListAdapter == null) {
-            relatedMusicListAdapter = RelatedMusicListAdapter(relatedMusicListData!!, this::RelatedItemSelected)
+            relatedMusicListAdapter = RelatedMusicListAdapter(relatedMusicListData!!, this::onRelatedItemSelected)
             MusicPlayer_RelatedMusic_RecyclerView.adapter = relatedMusicListAdapter
         }
         if (relatedMusicListLayoutManager == null) {
@@ -502,13 +499,12 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
         MusicPlayer_RelatedMusic_RecyclerView.scrollToPosition(0)
     }
 
-    private fun LoadRelatedMusicsToView(data: List<RelatedMusicInfo>) {
+    private fun loadRelatedMusics(data: List<RelatedMusicInfo>) {
         relatedMusicListData = data
-        ActivateRelatedMusicRecyclerViewAdapter()
+        activateRelatedMusicRecyclerViewAdapter()
     }
 
-    private fun RelatedItemSelected(index: Int) {
-        val item = relatedMusicListData!![index]
+    private fun onRelatedItemSelected(index: Int) {
         PLAY_LISTS = relatedMusicListData!!.map { related ->
             RecommendItemModel().apply {
                 ArtistName = related.Artist
@@ -517,10 +513,10 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
                 URL = related.URL
             }
         }
-        CurrentPlayItemIndex = index
+        currentPlayItemIndex = index
         // force rebuild play list cache.
         buildPlayListCacheIfNeeded(true)
-        LoadMusicContentInfo(index, false)
+        loadMusicContentInfo(index, false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -535,14 +531,14 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
                 if (CurrentMusicPlayInfo == null || CurrentMusicContentInfo == null || CurrentMusicContentInfo!!.Title.isEmpty()) {
                     Toast.makeText(this, R.string.MusicPlayInfoIsntPrepared, Toast.LENGTH_SHORT).show()
                 } else {
-                    ConfirmDownloadRequest()
+                    confirmDownloadRequest()
                 }
             }
         }
         return true
     }
 
-    private fun ConfirmDownloadRequest() {
+    private fun confirmDownloadRequest() {
         AlertDialog.Builder(this)
             .setTitle(R.string.DownloadMusicRequestDialogTitle)
             .setMessage(R.string.DownloadMusicRequestDialogMessgae)
@@ -557,19 +553,19 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
             .show()
     }
 
-    protected fun NextMusic() {
-        if (PLAY_LISTS != null && CurrentPlayItemIndex != -1 && CurrentPlayItemIndex + 1 < PLAY_LISTS!!.size) {
+    protected fun nextMusic() {
+        if (PLAY_LISTS != null && currentPlayItemIndex != -1 && currentPlayItemIndex + 1 < PLAY_LISTS!!.size) {
 //            val nextItem = PLAY_LISTS!![CurrentPlayItemIndex + 1]
 //            MusicPlayer_Toolbar.title = nextItem.ItemName
-            LoadMusicContentInfo(CurrentPlayItemIndex + 1, false)
-            CurrentPlayItemIndex++
+            loadMusicContentInfo(currentPlayItemIndex + 1, false)
+            currentPlayItemIndex++
         }
     }
 
-    protected fun PrevMusic() {
-        if (PLAY_LISTS != null && CurrentPlayItemIndex != -1 && CurrentPlayItemIndex - 1 >= 0) {
-            LoadMusicContentInfo(CurrentPlayItemIndex - 1, false)
-            CurrentPlayItemIndex--
+    protected fun prevMusic() {
+        if (PLAY_LISTS != null && currentPlayItemIndex != -1 && currentPlayItemIndex - 1 >= 0) {
+            loadMusicContentInfo(currentPlayItemIndex - 1, false)
+            currentPlayItemIndex--
         }
     }
 
@@ -605,12 +601,10 @@ open class MusicPlayerActivity : PiaproboxBaseActivity() {
 
 
         @JvmStatic
-        fun CleanStaticResources() {
+        fun cleanStaticResources() {
             LAST_MUSIC_PLAYER_ACTIVITY_STATUS = null
-
             // 音乐播放器没在播放，删掉当前播放列表
             if (!MusicPlayerService.IS_FOREGROUND) {
-
                 PLAY_LISTS = null
                 playListCache.clear()
             }

@@ -29,7 +29,7 @@ class MusicDetailActivity : PiaproboxBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_music_detail)
-        ShowToolbarBackIcon(MusicDetail_Toolbar)
+        showToolbarBackIcon(MusicDetail_Toolbar)
 
         val contentInfo = intent.getSerializableExtra(MUSIC_CONTENT_INFO_INTENT_KEY) as? MusicContentInfo
         if (contentInfo == null) {

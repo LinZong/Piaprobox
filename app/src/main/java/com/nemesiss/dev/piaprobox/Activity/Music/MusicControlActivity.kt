@@ -119,9 +119,9 @@ class MusicControlActivity : MusicPlayerActivity() {
             }, {
                 isEnableLooping = !isEnableLooping
             }, {
-                NextMusic()
+                nextMusic()
             }, {
-                PrevMusic()
+                prevMusic()
             })
         initSeekbarController()
     }
@@ -218,7 +218,7 @@ class MusicControlActivity : MusicPlayerActivity() {
                     MusicPlayer_Seekbar.progress,
                     MusicPlayer_Seekbar.secondaryProgress,
                     isEnableLooping,
-                    CurrentPlayItemIndex,
+                    currentPlayItemIndex,
                     PLAY_LISTS!!
             )
             if (AlsoUpdateActivityIntent) {

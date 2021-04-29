@@ -58,7 +58,7 @@ class TextDetailActivity : PiaproboxBaseActivity() {
 
         setContentView(binding.root)
 
-        ShowToolbarBackIcon(TextDetail_Toolbar)
+        showToolbarBackIcon(TextDetail_Toolbar)
 
         val data = intent.getSerializableExtra(SHOWN_TEXT_INTENT_KEY) as? RecommendItemModelText
         if (data != null) {

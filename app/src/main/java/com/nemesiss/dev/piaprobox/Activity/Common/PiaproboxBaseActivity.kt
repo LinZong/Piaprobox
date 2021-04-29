@@ -67,7 +67,7 @@ open class PiaproboxBaseActivity : AppCompatActivity() {
         return true
     }
 
-    fun ShowToolbarBackIcon(toolbar: Toolbar) {
+    fun showToolbarBackIcon(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

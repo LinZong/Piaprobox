@@ -176,7 +176,7 @@ class MusicPlayerService : Service() {
         IS_FOREGROUND = false
         musicPlayerNotificationManager.ClearNotification()
         stopSelf()
-        MusicPlayerActivity.CleanStaticResources()
+        MusicPlayerActivity.cleanStaticResources()
         super.onDestroy()
     }
 }
